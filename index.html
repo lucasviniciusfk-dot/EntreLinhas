@@ -1998,6 +1998,7 @@ body.dark .admin-members-stats-v1901 div,body.dark .admin-member-metrics-v1901 s
 
   <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style id="v18636-chat-avatar-sem-numero">
 /* v18.6.36 - remove a bolinha preta com nível/número dos avatares do Chat.
@@ -2432,9 +2433,9 @@ function profile(){
     const initial={
       user:null,screen:"home",
       users:[
-        {id:"owner-lucas",name:"Lucas",email:"lucasviniciusfk@gmail.com",password:"251120Ml@",role:"owner",hidden:true,banned:false,points:0},
-        {id:"maria",name:"Maria",email:"maria@entrelinhas.com",password:"123456",role:"admin",hidden:false,banned:false,points:1200},
-        {id:"ana",name:"Ana",email:"ana@entrelinhas.com",password:"123456",role:"member",hidden:false,banned:false,points:800}
+        {id:"owner-lucas",name:"Lucas",email:"lucasviniciusfk@gmail.com",password:"",role:"owner",hidden:true,banned:false,points:0},
+        {id:"maria",name:"Maria",email:"maria@entrelinhas.com",password:"",role:"admin",hidden:false,banned:false,points:1200},
+        {id:"ana",name:"Ana",email:"ana@entrelinhas.com",password:"",role:"member",hidden:false,banned:false,points:800}
       ],
       books:[
         {id:"b1",userId:"ana",title:"Verity",author:"Colleen Hoover",pages:416,currentPage:280,status:"reading",review:"",source:"manual",cover:"",updatedAt:Date.now()-86400000},
@@ -2533,12 +2534,12 @@ function profile(){
       document.getElementById("app").innerHTML=`
         <img src="assets/img_001_6644f517278f.png" class="login-official-logo" alt="Logo EntreLinhas" onerror="this.style.display=\'none\'">
 
-        <p style="text-align:center"><span class="online-status">${onlineEnabled?"Online ativo":"Modo local / aguardando Firebase"}</span></p>
+        <p style="text-align:center"><span class="online-status">${onlineEnabled?"Online ativo":"Supabase online ativo"}</span></p>
 
         <section class="card">
           <h3 class="title">Entrar</h3>
-          <input class="input" id="email" value="lucasviniciusfk@gmail.com" placeholder="E-mail">
-          <input class="input" id="password" value="251120Ml@" type="password" placeholder="Senha">
+          <input class="input" id="email" placeholder="E-mail">
+          <input class="input" id="password" type="password" placeholder="Senha">
 
           <button class="btn" onclick="login()">Entrar</button>
           <div style="height:10px"></div>
@@ -2630,7 +2631,7 @@ function profile(){
       save();render();
     }
 
-    function googleDemo(){alert("Login Google simulado.");data.user=data.users.find(u=>u.email==="maria@entrelinhas.com");save();render()}
+    async function googleDemo(){ if(window.entSupabaseClient){ const { error } = await window.entSupabaseClient.auth.signInWithOAuth({ provider:"google", options:{ redirectTo: location.origin + location.pathname } }); if(error) alert("Erro no Google: "+error.message); return; } alert("Supabase ainda não carregou. Atualize a página e tente novamente."); }
     function header(){
       const photo=data.user.photo;
       return`
@@ -5380,10 +5381,10 @@ function home(){
       if(!isAdmin())return;
       openModal(`
         <h3>Armazenamento online</h3>
-        <p class="muted">Para ativar o app online de verdade, preencha FIREBASE_CONFIG no código com as chaves do Firebase.</p>
+        <p class="muted">O EntreLinhas agora usa Supabase para login, banco de dados e armazenamento online.</p>
         <section class="card" style="box-shadow:none">
           <strong>Status</strong>
-          <p class="muted">${onlineEnabled?"Firebase conectado":"Modo local ativo"}</p>
+          <p class="muted">${onlineEnabled?"Supabase conectado":"Supabase online ativo"}</p>
         </section>
         <button class="btn secondary" onclick="loadCloudData()">Sincronizar agora</button>
         <div style="height:8px"></div>
@@ -16999,6 +17000,190 @@ body.ent-theme-escuro .admin-panel-card-v1910 button:not(.btn),body.theme-escuro
   document.addEventListener('change',function(e){if(e.target&&e.target.id==='readerProgressMode1870')setTimeout(refresh,350)},true);
   window.addEventListener('resize',()=>setTimeout(refresh,350));
   setInterval(()=>{if(document.querySelector('.epub-reader-fullscreen')&&isPages())updateProgress();},1600);
+})();
+</script>
+
+
+<script id="entrel-supabase-auth-real-v1">
+(function(){
+  const SUPABASE_URL = "https://rigwfejpjnrbvzfkuwgu.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpZ3dmZWpwam5yYnZ6Zmt1d2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MTU4NzAsImV4cCI6MjA5NjA5MTg3MH0.DiiO_o1WRYrs2nTIr9JGZ1dkT0nl0i00fXOarvCXMRw";
+  const ADMIN_EMAILS = ["lucasviniciusfk@gmail.com"];
+
+  function client(){
+    if(!window.supabase || !window.supabase.createClient){
+      console.error("Supabase SDK não carregou.");
+      return null;
+    }
+    if(!window.entSupabaseClient){
+      window.entSupabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true }
+      });
+    }
+    return window.entSupabaseClient;
+  }
+
+  function getNameFromUser(user){
+    return (user && user.user_metadata && (user.user_metadata.name || user.user_metadata.full_name)) ||
+           (user && user.email ? user.email.split("@")[0] : "Membro");
+  }
+
+  function makeLocalUser(user, profile){
+    const email = (user && user.email) || (profile && profile.email) || "";
+    const isLucas = ADMIN_EMAILS.includes(String(email).toLowerCase());
+    return {
+      id: user.id,
+      name: (profile && profile.nome) || getNameFromUser(user),
+      email,
+      role: isLucas || (profile && profile.is_admin) ? "owner" : "member",
+      hidden: !!(profile && profile.perfil_privado),
+      banned: false,
+      points: Number((profile && profile.xp) || 0),
+      bio: (profile && profile.bio) || "",
+      favoriteBook: (profile && profile.livro_favorito) || "",
+      photo: (profile && profile.foto_url) || (user.user_metadata && user.user_metadata.avatar_url) || "",
+      streakDays: Number((profile && profile.sequencia_dias) || 0),
+      streakActive:true,
+      eventMedals:[],
+      secretMedals:[],
+      manualMedals:[]
+    };
+  }
+
+  async function ensureProfile(user){
+    const sb = client();
+    if(!sb || !user) return null;
+    const email = user.email || "";
+    const isLucas = ADMIN_EMAILS.includes(String(email).toLowerCase());
+    const base = {
+      id: user.id,
+      nome: getNameFromUser(user),
+      email,
+      foto_url: (user.user_metadata && user.user_metadata.avatar_url) || null,
+      is_admin: isLucas
+    };
+    try{
+      await sb.from("usuarios").upsert(base, { onConflict:"id" });
+      const { data:profile, error } = await sb.from("usuarios").select("*").eq("id", user.id).single();
+      if(error) console.warn("Perfil Supabase:", error.message);
+      return profile || base;
+    }catch(e){
+      console.warn("Não foi possível criar/carregar perfil:", e);
+      return base;
+    }
+  }
+
+  async function applySessionUser(user){
+    if(!user) return false;
+    const profile = await ensureProfile(user);
+    const localUser = makeLocalUser(user, profile);
+    data.users = data.users || [];
+    const idx = data.users.findIndex(u => u.id === localUser.id || String(u.email).toLowerCase() === String(localUser.email).toLowerCase());
+    if(idx >= 0) data.users[idx] = Object.assign({}, data.users[idx], localUser);
+    else data.users.push(localUser);
+    data.user = idx >= 0 ? data.users[idx] : localUser;
+    try{ save(); }catch(e){}
+    try{ render(); }catch(e){}
+    return true;
+  }
+
+  window.renderLogin = function(){
+    document.getElementById("app").innerHTML=`
+      <img src="assets/img_001_6644f517278f.png" class="login-official-logo" alt="Logo EntreLinhas" onerror="this.style.display='none'">
+      <p style="text-align:center"><span class="online-status">Supabase online ativo</span></p>
+      <section class="card">
+        <h3 class="title">Entrar</h3>
+        <input class="input" id="email" placeholder="E-mail">
+        <input class="input" id="password" type="password" placeholder="Senha">
+        <button class="btn" onclick="login()">Entrar</button>
+        <div style="height:10px"></div>
+        <button class="btn secondary" onclick="renderRegister()">Cadastrar nova conta</button>
+        <div style="height:10px"></div>
+        <button class="btn secondary" onclick="googleDemo()">Entrar com Google</button>
+      </section>`;
+  };
+
+  window.renderRegister = function(){
+    document.getElementById("app").innerHTML=`
+      <img src="assets/img_001_6644f517278f.png" class="login-official-logo" alt="Logo EntreLinhas" onerror="this.style.display='none'"><h1 class="logo">Criar conta</h1>
+      <section class="card">
+        <label class="muted">E-mail</label><input class="input" id="regEmail" placeholder="email@exemplo.com">
+        <label class="muted">Usuário</label><input class="input" id="regName" placeholder="Seu nome de usuário">
+        <label class="muted">Senha</label><input class="input" id="regPassword" type="password" placeholder="Senha">
+        <label class="muted">Confirmar senha</label><input class="input" id="regConfirm" type="password" placeholder="Confirmar senha">
+        <button class="btn" onclick="registerUser()">Cadastrar</button>
+        <div style="height:10px"></div>
+        <button class="btn secondary" onclick="renderLogin()">Voltar para login</button>
+      </section>`;
+  };
+
+  window.registerUser = async function(){
+    const sb = client();
+    const email=document.getElementById("regEmail").value.trim();
+    const name=document.getElementById("regName").value.trim();
+    const password=document.getElementById("regPassword").value;
+    const confirm=document.getElementById("regConfirm").value;
+    if(!email||!name||!password||!confirm)return alert("Preencha todos os campos.");
+    if(password!==confirm)return alert("As senhas não conferem.");
+    if(password.length<6)return alert("A senha precisa ter pelo menos 6 caracteres.");
+    const { data:authData, error } = await sb.auth.signUp({ email, password, options:{ data:{ name } } });
+    if(error) return alert("Erro ao cadastrar: " + error.message);
+    if(authData && authData.user){
+      await applySessionUser(authData.user);
+      alert("Cadastro realizado com sucesso.");
+    }else{
+      alert("Cadastro criado. Verifique seu e-mail para confirmar a conta e depois faça login.");
+      renderLogin();
+    }
+  };
+
+  window.login = async function(){
+    const sb = client();
+    const email=document.getElementById("email").value.trim();
+    const password=document.getElementById("password").value;
+    if(!email||!password)return alert("Informe e-mail e senha.");
+    const { data:authData, error } = await sb.auth.signInWithPassword({ email, password });
+    if(error) return alert("Erro ao entrar: " + error.message);
+    await applySessionUser(authData.user);
+  };
+
+  window.googleDemo = async function(){
+    const sb = client();
+    const redirectTo = location.origin + location.pathname;
+    const { error } = await sb.auth.signInWithOAuth({ provider:"google", options:{ redirectTo } });
+    if(error) alert("Erro no Google: " + error.message);
+  };
+
+  window.logout = async function(){
+    try{ const sb=client(); await sb.auth.signOut(); }catch(e){}
+    data.user=null;
+    try{save();}catch(e){}
+    try{render();}catch(e){}
+  };
+
+  async function bootSupabaseAuth(){
+    const sb = client();
+    if(!sb) return;
+    try{
+      const { data:sessionData } = await sb.auth.getSession();
+      if(sessionData && sessionData.session && sessionData.session.user){
+        await applySessionUser(sessionData.session.user);
+      }else{
+        // Sem sessão real do Supabase: nunca manter login local antigo/simulado.
+        if(data && data.user){
+          data.user = null;
+          try{ save(); }catch(e){}
+        }
+        try{renderLogin();}catch(e){try{render();}catch(_){}}
+      }
+      sb.auth.onAuthStateChange(async (_event, session)=>{
+        if(session && session.user) await applySessionUser(session.user);
+      });
+    }catch(e){ console.warn("Boot Supabase Auth", e); try{render();}catch(_){} }
+  }
+
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", ()=>setTimeout(bootSupabaseAuth, 200));
+  else setTimeout(bootSupabaseAuth, 200);
 })();
 </script>
 
