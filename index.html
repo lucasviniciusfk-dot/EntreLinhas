@@ -22066,183 +22066,199 @@ html[data-ent-theme="escuro"] .profile-v166 .profile-hero-v59,html[data-ent-them
 </script>
 
 
-<script id="entrel-v171-publica-clube-para-minha-leitura-r2-definitivo">
+<script id="entrel-v172-publica-clube-minha-leitura-abre-r2">
 (function(){
   'use strict';
-  if(window.__ENTRELINHAS_V171_PUBLICA_CLUBE_R2_DEFINITIVO__) return;
-  window.__ENTRELINHAS_V171_PUBLICA_CLUBE_R2_DEFINITIVO__ = true;
+  if(window.__ENTRELINHAS_V172_PUBLICA_CLUBE_ABRE_R2__) return;
+  window.__ENTRELINHAS_V172_PUBLICA_CLUBE_ABRE_R2__ = true;
 
   var R2_BASE='https://pub-7ce147d638144dd8877110c09e20a4ab.r2.dev/';
   var WORKER='https://entrelinhas-upload.lucasviniciusfk.workers.dev/';
 
   function sb(){try{return window.entSupabaseClient||(typeof supaV18638==='function'&&supaV18638())||window.supabaseClient||null;}catch(e){return null;}}
-  async function authUser(){try{var c=sb(); if(c&&c.auth&&c.auth.getUser){var r=await c.auth.getUser(); return r&&r.data&&r.data.user||null;}}catch(e){} try{var c2=sb(); if(c2&&c2.auth&&c2.auth.getSession){var s=await c2.auth.getSession(); return s&&s.data&&s.data.session&&s.data.session.user||null;}}catch(e){} return null;}
-  async function authId(){var u=await authUser(); if(u&&u.id)return String(u.id); try{return String(data&&data.user&&(data.user.authId||data.user.supabaseId||data.user.id)||'');}catch(e){return '';}}
+  async function sessionUser(){
+    try{var c=sb(); if(c&&c.auth&&c.auth.getUser){var r=await c.auth.getUser(); if(r&&r.data&&r.data.user)return r.data.user;}}catch(e){}
+    try{var c2=sb(); if(c2&&c2.auth&&c2.auth.getSession){var s=await c2.auth.getSession(); if(s&&s.data&&s.data.session&&s.data.session.user)return s.data.session.user;}}catch(e){}
+    return null;
+  }
+  function validUuid(v){return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(v||''));}
+  async function authId(){var u=await sessionUser(); if(u&&validUuid(u.id))return String(u.id); try{var id=data&&data.user&&(data.user.authId||data.user.supabaseId||data.user.id); if(validUuid(id))return String(id);}catch(e){} return '';}
+  function localId(){try{return String(data&&data.user&&data.user.id||'guest');}catch(e){return 'guest';}}
   function esc(v){try{if(typeof escapeHtml==='function')return escapeHtml(v);}catch(e){} return String(v==null?'':v).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
   function attr(v){return esc(v).replace(/`/g,'&#96;');}
-  function num(v){v=Number(v||0); return Number.isFinite(v)?v:0;}
-  function now(){return new Date().toISOString();}
-  function uid(prefix){try{return crypto&&crypto.randomUUID?crypto.randomUUID():(prefix||'id')+'_'+Date.now()+'_'+Math.random().toString(36).slice(2);}catch(e){return (prefix||'id')+'_'+Date.now();}}
-  function saveSafe(){try{if(typeof save==='function')save();}catch(e){}}
-  function renderSafe(){try{if(typeof render==='function')render();}catch(e){}}
   function info(t,m){try{if(typeof prettyInfo==='function')return prettyInfo(t,m,'Ok');}catch(e){} try{if(typeof openModal==='function')return openModal('<h3>'+esc(t||'Aviso')+'</h3><p class="muted">'+esc(m||'')+'</p><button class="btn" onclick="closeModal()">Ok</button>');}catch(e){} alert((t||'Aviso')+'\n'+(m||''));}
   function success(t,m){try{if(typeof openModal==='function')return openModal('<h3>✅ '+esc(t||'Pronto')+'</h3><p class="muted">'+esc(m||'')+'</p><div class="row wrap"><button class="btn" onclick="closeModal();try{setScreen(\'books\')}catch(e){}">Abrir Minha Leitura</button><button class="btn secondary" onclick="closeModal()">Continuar</button></div>');}catch(e){} return info(t,m);}
-  function isAdminUser(){try{return (typeof isAdmin==='function'&&isAdmin())||!!(data&&data.user&&/admin|owner|adm/i.test(String(data.user.role||'')))||String(data&&data.user&&data.user.email||'').toLowerCase()==='lucasviniciusfk@gmail.com';}catch(e){return false;}}
+  function num(v){v=Number(v||0); return Number.isFinite(v)?v:0;}
+  function now(){return new Date().toISOString();}
+  function uid(p){try{return crypto&&crypto.randomUUID?crypto.randomUUID():(p||'id')+'_'+Date.now()+'_'+Math.random().toString(36).slice(2);}catch(e){return (p||'id')+'_'+Date.now();}}
+  function saveSafe(){try{if(typeof save==='function')save();}catch(e){}}
+  function renderSafe(){try{if(typeof render==='function')render();}catch(e){}}
+  function isAdm(){try{return (typeof isAdmin==='function'&&isAdmin())||String(data&&data.user&&data.user.email||'').toLowerCase()==='lucasviniciusfk@gmail.com'||/admin|owner/i.test(String(data&&data.user&&data.user.role||''));}catch(e){return false;}}
   function isHttp(v){return /^https?:\/\//i.test(String(v||''));}
   function isData(v){return /^data:/i.test(String(v||''));}
-  function isLocal(v){var s=String(v||''); return s.indexOf('::')>=0||/^blob:/i.test(s)||/^data:/i.test(s);}
+  function isLocalKey(v){var s=String(v||''); return s.indexOf('::')>=0||/^blob:/i.test(s)||/^data:/i.test(s);}
   function publicUrl(path){
     path=String(path||'').trim();
-    if(!path || isLocal(path))return '';
+    if(!path||isLocalKey(path))return '';
     if(isHttp(path)||isData(path))return path;
     path=path.replace(/^r2:\/\//i,'').replace(/^\/+/, '').replace(/^entrelinhas\//i,'').replace(/^public\//i,'');
     return R2_BASE+encodeURI(path).replace(/%2F/g,'/');
   }
-  function fileNameFromUrl(url,fb){try{var p=String(url||'').split('?')[0].split('#')[0].split('/').pop(); return decodeURIComponent(p||fb||'livro.epub');}catch(e){return fb||'livro.epub';}}
   function safeFileName(n){return String(n||'livro.epub').split('?')[0].split('#')[0].replace(/[\\\/:*?"<>|]+/g,'_').replace(/\s+/g,' ').trim()||'livro.epub';}
+  function fileNameFromUrl(url,fb){try{var p=String(url||'').split('?')[0].split('#')[0].split('/').pop(); return safeFileName(decodeURIComponent(p||fb||'livro.epub'));}catch(e){return fb||'livro.epub';}}
   function parseDados(d){if(!d)return {}; if(typeof d==='string'){try{return JSON.parse(d);}catch(e){return {};}} return d||{};}
   function first(){for(var i=0;i<arguments.length;i++){var v=arguments[i]; if(v!==undefined&&v!==null&&String(v).trim()!=='')return v;} return '';}
-  function allEpubRaw(o){o=o||{}; var d=parseDados(o.dados); return first(o.epubStoragePath,o.epub_storage_path,o.epubStorageKey,o.epubRemoteUrl,o.epubUrl,o.epub_url,o.arquivo_url,o.url_epub,o.file_url,o.url,o.epub,o.storage_path,d.epubStoragePath,d.epub_storage_path,d.epubStorageKey,d.epubRemoteUrl,d.epubUrl,d.epub_url,d.arquivo_url,d.url_epub,d.file_url,d.url,d.epub,d.storage_path);}
-  function allCoverRaw(o){o=o||{}; var d=parseDados(o.dados); return first(o.cover,o.capa,o.capa_url,o.coverUrl,o.cover_url,o.livro_capa_url,d.cover,d.capa,d.capa_url,d.coverUrl,d.cover_url,d.livro_capa_url);}
-  function remoteEpub(o){return publicUrl(allEpubRaw(o));}
-  function remoteCover(o){var c=allCoverRaw(o); return publicUrl(c)||c||'';}
-  function getBooks(){try{return Array.isArray(data.books)?data.books:[];}catch(e){return [];}}
-  function bookById(id){id=String(id||''); return getBooks().find(function(b){return String(b.id)===id||String(b.onlinePersonalId||'')===id||String(b.personalOnlineId||'')===id||String(b.livroId||'')===id||String(b.livro_id||'')===id||String(b.personalFingerprint||'')===id;})||null;}
-  function getShelfRec(key){return (window.__entrelPublicShelfBooksV166||{})[key]||(window.__entrelPublicShelfBooksV165||{})[key]||(window.__entrelPublicShelfBooksV102||{})[key]||(window.__entrelPublicShelfBooksV170||{})[key]||(window.__entrelPublicShelfBooksV171||{})[key]||null;}
-  function bookIdPublic(book){var basis=String(book.sourceLivroId||book.livro_id||book.id||book.epub||book.title||'livro').replace(/\s+/g,'_').slice(0,160); return 'publica:'+String(book.ownerId||book.userId||'membro')+':'+basis;}
-  function bookIdClub(book){return 'clube:'+String(book.id||book.clubBookId||book.clube_livro_id||'atual');}
-  function normalizeAnyBook(o,owner){o=o||{}; var d=parseDados(o.dados); var epub=remoteEpub(o); var title=first(o.title,o.titulo,d.title,d.titulo,'Livro'); return {
-    id:String(first(o.id,d.id,o.livro_id,d.livro_id,uid('book'))), livro_id:first(o.livro_id,d.livro_id,d.fingerprint,''), ownerId:String(first(owner,o.usuario_id,o.userId,d.userId,'')), userId:String(first(owner,o.usuario_id,o.userId,d.userId,'')), title:title, author:first(o.author,o.autor,d.author,d.autor,'Autor não informado'), genre:first(o.genre,o.genero,d.genre,d.genero,'Outro'), pages:num(first(o.pages,o.paginas,o.paginas_total,d.pages,d.paginas,d.paginas_total,300))||300, currentPage:num(first(o.currentPage,o.pagina_atual,o.paginas_lidas,d.currentPage,d.pagina_atual,0)), status:first(o.status,d.status,'reading'), cover:remoteCover(o), epub:epub, fileName:first(o.epubFileName,o.nome_arquivo,d.epubFileName,d.fileName,fileNameFromUrl(epub,(title||'livro')+'.epub')), sourceLivroId:first(o.livro_id,d.livro_id,o.id,d.id,''), raw:o
-  };}
-  function toLocalBook(row, uidReal, extra){row=row||{}; extra=extra||{}; var d=parseDados(row.dados); var epub=remoteEpub(row)||remoteEpub(d)||extra.epub||''; var title=first(row.titulo,row.title,d.title,d.titulo,extra.title,'Livro'); var pages=num(first(row.paginas,row.paginas_total,row.pages,d.pages,d.paginas,d.paginas_total,extra.pages,300))||300; var pg=num(first(row.pagina_atual,row.paginas_lidas,row.currentPage,d.currentPage,d.pagina_atual,extra.currentPage,0)); var cover=remoteCover(row)||remoteCover(d)||extra.cover||''; var id=String(first(row.id,extra.id,uid('personal'))); var livroId=first(row.livro_id,d.livro_id,extra.livroId,'');
-    var b={id:id,onlinePersonalId:id,personalOnlineId:id,personalFingerprint:livroId,livroId:livroId,livro_id:livroId,userId:uidReal||row.usuario_id||extra.userId||'',title:title,author:first(row.autor,row.author,d.author,d.autor,extra.author,'Autor não informado'),genre:first(row.genero,row.genre,d.genre,d.genero,extra.genre,'Outro'),pages:pages,currentPage:pg,readerPage:pg,epubProgress:num(first(row.progresso,row.progress,d.progresso,d.progress,extra.epubProgress,0)),epubCfi:first(row.epub_cfi,row.epubCfi,d.epubCfi,extra.epubCfi,''),status:first(row.status,d.status,extra.status,'reading'),source:'epub',cover:cover,epubStoragePath:epub,epubStorageKey:epub,epubRemoteUrl:epub,epub_url:epub,epubFileName:first(row.nome_arquivo,d.epubFileName,d.fileName,extra.fileName,fileNameFromUrl(epub,title+'.epub')),syncedOnline:true,epubStored:false,updatedAt:Date.now()}; return fixBook(b);}
-  function fixBook(b){if(!b)return b; var e=remoteEpub(b)||remoteEpub(parseDados(b.dados)); if(e){b.epubStoragePath=e; b.epubStorageKey=e; b.epubRemoteUrl=e; b.epub_url=e; b.source='epub'; if(!b.epubFileName)b.epubFileName=fileNameFromUrl(e,(b.title||'livro')+'.epub');} var c=remoteCover(b)||remoteCover(parseDados(b.dados)); if(c)b.cover=c; return b;}
-  function mergeLocalBook(b){if(!b||!b.id)return; try{data.books=data.books||[]; data.books=data.books.filter(function(x){return String(x.id)!==String(b.id)&&String(x.onlinePersonalId||'')!==String(b.id)&&String(x.livroId||x.livro_id||'')!==String(b.livroId||b.livro_id||'');}); data.books.unshift(b); saveSafe();}catch(e){}}
-  function strip(o,keys){var x=Object.assign({},o); (keys||[]).forEach(function(k){delete x[k];}); return x;}
-  async function savePersonalRow(c,payload,existing){
-    var variants=[payload,strip(payload,['publico']),strip(payload,['capa']),strip(payload,['epub_storage_path','capa']),strip(payload,['dados']),strip(payload,['publico','epub_storage_path','capa','dados'])];
-    var last=null;
-    for(var i=0;i<variants.length;i++){
-      try{var v=variants[i]; var r=existing&&existing.id?await c.from('livros_pessoais').update(v).eq('id',existing.id).select().maybeSingle():await c.from('livros_pessoais').insert(v).select().maybeSingle(); if(!r.error)return r.data||Object.assign({},payload,{id:(existing&&existing.id)||payload.id}); last=r.error;}catch(e){last=e;}
+  function rawEpub(o){o=o||{}; var d=parseDados(o.dados); return first(o.epubStoragePath,o.epub_storage_path,o.epubRemoteUrl,o.epubUrl,o.epub_url,o.arquivo_url,o.url_epub,o.file_url,o.url,o.epub,o.storage_path,(!isLocalKey(o.epubStorageKey)?o.epubStorageKey:''),d.epubStoragePath,d.epub_storage_path,d.epubRemoteUrl,d.epubUrl,d.epub_url,d.arquivo_url,d.url_epub,d.file_url,d.url,d.epub,d.storage_path);}
+  function rawCover(o){o=o||{}; var d=parseDados(o.dados); return first(o.cover,o.capa,o.capa_url,o.coverUrl,o.cover_url,d.cover,d.capa,d.capa_url,d.coverUrl,d.cover_url);}
+  function remoteEpub(o){return publicUrl(rawEpub(o));}
+  function remoteCover(o){var c=rawCover(o); return publicUrl(c)||c||'';}
+  function booksArr(){try{return Array.isArray(data.books)?data.books:[];}catch(e){return [];}}
+  function bookIdLike(b){return String((b&&(b.livroId||b.livro_id||b.personalFingerprint||b.onlineLivroId||b.clubBookId))||'');}
+  function findLocalBook(id){id=String(id||''); return booksArr().find(function(b){return String(b.id)===id||String(b.onlinePersonalId||'')===id||String(b.personalOnlineId||'')===id||String(bookIdLike(b))===id;})||null;}
+  function fixBook(b,forceUid){
+    if(!b)return b;
+    var e=remoteEpub(b); if(e){b.epubStoragePath=e; b.epubRemoteUrl=e; b.epub_url=e; b.source='epub'; if(!b.epubFileName)b.epubFileName=fileNameFromUrl(e,(b.title||b.titulo||'livro')+'.epub');}
+    var c=remoteCover(b); if(c)b.cover=c;
+    if(forceUid)b.userId=forceUid;
+    return b;
+  }
+  function rowToBook(row,uidReal,extra){
+    row=row||{}; extra=extra||{}; var d=parseDados(row.dados); var epub=remoteEpub(row)||remoteEpub(d)||extra.epub||''; var title=first(row.titulo,row.title,d.title,d.titulo,extra.title,'Livro');
+    var id=String(first(row.id,extra.id,uid('personal'))); var livroId=first(row.livro_id,d.livro_id,extra.livroId,''); var pages=num(first(row.paginas,row.paginas_total,row.pages,d.pages,d.paginas,d.paginas_total,extra.pages,300))||300;
+    return fixBook({id:id,onlinePersonalId:id,personalOnlineId:id,personalFingerprint:livroId,livroId:livroId,livro_id:livroId,userId:uidReal||row.usuario_id||'',title:title,author:first(row.autor,row.author,d.author,d.autor,extra.author,'Autor não informado'),genre:first(row.genero,row.genre,d.genre,d.genero,extra.genre,'Outro'),pages:pages,currentPage:num(first(row.pagina_atual,row.currentPage,d.currentPage,d.pagina_atual,extra.currentPage,0)),readerPage:num(first(row.pagina_atual,row.readerPage,d.readerPage,extra.currentPage,0)),epubProgress:num(first(row.progresso,row.progress,d.progresso,d.progress,extra.epubProgress,0)),epubCfi:first(row.epub_cfi,row.epubCfi,d.epubCfi,extra.epubCfi,''),status:first(row.status,d.status,extra.status,'reading'),source:'epub',cover:remoteCover(row)||remoteCover(d)||extra.cover||'',epubStoragePath:epub,epubRemoteUrl:epub,epub_url:epub,epubFileName:first(row.nome_arquivo,d.epubFileName,d.fileName,extra.fileName,fileNameFromUrl(epub,title+'.epub')),syncedOnline:true,updatedAt:row.atualizado_em?new Date(row.atualizado_em).getTime():Date.now(),dados:d},uidReal);
+  }
+  function mergeBook(b){
+    if(!b||!b.id)return b; data.books=data.books||[]; var lid=bookIdLike(b), remote=remoteEpub(b);
+    var i=data.books.findIndex(function(x){return String(x.id)===String(b.id)||String(x.onlinePersonalId||'')===String(b.id)||String(bookIdLike(x))===String(lid)|| (remote&&String(remoteEpub(x))===String(remote));});
+    if(i>=0)data.books[i]=fixBook(Object.assign({},data.books[i],b),b.userId); else data.books.unshift(fixBook(b,b.userId));
+    saveSafe(); return i>=0?data.books[i]:data.books[0];
+  }
+  async function select(table,builder){try{var c=sb(); if(!c)return []; var q=c.from(table).select('*'); if(builder)q=builder(q); var r=await q; if(r.error)return []; return r.data||[];}catch(e){return [];}}
+  async function findPersonalRow(uidReal,id,b){
+    if(!uidReal)return null; var remote=b&&remoteEpub(b), lid=b&&bookIdLike(b); var ids=[id,b&&b.id,b&&b.onlinePersonalId,b&&b.personalOnlineId].filter(Boolean).map(String);
+    var rows=await select('livros_pessoais',function(q){return q.eq('usuario_id',uidReal).limit(1000);});
+    return rows.find(function(r){var re=remoteEpub(r); var d=parseDados(r.dados); return ids.indexOf(String(r.id))>=0 || (lid&&String(r.livro_id||d.livro_id||'')===String(lid)) || (remote&&re&&String(re)===String(remote));})||null;
+  }
+  async function sourceFromClub(id){
+    id=String(id||'').replace(/^clube:/,''); var rows=[];
+    if(id&&id!=='atual'&&id!=='current'){rows=await select('clube_biblioteca',function(q){return q.eq('id',id).limit(1);}); if(rows[0])return rows[0]; rows=await select('clube_livro_atual',function(q){return q.eq('id',id).limit(1);}); if(rows[0])return rows[0];}
+    rows=await select('clube_livro_atual',function(q){return q.eq('ativo',true).limit(1);}); return rows[0]||null;
+  }
+  async function sourceFromPublic(owner,sourceId,remote){
+    if(!owner&&!sourceId&&!remote)return null; var rows=[];
+    if(owner){rows=await select('livros_pessoais',function(q){return q.eq('usuario_id',owner).limit(1000);});}
+    else {rows=await select('livros_pessoais',function(q){return q.limit(1000);});}
+    return rows.find(function(r){var re=remoteEpub(r); return (sourceId&&String(r.id)===String(sourceId))||(sourceId&&String(r.livro_id||'')===String(sourceId))||(remote&&re&&String(re)===String(remote));})||null;
+  }
+  async function repairPersonalRow(row,uidReal,remote,cover,extra){
+    if(!row||!remote)return row; var c=sb(); if(!c)return row; var dados=Object.assign({},parseDados(row.dados),extra||{}, {source:'epub',epubUrl:remote,epub_url:remote,epub_storage_path:remote,cover:cover||remoteCover(row)||''});
+    var variants=[{epub_storage_path:remote,epub_url:remote,capa_url:cover||remoteCover(row)||'',capa:cover||remoteCover(row)||'',dados:dados,atualizado_em:now()},{epub_url:remote,capa_url:cover||'',dados:dados,atualizado_em:now()},{dados:dados,atualizado_em:now()}];
+    for(var i=0;i<variants.length;i++){try{var r=await c.from('livros_pessoais').update(variants[i]).eq('id',row.id).eq('usuario_id',uidReal).select().maybeSingle(); if(!r.error&&r.data)return r.data;}catch(e){}}
+    return Object.assign({},row,{epub_url:remote,epub_storage_path:remote,capa_url:cover||row.capa_url,dados:dados});
+  }
+  async function resolveBook(id){
+    var uidReal=await authId(); var b=findLocalBook(id); if(b)fixBook(b,uidReal||b.userId); var row=await findPersonalRow(uidReal,id,b); if(row){var rb=rowToBook(row,uidReal); if(!remoteEpub(b)&&remoteEpub(rb))b=mergeBook(rb); else if(b){Object.assign(b,rb,{id:b.id||rb.id}); fixBook(b,uidReal); mergeBook(b);}}
+    var remote=b&&remoteEpub(b); var cover=b&&remoteCover(b); var livroId=bookIdLike(b)||(row&&row.livro_id)||''; var d=parseDados((row&&row.dados)||(b&&b.dados));
+    if(!remote){
+      var src=null;
+      if(String(livroId).indexOf('clube:')===0 || d.clube_livro_id || d.origem==='clube'){src=await sourceFromClub(d.clube_livro_id||String(livroId).replace(/^clube:/,''));}
+      if(!src && (String(livroId).indexOf('publica:')===0 || d.sourceOwnerId || d.sourceBookId)){src=await sourceFromPublic(d.sourceOwnerId||'',d.sourceBookId||'',d.epubUrl||d.epub_url||'');}
+      if(src){remote=remoteEpub(src); cover=remoteCover(src)||cover; if(row)row=await repairPersonalRow(row,uidReal,remote,cover,{sourceBookId:src.id,sourceOwnerId:src.usuario_id||''}); b=mergeBook(rowToBook(row||src,uidReal,{id:(row&&row.id)||(b&&b.id)||uid('personal'),livroId:livroId||('origem:'+String(src.id)),epub:remote,cover:cover,title:src.titulo||src.title,author:src.autor||src.author,genre:src.genero||src.genre,pages:src.paginas||src.paginas_total||src.pages}));}
     }
-    throw last||new Error('Não consegui salvar o livro em livros_pessoais.');
+    return {book:b,row:row,uid:uidReal,remote:remoteEpub(b)||remote,cover:cover};
   }
-  async function selectRows(table, build){try{var c=sb(); if(!c)return []; var q=c.from(table).select('*'); if(build)q=build(q); var r=await q; if(r.error)return []; return r.data||[];}catch(e){return [];}}
-  async function findPersonalRow(uidReal,idOrLivro,book){
-    var c=sb(); if(!c||!uidReal)return null; var rows=[];
-    try{var r=await c.from('livros_pessoais').select('*').eq('usuario_id',uidReal).eq('id',idOrLivro).limit(1); if((r.data||[])[0])return r.data[0];}catch(e){}
-    try{var r2=await c.from('livros_pessoais').select('*').eq('usuario_id',uidReal).eq('livro_id',idOrLivro).limit(1); if((r2.data||[])[0])return r2.data[0];}catch(e){}
-    try{var r3=await c.from('livros_pessoais').select('*').eq('usuario_id',uidReal).limit(1000); rows=r3.data||[];}catch(e){rows=[];}
-    var title=String(book&&book.title||'').trim().toLowerCase(); var epub=remoteEpub(book||{});
-    return rows.find(function(x){var d=parseDados(x.dados); return String(x.id)===String(idOrLivro)||String(x.livro_id||d.livro_id||'')===String(idOrLivro)||String(remoteEpub(x))===String(epub)||(title&&String(x.titulo||d.title||'').trim().toLowerCase()===title);})||null;
-  }
-  async function findPublicSource(row){
-    row=row||{}; var d=parseDados(row.dados); var owner=first(d.dono_original_id,d.ownerId,row.dono_original_id,''); var pubId=first(d.livro_publico_id,d.publicBookId,d.livro_publico_livro_id,'');
-    var rows=[];
-    if(owner&&pubId){rows=await selectRows('livros_pessoais',function(q){return q.eq('usuario_id',owner).eq('id',pubId).limit(1);}); if(rows[0])return rows[0]; rows=await selectRows('livros_pessoais',function(q){return q.eq('usuario_id',owner).eq('livro_id',pubId).limit(1);}); if(rows[0])return rows[0];}
-    return null;
-  }
-  async function findClubSource(row){
-    row=row||{}; var d=parseDados(row.dados); var lid=first(d.clube_livro_id,row.clube_livro_id,''); var livro=String(first(row.livro_id,d.livro_id,'')); if(!lid&&livro.indexOf('clube:')===0)lid=livro.replace(/^clube:/,'');
-    var rows=[];
-    if(lid&&lid!=='atual'){rows=await selectRows('clube_biblioteca',function(q){return q.eq('id',lid).limit(1);}); if(rows[0])return rows[0]; rows=await selectRows('clube_livro_atual',function(q){return q.eq('id',lid).limit(1);}); if(rows[0])return rows[0];}
-    rows=await selectRows('clube_livro_atual',function(q){return q.eq('ativo',true).limit(1);}); if(rows[0]&&String(livro).indexOf('clube:')===0)return rows[0];
-    return null;
-  }
-  async function repairPersonalRowRemote(row,source){
-    var c=sb(); if(!c||!row||!row.id||!source)return row; var epub=remoteEpub(source), cover=remoteCover(source), d=Object.assign({},parseDados(row.dados),{reparado_v171:true,epubUrl:epub,epub_storage_path:epub,cover:cover}); if(!epub)return row;
-    var upd={epub_url:epub, epub_storage_path:epub, capa_url:cover||row.capa_url||row.capa||'', capa:cover||row.capa||row.capa_url||'', dados:d, atualizado_em:now(), ativo:true};
-    try{await c.from('livros_pessoais').update(upd).eq('id',row.id);}catch(e){try{await c.from('livros_pessoais').update(strip(upd,['capa','epub_storage_path','dados'])).eq('id',row.id);}catch(_){}}
-    return Object.assign({},row,upd);
-  }
-  async function resolveBookRemote(id,userId){
-    var uidReal=userId||await authId(); var b=bookById(id); if(b)fixBook(b); if(b&&remoteEpub(b))return b;
-    var row=await findPersonalRow(uidReal,id,b); if(row){
-      var source=null; if(!remoteEpub(row))source=await findClubSource(row)||await findPublicSource(row);
-      if(source&&remoteEpub(source))row=await repairPersonalRowRemote(row,source);
-      var local=toLocalBook(row,uidReal,b||{}); mergeLocalBook(local); return local;
-    }
-    return b||null;
-  }
-  async function fetchRemoteFile(url,name){
+  async function fetchFile(url,name){
     url=publicUrl(url); if(!url)throw new Error('URL do EPUB vazia.');
-    var res=await fetch(url,{cache:'force-cache',mode:'cors'});
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    var blob=await res.blob();
-    var fname=safeFileName(name||fileNameFromUrl(url,'livro.epub'));
-    try{return new File([blob],fname,{type:blob.type||'application/epub+zip'});}catch(e){blob.name=fname; return blob;}
-  }
-  async function getIndexedEpub(id,userId,b){
-    try{if(typeof openEpubDB!=='function')return null; var db=await openEpubDB(); var store=typeof EPUB_STORE_NAME!=='undefined'?EPUB_STORE_NAME:'epubs'; var keys=[]; try{if(typeof epubStorageKey==='function')keys.push(epubStorageKey(id,userId));}catch(e){} [id,b&&b.id,b&&b.onlinePersonalId,b&&b.personalOnlineId,b&&b.localEpubKey,b&&b.epubLocalKey].forEach(function(k){if(k&&!isHttp(k))keys.push(String(k));}); keys=keys.filter(Boolean).filter(function(v,i,a){return a.indexOf(v)===i;});
-      return await new Promise(function(resolve){try{var tx=db.transaction(store,'readonly'); var st=tx.objectStore(store); var done=false; function finish(v){if(done)return; done=true; try{db.close();}catch(e){} resolve(v&&v.blob?v:null);} (function next(i){if(i>=keys.length)return finish(null); var r=st.get(keys[i]); r.onsuccess=function(){if(r.result)finish(r.result); else next(i+1);}; r.onerror=function(){next(i+1);};})(0); tx.onerror=function(){finish(null);};}catch(e){try{db.close();}catch(_){} resolve(null);}});
-    }catch(e){return null;}
-  }
-  var prevGet=window.getEpubFile||(typeof getEpubFile==='function'?getEpubFile:null);
-  window.getEpubFile=async function(id,userId){
-    var uidReal=userId||await authId(); var b=await resolveBookRemote(id,uidReal); if(b)fixBook(b); var remote=b?remoteEpub(b):'';
-    if(remote){
-      var local=await getIndexedEpub(id,uidReal,b); if(local&&local.blob)return local;
-      try{
-        if(typeof prettyInfo==='function')prettyInfo('Baixando EPUB','O livro está online. Vou baixar do R2 para abrir neste aparelho.','Ok');
-        var file=await fetchRemoteFile(remote,(b&&b.epubFileName)||'livro.epub'); var savedKey='';
-        if(typeof saveEpubFile==='function'){
-          var ids=[id,b&&b.id,b&&b.onlinePersonalId,b&&b.personalOnlineId].filter(Boolean).filter(function(v,i,a){return a.indexOf(v)===i;});
-          for(var i=0;i<ids.length;i++){try{savedKey=await saveEpubFile(ids[i],file,uidReal);}catch(e){}}
-        }
-        if(b){b.epubStored=true; b.localEpubKey=savedKey||b.localEpubKey||''; b.epubStoragePath=remote; b.epubStorageKey=remote; b.epubRemoteUrl=remote; fixBook(b); mergeLocalBook(b);}
-        try{if(typeof closeModal==='function')closeModal();}catch(e){}
-        return {id:savedKey||id,bookId:id,userId:String(uidReal||''),name:file.name||((b&&b.title)||'livro')+'.epub',type:file.type||'application/epub+zip',blob:file,createdAt:Date.now()};
-      }catch(e){
-        console.error('v171 abrir EPUB R2',e);
-        try{if(typeof closeModal==='function')closeModal();}catch(_){ }
-        info('Não consegui abrir o EPUB online','O link do livro existe, mas o navegador não conseguiu ler o arquivo para o leitor interno. Detalhe: '+(e&&e.message?e.message:e));
-        return null;
-      }
+    var tries=[url];
+    // Fallback inocente: se o Worker tiver rota de proxy, usa; se não tiver, ignora.
+    tries.push(WORKER+'?url='+encodeURIComponent(url));
+    tries.push(WORKER+'/proxy?url='+encodeURIComponent(url));
+    var last=null;
+    for(var i=0;i<tries.length;i++){
+      try{var res=await fetch(tries[i],{cache:'force-cache',mode:'cors'}); if(res.ok){var blob=await res.blob(); var fname=safeFileName(name||fileNameFromUrl(url,'livro.epub')); try{return new File([blob],fname,{type:blob.type||'application/epub+zip'});}catch(e){blob.name=fname; return blob;}} last=new Error('HTTP '+res.status);}catch(e){last=e;}
     }
-    if(typeof prevGet==='function'){try{return await prevGet(id,userId);}catch(e){}}
+    throw last||new Error('Não foi possível baixar o EPUB.');
+  }
+  async function saveLocalCopies(id,file,userIds,b){
+    var keys=[]; function add(k){k=String(k||'').trim(); if(k&&keys.indexOf(k)<0&&!isHttp(k))keys.push(k);} add(id);
+    userIds.forEach(function(u){if(u)add(String(u)+'::'+String(id));});
+    [b&&b.id,b&&b.onlinePersonalId,b&&b.personalOnlineId].forEach(function(bid){if(bid){add(bid); userIds.forEach(function(u){if(u)add(String(u)+'::'+String(bid));});}});
+    [b&&b.epubStorageKey,b&&b.localEpubKey,b&&b.epubLocalKey].forEach(function(k){if(k&&!isHttp(k))add(k);});
+    var firstKey=keys.find(function(k){return k.indexOf('::')>0;})||keys[0]||id;
+    try{if(typeof openEpubDB==='function'){var db=await openEpubDB(); await new Promise(function(resolve,reject){try{var tx=db.transaction(typeof EPUB_STORE_NAME!=='undefined'?EPUB_STORE_NAME:'files','readwrite'); var st=tx.objectStore(typeof EPUB_STORE_NAME!=='undefined'?EPUB_STORE_NAME:'files'); keys.forEach(function(k){st.put({id:k,bookId:id,userId:String((userIds&&userIds[0])||''),name:file.name||'livro.epub',type:file.type||'application/epub+zip',blob:file,createdAt:Date.now()});}); tx.oncomplete=function(){try{db.close();}catch(e){} resolve();}; tx.onerror=function(){try{db.close();}catch(e){} reject(tx.error);};}catch(e){try{db.close();}catch(_){} reject(e);}});}}catch(e){console.warn('v172 IndexedDB direto',e);}
+    try{if(typeof saveEpubFile==='function'){for(var i=0;i<userIds.length;i++){try{await saveEpubFile(id,file,userIds[i]);}catch(e){}}}}catch(e){}
+    return firstKey;
+  }
+  async function ensureLocalEpub(id){
+    var r=await resolveBook(id); var b=r.book, uidReal=r.uid; var remote=r.remote||remoteEpub(b);
+    if(!b)throw new Error('Livro não encontrado na Minha Leitura.');
+    if(!remote)throw new Error('Este registro ainda não tem link EPUB online. Remova e adicione novamente pela Biblioteca com a versão v172.');
+    var userIds=[]; [uidReal,b.userId,localId(),'guest'].forEach(function(u){u=String(u||''); if(u&&userIds.indexOf(u)<0)userIds.push(u);});
+    try{
+      var file=await fetchFile(remote,b.epubFileName||fileNameFromUrl(remote,(b.title||'livro')+'.epub'));
+      var key=await saveLocalCopies(id,file,userIds,b);
+      b.userId=uidReal||b.userId; b.epubStoragePath=remote; b.epubRemoteUrl=remote; b.epub_url=remote; b.epubStorageKey=key; b.epubStored=true; b.source='epub'; mergeBook(b);
+      return {book:b,file:file,key:key,uid:uidReal,remote:remote};
+    }catch(e){
+      console.error('v172 ensureLocalEpub',e);
+      throw e;
+    }
+  }
+  var oldGet=window.getEpubFile||(typeof getEpubFile==='function'?getEpubFile:null);
+  window.getEpubFile=async function(id,userId){
+    var uidReal=await authId(); var b=findLocalBook(id); if(b)fixBook(b,uidReal||b.userId); var remote=b&&remoteEpub(b);
+    if(!remote){try{var r=await resolveBook(id); b=r.book; remote=r.remote;}catch(e){}}
+    if(remote){try{var ensured=await ensureLocalEpub(id); return {id:ensured.key,bookId:id,userId:String(ensured.uid||''),name:ensured.file.name||((ensured.book&&ensured.book.title)||'livro')+'.epub',type:ensured.file.type||'application/epub+zip',blob:ensured.file,createdAt:Date.now()};}catch(e){info('EPUB online não abriu','O livro tem link online, mas o navegador não conseguiu baixar para o leitor interno. O download direto pode funcionar. Detalhe: '+(e&&e.message?e.message:e)); return null;}}
+    if(typeof oldGet==='function'){try{return await oldGet(id,userId);}catch(e){}}
     return null;
   };
   try{getEpubFile=window.getEpubFile;}catch(e){}
 
   var oldOpen=window.openEpubReader||(typeof openEpubReader==='function'?openEpubReader:null);
-  if(typeof oldOpen==='function'){
-    window.openEpubReader=async function(id){
-      try{await resolveBookRemote(id,await authId());}catch(e){console.warn('v171 resolver antes de abrir',e);}
-      return oldOpen.apply(this,arguments);
-    };
-    try{openEpubReader=window.openEpubReader;}catch(e){}
-  }
+  window.openEpubReader=async function(id){
+    try{
+      var b=findLocalBook(id); var remote=b&&remoteEpub(b); if(!remote){try{var rr=await resolveBook(id); b=rr.book; remote=rr.remote;}catch(e){}}
+      if(remote){
+        try{if(typeof prettyInfo==='function')prettyInfo('Preparando EPUB','O livro está online. Vou baixar para este aparelho antes de abrir.','Ok');}catch(e){}
+        await ensureLocalEpub(id);
+        try{if(typeof closeModal==='function')closeModal();}catch(e){}
+      }
+    }catch(e){
+      try{if(typeof closeModal==='function')closeModal();}catch(_){ }
+      info('Não consegui preparar o EPUB','O livro foi encontrado, mas o app não conseguiu baixar o arquivo online para abrir no leitor. Detalhe: '+(e&&e.message?e.message:e));
+      return;
+    }
+    if(typeof oldOpen==='function')return oldOpen.apply(this,arguments);
+  };
+  try{openEpubReader=window.openEpubReader;}catch(e){}
 
-  async function fetchClubBook(id){
-    id=String(id||'').trim(); var rows=[];
-    if(id&&id!=='atual'&&id!=='current'){rows=await selectRows('clube_biblioteca',function(q){return q.eq('id',id).limit(1);}); if(rows[0])return normalizeAnyBook(rows[0]); rows=await selectRows('clube_livro_atual',function(q){return q.eq('id',id).limit(1);}); if(rows[0])return normalizeAnyBook(rows[0]);}
-    rows=await selectRows('clube_livro_atual',function(q){return q.eq('ativo',true).limit(1);}); if(rows[0])return normalizeAnyBook(rows[0]);
-    throw new Error('Livro do Clube não encontrado.');
+  async function savePersonal(payload,existing){
+    var c=sb(); if(!c)throw new Error('Supabase não carregou.'); var variants=[payload, Object.assign({},payload), Object.assign({},payload), Object.assign({},payload)];
+    delete variants[1].capa; delete variants[1].epub_storage_path;
+    delete variants[2].capa; delete variants[2].capa_url; delete variants[2].epub_storage_path;
+    delete variants[3].capa; delete variants[3].capa_url; delete variants[3].epub_storage_path; delete variants[3].epub_url;
+    var last=null; for(var i=0;i<variants.length;i++){try{var r=existing&&existing.id?await c.from('livros_pessoais').update(variants[i]).eq('id',existing.id).select().maybeSingle():await c.from('livros_pessoais').insert(variants[i]).select().maybeSingle(); if(!r.error)return r.data||Object.assign({},payload,{id:(existing&&existing.id)||payload.id}); last=r.error;}catch(e){last=e;}}
+    throw last||new Error('Não consegui salvar em livros_pessoais.');
   }
-  async function addBookToMyReading(book, origem){
-    var c=sb(); if(!c)throw new Error('Supabase não carregou.'); var uidReal=await authId(); if(!uidReal)throw new Error('Entre novamente antes de adicionar.');
-    book=normalizeAnyBook(book,book.ownerId||book.userId); if(!book.epub)throw new Error('Este livro não tem EPUB online salvo.');
-    var livroId=origem==='publica'?bookIdPublic(book):bookIdClub(book); var existing=await findPersonalRow(uidReal,livroId,book); var id=(existing&&existing.id)||uid('personal'); var pg=num(existing&&existing.pagina_atual); var prog=num(existing&&existing.progresso);
-    var dados=Object.assign({},parseDados(existing&&existing.dados),{origem:origem+'_v171',source:'epub',epubUrl:book.epub,epub_storage_path:book.epub,cover:book.cover,epubFileName:book.fileName,sourceBookId:book.id,sourceOwnerId:book.ownerId||book.userId||'',clube_livro_id:origem==='clube'?book.id:''});
-    var payload={id:id,usuario_id:uidReal,livro_id:livroId,titulo:book.title,autor:book.author,genero:book.genre,paginas:book.pages,capa:book.cover||'',capa_url:book.cover||'',epub_storage_path:book.epub,epub_url:book.epub,pagina_atual:pg,progresso:prog,epub_cfi:(existing&&existing.epub_cfi)||'',status:(existing&&existing.status)||'reading',ativo:true,publico:true,atualizado_em:now(),dados:dados};
-    var row=await savePersonalRow(c,payload,existing); var local=toLocalBook(row,uidReal,{livroId:livroId,title:book.title,author:book.author,genre:book.genre,pages:book.pages,cover:book.cover,epub:book.epub,fileName:book.fileName}); mergeLocalBook(local); renderSafe(); return {existing:!!existing,book:local};
+  function normalizeSourceBook(o,owner){o=o||{}; var d=parseDados(o.dados); var e=remoteEpub(o)||remoteEpub(d); var title=first(o.title,o.titulo,d.title,d.titulo,'Livro'); return {id:String(first(o.id,d.id,o.livro_id,d.livro_id,uid('src'))),ownerId:String(first(owner,o.usuario_id,o.userId,d.userId,'')),title:title,author:first(o.author,o.autor,d.author,d.autor,'Autor não informado'),genre:first(o.genre,o.genero,d.genre,d.genero,'Outro'),pages:num(first(o.pages,o.paginas,o.paginas_total,d.pages,d.paginas,d.paginas_total,300))||300,cover:remoteCover(o)||remoteCover(d),epub:e,fileName:first(o.nome_arquivo,o.epubFileName,d.epubFileName,d.fileName,fileNameFromUrl(e,title+'.epub'))};}
+  async function addSourceToMine(src,origem){
+    var uidReal=await authId(); if(!uidReal)throw new Error('Entre novamente antes de adicionar.'); src=normalizeSourceBook(src,src.ownerId); if(!src.epub)throw new Error('Este livro não tem EPUB online salvo.');
+    var livroId=origem==='publica'?'publica:'+String(src.ownerId||'membro')+':'+String(src.id):'clube:'+String(src.id);
+    var existing=await findPersonalRow(uidReal,livroId,{epubStoragePath:src.epub,livroId:livroId}); var id=(existing&&existing.id)||uid('personal'); var pg=num(existing&&existing.pagina_atual), prog=num(existing&&existing.progresso);
+    var dados=Object.assign({},parseDados(existing&&existing.dados),{origem:origem+'_v172',source:'epub',sourceBookId:src.id,sourceOwnerId:src.ownerId||'',clube_livro_id:origem==='clube'?src.id:'',epubUrl:src.epub,epub_url:src.epub,epub_storage_path:src.epub,cover:src.cover,epubFileName:src.fileName});
+    var payload={id:id,usuario_id:uidReal,livro_id:livroId,titulo:src.title,autor:src.author,genero:src.genre,paginas:src.pages,capa:src.cover||'',capa_url:src.cover||'',epub_storage_path:src.epub,epub_url:src.epub,nome_arquivo:src.fileName||fileNameFromUrl(src.epub,src.title+'.epub'),pagina_atual:pg,progresso:prog,epub_cfi:(existing&&existing.epub_cfi)||'',status:(existing&&existing.status)||'reading',ativo:true,publico:true,atualizado_em:now(),dados:dados};
+    var row=await savePersonal(payload,existing); var b=mergeBook(rowToBook(row,uidReal,{id:id,livroId:livroId,title:src.title,author:src.author,genre:src.genre,pages:src.pages,cover:src.cover,epub:src.epub,fileName:src.fileName})); return b;
   }
-  window.addClubBookToMyReadingV171=window.addClubBookToMyReadingV170=window.addClubBookToMyReadingV169=window.addClubBookToMyReadingV168=window.addClubBookToMyReadingV164=window.addClubBookToMyReadingV163=window.addClubBookToReadingV47=async function(id){
-    try{var b=await fetchClubBook(id); var r=await addBookToMyReading(b,'clube'); success(r.existing?'Livro restaurado':'Adicionado à Minha Leitura', r.existing?'O livro voltou com o progresso salvo.':'Agora ele foi salvo com o link R2 real e deve abrir mesmo sem estar no aparelho.');}
-    catch(e){console.error('v171 clube->minha leitura',e); info('Erro ao adicionar',e&&e.message?e.message:String(e));}
-  };
-  window.addPublicShelfBookToMyReadingV171=window.addPublicShelfBookToMyReadingV170=async function(key){
-    try{var rec=getShelfRec(key); if(!rec||!rec.book)throw new Error('Livro não encontrado na biblioteca pública carregada.'); var b=normalizeAnyBook(rec.book,rec.userId); if(!b.epub)throw new Error('Este livro público não tem EPUB online salvo.'); var r=await addBookToMyReading(b,'publica'); success(r.existing?'Livro restaurado':'Adicionado à Minha Leitura', r.existing?'O livro público voltou com o progresso salvo.':'O livro público foi salvo com o link R2 real na sua Minha Leitura.');}
-    catch(e){console.error('v171 pública->minha leitura',e); info('Erro ao adicionar',e&&e.message?e.message:String(e));}
-  };
-  function downloadDirect(url){url=publicUrl(url); if(!url)return info('Sem EPUB','Este livro não possui link de EPUB online.'); try{var w=window.open(url,'_blank','noopener,noreferrer'); if(!w)location.href=url;}catch(e){try{location.href=url;}catch(_){info('Link do EPUB','Copie e abra: '+url);}} return false;}
-  window.downloadPublicShelfBookV171=window.downloadPublicShelfBookV170=window.downloadPublicShelfBookV169=window.downloadPublicShelfBookV166=async function(key){var rec=getShelfRec(key); var b=rec&&normalizeAnyBook(rec.book,rec.userId); if(!b)return info('Download','Livro não encontrado.'); return downloadDirect(b.epub);};
-  window.openPublicShelfBookV171=window.openPublicShelfBookV170=window.openPublicShelfBookV169=window.openPublicShelfBookV166=window.openPublicShelfBookV165=window.openPublicShelfBookV102=function(key){
-    var rec=getShelfRec(key); if(!rec||!rec.book)return info('Livro','Não consegui abrir as informações deste livro.'); var b=normalizeAnyBook(rec.book,rec.userId); var pct=Math.max(0,Math.min(100,Math.round((num(b.currentPage)/Math.max(1,b.pages))*100))); var cover=b.cover?'<img src="'+attr(b.cover)+'" alt="Capa">':'📚';
-    var add=b.epub?'<button class="btn" onclick="addPublicShelfBookToMyReadingV171(\''+attr(key)+'\')">Adicionar à Minha Leitura</button>':''; var dl=b.epub?'<button class="btn secondary" onclick="downloadPublicShelfBookV171(\''+attr(key)+'\')">Baixar EPUB</button>':'<button class="btn secondary" disabled>Sem EPUB online</button>'; var admin=''; try{if(isAdminUser())admin='<button class="btn danger" onclick="adminRemovePublicShelfBookV166&&adminRemovePublicShelfBookV166(\''+attr(key)+'\')">Remover da biblioteca</button>';}catch(e){} var back=b.ownerId?'<button class="btn secondary" onclick="openPublicShelfV166&&openPublicShelfV166(\''+attr(b.ownerId)+'\')">Voltar</button>':'';
-    if(typeof openModal==='function')openModal('<div class="public-detail-v166"><h3>📖 '+esc(b.title)+'</h3><div class="public-detail-hero-v166"><div class="public-cover-v166">'+cover+'</div><div><strong>'+esc(b.title)+'</strong><p class="muted">'+esc(b.author)+'</p><p class="muted">'+esc(b.genre)+'</p></div></div><div class="public-meta-v166"><div><b>'+b.pages+'</b><span>Total de páginas</span></div><div><b>'+b.currentPage+'</b><span>Página atual</span></div><div><b>'+pct+'%</b><span>Progresso</span></div><div><b>'+esc(b.status)+'</b><span>Status</span></div></div><div class="public-actions-v166">'+add+dl+admin+back+'<button class="btn secondary" onclick="closeModal()">Fechar</button></div></div>');
-  };
-  console.info('EntreLinhas v171: resolver definitivo de EPUB R2 para Biblioteca Pública/Clube -> Minha Leitura.');
+  async function fetchClub(id){var src=await sourceFromClub(id||'atual'); if(!src)throw new Error('Livro do Clube não encontrado.'); return normalizeSourceBook(src);}
+  window.addClubBookToMyReadingV172=window.addClubBookToMyReadingV171=window.addClubBookToMyReadingV170=window.addClubBookToMyReadingV169=window.addClubBookToMyReadingV168=window.addClubBookToMyReadingV164=window.addClubBookToMyReadingV163=window.addClubBookToReadingV47=async function(id){try{var b=await addSourceToMine(await fetchClub(id),'clube'); success('Adicionado à Minha Leitura','Agora o livro foi salvo com link R2 e será baixado automaticamente quando abrir.');}catch(e){console.error('v172 clube->minha leitura',e); info('Erro ao adicionar',(e&&e.message)||String(e));}};
+  function shelfRec(key){return (window.__entrelPublicShelfBooksV166||{})[key]||(window.__entrelPublicShelfBooksV165||{})[key]||(window.__entrelPublicShelfBooksV102||{})[key]||(window.__entrelPublicShelfBooksV170||{})[key]||(window.__entrelPublicShelfBooksV171||{})[key]||{};}
+  window.addPublicShelfBookToMyReadingV172=window.addPublicShelfBookToMyReadingV171=window.addPublicShelfBookToMyReadingV170=async function(key){try{var rec=shelfRec(key); if(!rec.book)throw new Error('Livro não encontrado na biblioteca pública carregada.'); var src=normalizeSourceBook(rec.book,rec.userId); if(!src.epub)throw new Error('Este livro público não tem EPUB online salvo.'); await addSourceToMine(src,'publica'); success('Adicionado à Minha Leitura','O livro público foi salvo com o link R2 real. Ao abrir, ele baixa automaticamente para o aparelho.');}catch(e){console.error('v172 pública->minha leitura',e); info('Erro ao adicionar',(e&&e.message)||String(e));}};
+  function downloadDirect(url){url=publicUrl(url); if(!url)return info('Sem EPUB','Este livro não tem link EPUB online.'); try{var w=window.open(url,'_blank','noopener,noreferrer'); if(!w)location.href=url;}catch(e){location.href=url;} return false;}
+  window.downloadPublicShelfBookV172=window.downloadPublicShelfBookV171=window.downloadPublicShelfBookV170=window.downloadPublicShelfBookV169=window.downloadPublicShelfBookV166=async function(key){var rec=shelfRec(key); var src=rec.book&&normalizeSourceBook(rec.book,rec.userId); if(!src||!src.epub)return info('Download','Livro sem EPUB online.'); return downloadDirect(src.epub);};
+  window.openPublicShelfBookV172=window.openPublicShelfBookV171=window.openPublicShelfBookV170=window.openPublicShelfBookV169=window.openPublicShelfBookV166=window.openPublicShelfBookV165=window.openPublicShelfBookV102=function(key){var rec=shelfRec(key); if(!rec.book)return info('Livro','Não consegui abrir as informações deste livro.'); var b=normalizeSourceBook(rec.book,rec.userId); var cover=b.cover?'<img src="'+attr(b.cover)+'" alt="Capa">':'📚'; var add=b.epub?'<button class="btn" onclick="addPublicShelfBookToMyReadingV172(\''+attr(key)+'\')">Adicionar à Minha Leitura</button>':''; var dl=b.epub?'<button class="btn secondary" onclick="downloadPublicShelfBookV172(\''+attr(key)+'\')">Baixar EPUB</button>':'<button class="btn secondary" disabled>Sem EPUB online</button>'; var admin=''; try{if(isAdm())admin='<button class="btn danger" onclick="adminRemovePublicShelfBookV166&&adminRemovePublicShelfBookV166(\''+attr(key)+'\')">Remover da biblioteca</button>';}catch(e){} var back=rec.userId?'<button class="btn secondary" onclick="openPublicShelfV166&&openPublicShelfV166(\''+attr(rec.userId)+'\')">Voltar</button>':''; try{openModal('<div class="public-detail-v166"><h3>📖 '+esc(b.title)+'</h3><div class="public-detail-hero-v166"><div class="public-cover-v166">'+cover+'</div><div><strong>'+esc(b.title)+'</strong><p class="muted">'+esc(b.author)+'</p><p class="muted">'+esc(b.genre)+'</p></div></div><div class="public-meta-v166"><div><b>'+num(b.pages)+'</b><span>Total de páginas</span></div><div><b>EPUB</b><span>Arquivo online</span></div></div><div class="public-actions-v166">'+add+dl+admin+back+'<button class="btn secondary" onclick="closeModal()">Fechar</button></div></div>');}catch(e){}}
+  var oldSet=window.setScreen; if(typeof oldSet==='function'&&!oldSet.__v172R2Open){window.setScreen=function(){booksArr().forEach(function(b){fixBook(b);}); var r=oldSet.apply(this,arguments); setTimeout(function(){booksArr().forEach(function(b){fixBook(b);}); saveSafe();},80); return r;}; window.setScreen.__v172R2Open=true; try{setScreen=window.setScreen;}catch(e){}}
+  setTimeout(function(){booksArr().forEach(function(b){fixBook(b);}); saveSafe();},700);
+  console.info('EntreLinhas v172: Biblioteca Pública/Clube -> Minha Leitura com EPUB R2 salvo e pré-baixado antes de abrir.');
 })();
 </script>
 
