@@ -1,5 +1,4 @@
-```js
-const CACHE_NAME = 'entrelinhas-pwa-v243-push';
+const CACHE_NAME = 'entrelinhas-pwa-v244-push-safe';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,45 +9,59 @@ const APP_SHELL = [
   './maskable-512.png'
 ];
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', function(event) {
   self.skipWaiting();
 
   event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => cache.addAll(APP_SHELL).catch(() => undefined))
+    caches.open(CACHE_NAME).then(function(cache) {
+      return cache.addAll(APP_SHELL).catch(function() {
+        return undefined;
+      });
+    })
   );
 });
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil((async () => {
-    const keys = await caches.keys();
+self.addEventListener('activate', function(event) {
+  event.waitUntil((async function() {
+    var keys = await caches.keys();
 
     await Promise.all(
       keys
-        .filter((key) => key !== CACHE_NAME && key.startsWith('entrelinhas-pwa-'))
-        .map((key) => caches.delete(key))
+        .filter(function(key) {
+          return key !== CACHE_NAME && key.indexOf('entrelinhas-pwa-') === 0;
+        })
+        .map(function(key) {
+          return caches.delete(key);
+        })
     );
 
     await self.clients.claim();
   })());
 });
 
-self.addEventListener('fetch', (event) => {
-  const req = event.request;
-  const url = new URL(req.url);
+self.addEventListener('fetch', function(event) {
+  var req = event.request;
+  var url;
+
+  try {
+    url = new URL(req.url);
+  } catch (e) {
+    return;
+  }
 
   if (req.method !== 'GET') return;
-  if (url.hostname.includes('supabase.co')) return;
+  if (url.hostname.indexOf('supabase.co') !== -1) return;
   if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
 
   if (req.mode === 'navigate') {
-    event.respondWith((async () => {
+    event.respondWith((async function() {
       try {
-        const fresh = await fetch(req, { cache: 'no-store' });
-        const cache = await caches.open(CACHE_NAME);
+        var fresh = await fetch(req, { cache: 'no-store' });
+        var cache = await caches.open(CACHE_NAME);
 
-        cache.put('./index.html', fresh.clone()).catch(() => undefined);
+        cache.put('./index.html', fresh.clone()).catch(function() {
+          return undefined;
+        });
 
         return fresh;
       } catch (e) {
@@ -59,16 +72,18 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  event.respondWith((async () => {
-    const cached = await caches.match(req);
+  event.respondWith((async function() {
+    var cached = await caches.match(req);
 
     if (cached) return cached;
 
     try {
-      const fresh = await fetch(req);
-      const cache = await caches.open(CACHE_NAME);
+      var fresh = await fetch(req);
+      var cache = await caches.open(CACHE_NAME);
 
-      cache.put(req, fresh.clone()).catch(() => undefined);
+      cache.put(req, fresh.clone()).catch(function() {
+        return undefined;
+      });
 
       return fresh;
     } catch (e) {
@@ -77,34 +92,33 @@ self.addEventListener('fetch', (event) => {
   })());
 });
 
-/* =========================================================
-   EntreLinhas v243 - Push Notifications PWA
-   Mantém o cache antigo e adiciona notificações push.
-   ========================================================= */
+/* EntreLinhas - Push Notifications PWA */
 
 function normalizeNotificationUrl(rawUrl) {
-  const fallbackScope = self.registration && self.registration.scope
-    ? self.registration.scope
-    : './';
+  var fallbackScope = './';
+
+  try {
+    if (self.registration && self.registration.scope) {
+      fallbackScope = self.registration.scope;
+    }
+  } catch (e) {
+    fallbackScope = './';
+  }
 
   if (!rawUrl) return fallbackScope;
 
   try {
-    const text = String(rawUrl);
+    var text = String(rawUrl);
 
-    if (text.startsWith('http://') || text.startsWith('https://')) {
+    if (text.indexOf('http://') === 0 || text.indexOf('https://') === 0) {
       return text;
     }
 
-    /*
-      Se vier "/?open=chat", em GitHub Pages isso poderia abrir a raiz do domínio.
-      Aqui corrigimos para abrir dentro do escopo real do app.
-    */
-    if (text.startsWith('/?')) {
-      return fallbackScope.replace(/\/$/, '') + text.slice(1);
+    if (text.indexOf('/?') === 0) {
+      return fallbackScope.replace(/\/$/, '') + text.substring(1);
     }
 
-    if (text.startsWith('?')) {
+    if (text.indexOf('?') === 0) {
       return fallbackScope.replace(/\/$/, '') + '/' + text;
     }
 
@@ -114,41 +128,41 @@ function normalizeNotificationUrl(rawUrl) {
   }
 }
 
-self.addEventListener('push', (event) => {
-  let payload = {};
+self.addEventListener('push', function(event) {
+  var payload = {};
 
   try {
-    payload = event.data ? event.data.json() : {};
+    if (event.data) {
+      payload = event.data.json();
+    }
   } catch (e) {
     try {
       payload = {
         title: 'EntreLinhas',
         body: event.data ? event.data.text() : 'Você recebeu uma nova notificação.'
       };
-    } catch (_) {
+    } catch (ignore) {
       payload = {};
     }
   }
 
-  const title = payload.title || 'EntreLinhas';
-  const body = payload.body || 'Você recebeu uma nova notificação.';
+  var title = payload.title || 'EntreLinhas';
+  var body = payload.body || 'Você recebeu uma nova notificação.';
+  var data = payload.data || {};
 
-  const targetUrl = normalizeNotificationUrl(
-    payload.url ||
-    payload?.data?.url ||
-    './'
-  );
+  var targetUrl = normalizeNotificationUrl(payload.url || data.url || './');
 
-  const options = {
-    body,
+  var options = {
+    body: body,
     icon: payload.icon || './icon-192.png',
     badge: payload.badge || './icon-192.png',
     tag: payload.tag || 'entrelines-notification',
     renotify: true,
     vibrate: [120, 60, 120],
     data: {
-      ...(payload.data || {}),
-      url: targetUrl
+      url: targetUrl,
+      type: data.type || payload.type || 'generic',
+      id: data.id || payload.id || null
     }
   };
 
@@ -157,23 +171,33 @@ self.addEventListener('push', (event) => {
   );
 });
 
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
-  const targetUrl = normalizeNotificationUrl(
-    event.notification?.data?.url || './'
-  );
+  var url = './';
 
-  event.waitUntil((async () => {
-    const windowClients = await clients.matchAll({
+  try {
+    if (event.notification && event.notification.data && event.notification.data.url) {
+      url = event.notification.data.url;
+    }
+  } catch (e) {
+    url = './';
+  }
+
+  var targetUrl = normalizeNotificationUrl(url);
+
+  event.waitUntil((async function() {
+    var windowClients = await clients.matchAll({
       type: 'window',
       includeUncontrolled: true
     });
 
-    for (const client of windowClients) {
+    for (var i = 0; i < windowClients.length; i++) {
+      var client = windowClients[i];
+
       try {
-        const clientUrl = new URL(client.url);
-        const target = new URL(targetUrl);
+        var clientUrl = new URL(client.url);
+        var target = new URL(targetUrl);
 
         if (clientUrl.origin === target.origin) {
           await client.focus();
@@ -185,7 +209,7 @@ self.addEventListener('notificationclick', (event) => {
           return;
         }
       } catch (e) {
-        // Ignora cliente inválido e tenta abrir novo.
+        // tenta o próximo cliente
       }
     }
 
@@ -193,7 +217,6 @@ self.addEventListener('notificationclick', (event) => {
   })());
 });
 
-self.addEventListener('notificationclose', () => {
-  // Reservado para métricas futuras, sem fazer nada agora.
+self.addEventListener('notificationclose', function() {
+  // reservado para métricas futuras
 });
-```
