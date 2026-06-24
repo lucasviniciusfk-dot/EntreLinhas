@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#e86f9d">
+  <title>EntreLinhas — Sem conexão</title>
+  <style>
+    :root{color-scheme:light dark;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    *{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;padding:24px;background:linear-gradient(160deg,#fff7fa,#f8e9f2);color:#4a2438}
+    main{width:min(440px,100%);text-align:center;background:rgba(255,255,255,.9);border:1px solid rgba(214,78,136,.16);border-radius:30px;padding:28px;box-shadow:0 22px 60px rgba(124,46,82,.14)}
+    img{width:112px;height:112px;border-radius:28px;display:block;margin:0 auto 18px}h1{font-size:1.45rem;margin:0 0 8px}p{line-height:1.55;color:#7d596b;margin:0 0 20px}.status{font-size:.82rem;font-weight:800;color:#b33e72;margin-bottom:14px}
+    button{appearance:none;border:0;border-radius:999px;min-height:46px;padding:0 22px;background:linear-gradient(135deg,#e65b98,#c84c85);color:#fff;font-weight:900;font-size:.95rem;cursor:pointer}
+    small{display:block;margin-top:16px;color:#937284;line-height:1.45}
+    @media(prefers-color-scheme:dark){body{background:linear-gradient(160deg,#2d1f29,#1e171d);color:#ffe9f3}main{background:rgba(45,31,41,.96);border-color:rgba(255,255,255,.08)}p,small{color:#d7bac8}.status{color:#ff9bc4}}
+  </style>
+</head>
+<body>
+  <main>
+    <img src="./icon-192.png" alt="Ícone do EntreLinhas">
+    <h1>Você está sem conexão</h1>
+    <p>O EntreLinhas continuará usando os dados que já estiverem disponíveis neste aparelho. Algumas atualizações online precisarão aguardar a internet voltar.</p>
+    <div class="status" id="status">Modo offline</div>
+    <button type="button" onclick="location.reload()">Tentar novamente</button>
+    <small>Não feche o aplicativo durante uma sincronização pendente.</small>
+  </main>
+  <script>
+    function update(){var el=document.getElementById('status');if(navigator.onLine){el.textContent='Conexão restabelecida';setTimeout(function(){location.reload()},700)}else el.textContent='Modo offline'}
+    addEventListener('online',update);addEventListener('offline',update);update();
+  </script>
+</body>
+</html>
