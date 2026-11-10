@@ -104,3 +104,14 @@ As tabelas do clube, chat, mural, ranking e administração possuem regras difer
 - `POST /api/v1/rewards/daily-epub`: concede 20 XP e 10 pontos para meta diária EPUB elegível, com claim idempotente em `entrel_reward_claims_v510`. O usuário é derivado do token Supabase Auth.
 - O cliente isolado expõe `progress.monthly(period)` e `rewards.awardDailyEpub(date)`. Os testes de contrato validam datas e formatos inválidos.
 - A consulta SQL principal da contagem mensal foi executada somente para um identificador sintético inexistente no D1 de staging; retornou zero, sem escrita. Isso valida sintaxe, não validação funcional ponta a ponta.
+
+## Revisão administrativa de solicitações (staging)
+
+- `GET /api/v1/admin/requests`: lista solicitações por status e pagina com limite máximo; exige `is_admin`, `admin_principal` ou o e-mail administrativo legado já previsto nas RPCs.
+- `POST /api/v1/admin/requests/reject`: recusa solicitação pendente, registra motivo, revisor e horário; não altera solicitações já aprovadas/recusadas.
+- `POST /api/v1/admin/requests/approve-book-finish`: aprova finalização de livro pessoal, resolve o livro do próprio usuário, atualiza `livros_pessoais` e `leituras`, e aplica recompensa idempotente via `entrel_reward_claims_v510`.
+- O cliente expõe `admin.listRequests`, `admin.rejectRequest` e `admin.approveBookFinish`.
+- A autorização usa o perfil do administrador obtido no D1 após validar o token Supabase Auth. O ID do usuário beneficiário vem exclusivamente da solicitação armazenada, nunca do corpo enviado pelo cliente.
+- Não foi implementada nesta etapa a aprovação do Livro do Clube nem recompensas semanais/mensais. Elas têm regras específicas de ciclo/período e não devem ser tratadas como finalização de livro pessoal.
+- A lista e as ações não foram executadas contra dados reais; apenas o código e os contratos foram adicionados à branch de staging.
+- Correção adicional: removida a referência a `epub_url` em consultas/insert de livros pessoais porque essa coluna não existe no esquema D1 de staging; o insert foi alinhado aos 20 campos reais.
