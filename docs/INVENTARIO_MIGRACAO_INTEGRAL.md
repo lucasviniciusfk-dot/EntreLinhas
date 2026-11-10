@@ -89,3 +89,10 @@ As tabelas do clube, chat, mural, ranking e administração possuem regras difer
 - A migração dos registros divergentes entre Supabase e D1 exige plano de reconciliação e autorização específica antes de copiar dados.
 - O deploy do Worker staging mais recente está pendente por bloqueio da ferramenta; não contornar esse bloqueio.
 - Não publicar, mesclar PR, alterar main, GitHub Pages ou recursos de produção durante a preparação.
+
+## Sinais adicionais encontrados no código
+
+- Foram identificadas **20 chamadas a RPC** do Supabase. Seus nomes, argumentos e efeitos precisam ser inventariados antes de substituição; não podem ser traduzidas automaticamente para SQL.
+- Foram encontradas chamadas de upload no Storage e muitas chamadas a remoção de arquivos. A contagem textual de .remove inclui métodos encadeados e não equivale a exclusões confirmadas.
+- O padrão de acesso é misto: SELECT, INSERT, UPDATE, UPSERT e DELETE aparecem nos domínios principais. A compatibilidade precisa preservar filtros, retornos de linhas, ordenação e semântica de conflito do PostgREST.
+- O código da fila offline v348 guarda URLs REST Supabase e faz replay. A camada v400 trata consolidação de progresso de leitura; a camada de mídia v349 mantém jobs separados. Essas estruturas devem ser preservadas e migradas por adaptadores.
