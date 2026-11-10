@@ -67,6 +67,19 @@ assert.equal(typeof rewards.awardDailyEpub, 'function');
 assert.throws(() => rewards.awardDailyEpub('09/11/2026'), /Data inválida/);
 assert.throws(() => rewards.awardDailyEpub('2026-99-99'), /Data inválida/);
 
+const chat = window.EntreLinhasCloudflare.chat;
+assert.equal(typeof chat.list, 'function');
+assert.equal(typeof chat.send, 'function');
+assert.equal(typeof chat.edit, 'function');
+assert.equal(typeof chat.remove, 'function');
+assert.equal(typeof chat.setReaction, 'function');
+assert.equal(typeof chat.removeReaction, 'function');
+assert.throws(() => chat.send('   '), /Mensagem obrigatória/);
+assert.throws(() => chat.edit('', 'texto'), /ID obrigatório/);
+assert.throws(() => chat.remove(''), /ID obrigatório/);
+assert.throws(() => chat.setReaction('msg-1', ''), /Emoji obrigatório/);
+assert.throws(() => chat.removeReaction(''), /ID obrigatório/);
+
 const notifications = window.EntreLinhasCloudflare.notifications;
 assert.equal(typeof notifications.list, 'function');
 assert.equal(typeof notifications.markRead, 'function');
