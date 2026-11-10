@@ -29,6 +29,8 @@ assert.equal(newBook.status, 'reading');
 
 const partialPatch = map.toApiBookPatch({ author: 'Novo nome' });
 assert.deepEqual(JSON.parse(JSON.stringify(partialPatch)), { author: 'Novo nome' });
+const progressPatch = map.toApiBookPatch({ currentPage: 44, epubCfi: 'epubcfi(/6/8)', status: 'reading' });
+assert.deepEqual(JSON.parse(JSON.stringify(progressPatch)), { current_page: 44, epub_cfi: 'epubcfi(/6/8)', status: 'reading' });
 assert.deepEqual(JSON.parse(JSON.stringify(map.toApiBookPatch({ pages: 410, cover: '' }))), {
   pages: 410, cover_url: ''
 });
