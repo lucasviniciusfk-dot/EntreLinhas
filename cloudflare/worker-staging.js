@@ -21,6 +21,46 @@ export default {async fetch(request,env){
  const url=new URL(request.url);if(url.pathname==="/health"&&request.method==="GET"){let d1=false;try{const x=await env.DB.prepare("SELECT 1 AS ok").first();d1=!!x&&x.ok===1;}catch(_){}const authReady=!!env.SUPABASE_URL&&!!env.SUPABASE_PUBLISHABLE_KEY;return json({ok:d1&&!!env.FILES&&authReady,environment:"staging",service:"entrelinhas-api-staging",bindings:{d1,r2:!!env.FILES,authConfig:authReady},readRoutesEnabled:true,writeRoutesEnabled:true},200,headers);}
  if(!url.pathname.startsWith("/api/v1/"))return json({ok:false,error:"Not found"},404,headers);
  const access=await requireUser(request,env,headers);if(access.response)return access.response;const uid=access.user.id;
+ // Arquivos privados: o proprietário vem exclusivamente da sessão validada.
+ const fileRoute=url.pathname.match(/^\\/api\\/v1\\/files\\/([^/]+)$/);
+ if(request.method==="POST"&&url.pathname==="/api/v1/files/upload"){
+  try{
+   const form=await request.formData(),file=form.get("file"),rawType=String(form.get("tipo")||"").toLowerCase();
+   const categories={"epub":"epub","capa":"cover","cover":"cover","avatar":"avatar","foto-encontro":"club-photo","club-photo":"club-photo","comprovante":"receipt","receipt":"receipt"};
+   const category=categories[rawType];
+   if(!category||!(file instanceof File))return json({ok:false,error:"Arquivo ou categoria inválida."},400,headers);
+   const mime=String(file.type||"application/octet-stream").toLowerCase();
+   const allowed={"epub":["application/epub+zip","application/octet-stream"],"cover":["image/jpeg","image/png","image/webp"],"avatar":["image/jpeg","image/png","image/webp"],"club-photo":["image/jpeg","image/png","image/webp"],"receipt":["image/jpeg","image/png","image/webp","application/pdf"]};
+   const max=category==="epub"?25*1024*1024:category==="receipt"?10*1024*1024:5*1024*1024;
+   if(!allowed[category].includes(mime))return json({ok:false,error:"Tipo de arquivo não permitido."},415,headers);
+   if(file.size<1||file.size>max)return json({ok:false,error:"Tamanho do arquivo fora do limite permitido."},413,headers);
+   const id=crypto.randomUUID(),stamp=new Date().toISOString(),safeName=String(file.name||"arquivo").replace(/[^a-zA-Z0-9._-]/g,"_").slice(-120)||"arquivo";
+   const key=uid+"/"+category+"/"+id;
+   await env.FILES.put(key,file.stream(),{httpMetadata:{contentType:mime},customMetadata:{ownerId:uid,category:category,assetId:id}});
+   try{
+    await env.DB.prepare("INSERT INTO file_assets (id,owner_id,object_key,category,original_name,content_type,size_bytes,created_at) VALUES (?,?,?,?,?,?,?,?)").bind(id,uid,key,category,safeName,mime,file.size,stamp).run();
+   }catch(e){await env.FILES.delete(key);throw e;}
+   return json({ok:true,file:{id:id,category:category,name:safeName,content_type:mime,size_bytes:file.size,created_at:stamp}},201,headers);
+  }catch(e){return json({ok:false,error:"Não foi possível armazenar o arquivo no staging."},500,headers);}
+ }
+ if(fileRoute&&request.method==="GET"){
+  try{
+   const id=decodeURIComponent(fileRoute[1]),asset=await env.DB.prepare("SELECT id,owner_id,object_key,content_type,original_name,size_bytes FROM file_assets WHERE id=? AND owner_id=? AND deleted_at IS NULL LIMIT 1").bind(id,uid).first();
+   if(!asset)return json({ok:false,error:"Arquivo não encontrado."},404,headers);
+   const object=await env.FILES.get(asset.object_key);if(!object)return json({ok:false,error:"Arquivo indisponível no armazenamento."},404,headers);
+   const outHeaders=new Headers(headers);outHeaders.set("Content-Type",asset.content_type);outHeaders.set("Content-Length",String(asset.size_bytes));outHeaders.set("Content-Disposition",'inline; filename="'+asset.original_name.replace(/["\\\\\\r\\n]/g,"_")+'"');outHeaders.set("Cache-Control","private, no-store");outHeaders.set("X-Content-Type-Options","nosniff");
+   return new Response(object.body,{status:200,headers:outHeaders});
+  }catch(e){return json({ok:false,error:"Não foi possível recuperar o arquivo."},500,headers);}
+ }
+ if(fileRoute&&request.method==="DELETE"){
+  try{
+   const id=decodeURIComponent(fileRoute[1]),asset=await env.DB.prepare("SELECT id,object_key FROM file_assets WHERE id=? AND owner_id=? AND deleted_at IS NULL LIMIT 1").bind(id,uid).first();
+   if(!asset)return json({ok:false,error:"Arquivo não encontrado."},404,headers);
+   await env.FILES.delete(asset.object_key);
+   await env.DB.prepare("UPDATE file_assets SET deleted_at=? WHERE id=? AND owner_id=?").bind(new Date().toISOString(),id,uid).run();
+   return json({ok:true,deleted:true,id:id},200,headers);
+  }catch(e){return json({ok:false,error:"Não foi possível remover o arquivo."},500,headers);}
+ }
  try{
   if(request.method==="GET"&&url.pathname==="/api/v1/me"){const p=await env.DB.prepare("SELECT id,nome,email,foto_url,bio,livro_favorito,nivel,xp,paginas_lidas,livros_finalizados,sequencia_dias,moldura_ativa,perfil_privado,biblioteca_publica,moldura_atual,criado_em,estado FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();return json({ok:true,user:{id:uid,email:access.user.email||p.email},profile:p},200,headers);}
   if(request.method==="GET"&&url.pathname==="/api/v1/library/books"){const limit=clampInt(url.searchParams.get("limit"),200,1,500),cursor=url.searchParams.get("before");const r=await env.DB.prepare("SELECT * FROM livros_pessoais WHERE usuario_id=? AND COALESCE(ativo,1)=1 AND (? IS NULL OR atualizado_em < ?) ORDER BY atualizado_em DESC LIMIT ?").bind(uid,cursor,cursor,limit).all();return json({ok:true,items:r.results||[],count:(r.results||[]).length,limit},200,headers);}
