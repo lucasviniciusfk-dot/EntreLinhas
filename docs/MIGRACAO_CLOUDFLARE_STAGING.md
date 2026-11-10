@@ -23,6 +23,7 @@ Não alterar o Worker/R2 de produção, o schema/dados/Auth do Supabase, a branc
 - O Worker staging responde em `/health` e confirma bindings D1, R2 e configuração de Auth.
 - Rotas existentes no Worker: `/api/v1/me`, biblioteca pessoal (lista, consulta individual, criação, atualização e desativação), leituras, metas, desafios e arquivos privados (conjunto inicial).
 - Criação e atualização de livros contemplam página atual, progresso, posição EPUB e status; a atualização também sincroniza a tabela `leituras` no mesmo batch D1.
+- As rotas de criação/edição/salvamento de leitura rejeitam páginas negativas ou acima do total; a edição também rejeita reduzir o total de páginas abaixo da posição atual, evitando truncamento silencioso do progresso.
 - O frontend ainda faz chamadas diretas ao Supabase PostgREST em vários módulos.
 - A fila offline `entrel_offline_v348` guarda operações REST endereçadas ao host Supabase. Não trocar sua URL sem uma camada de compatibilidade e replay testada.
 - Upload legado envia FormData (`file`, `tipo`, `userId`, `albumId`) ao Worker antigo e espera URL pública. O novo bucket é privado; o novo contrato deve usar identificadores de arquivo e leitura autenticada. O servidor deve derivar o proprietário do token validado, nunca confiar no `userId` do formulário.
