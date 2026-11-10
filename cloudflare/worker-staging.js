@@ -207,6 +207,19 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    const upd=await env.DB.prepare("UPDATE solicitacoes_validacao SET status='rejected',dados=json_set(COALESCE(dados,'{}'),'$.v507_rejected',true,'$.v507_rejected_at',?,'$.v507_reject_reason',?),resposta_admin=?,revisado_por=?,revisado_em=?,atualizado_em=? WHERE id=? AND lower(COALESCE(status,'pending')) NOT IN ('approved','aprovado','aprovada','rejected','recusado','recusada')").bind(stamp,reason,reason,uid,stamp,stamp,requestId).run();
    return json({ok:true,applied:Number(upd.meta&&upd.meta.changes)>0,status:"rejected"},200,headers);
   }
+  if(url.pathname==="/api/v1/club/finish-request"&&request.method==="POST"){
+   const b=await readBody(request),cycle=validText(b.cycle_id,160,"Identificador do ciclo",true);
+   const participant=await env.DB.prepare("SELECT id,recompensa_recebida FROM clube_livro_participantes WHERE usuario_id=? AND ciclo_id=? ORDER BY atualizado_em DESC LIMIT 1").bind(uid,cycle).first();
+   if(!participant)return json({ok:false,error:"Sua participação neste ciclo não foi localizada."},404,headers);
+   if(Number(participant.recompensa_recebida)===1)return json({ok:true,already_rewarded:true,participant_id:participant.id,cycle_id:cycle},200,headers);
+   const existing=await env.DB.prepare("SELECT id FROM solicitacoes_validacao WHERE usuario_id=? AND lower(COALESCE(status,'pending')) IN ('pending','processing','pendente','processando') AND (lower(COALESCE(origem,'')) LIKE '%livro do clube%' OR COALESCE(json_extract(dados,'$.request_kind'),'')='club_finish' OR COALESCE(json_extract(dados,'$.tipo_validacao'),'')='club_finish') AND COALESCE(json_extract(dados,'$.cycle_id'),'')=? ORDER BY created_at DESC LIMIT 1").bind(uid,cycle).first();
+   if(existing)return json({ok:true,already_pending:true,request_id:existing.id,participant_id:participant.id,cycle_id:cycle},200,headers);
+   const book=await env.DB.prepare("SELECT titulo,autor,paginas_total,xp_recompensa,pontos_recompensa FROM clube_livro_atual WHERE id='atual' LIMIT 1").first();
+   if(!book)return json({ok:false,error:"Livro do Clube atual não encontrado."},404,headers);
+   const user=await env.DB.prepare("SELECT nome,email FROM usuarios WHERE id=? LIMIT 1").bind(uid).first(),name=String(user&&user.nome||user&&user.email&&user.email.split("@")[0]||"Membro"),id=crypto.randomUUID(),stamp=new Date().toISOString(),pages=Math.max(0,Number(book.paginas_total)||0),xp=Math.max(0,Number(book.xp_recompensa==null?25:book.xp_recompensa)||0),points=Math.max(0,Number(book.pontos_recompensa==null?10:book.pontos_recompensa)||0);
+   await env.DB.prepare("INSERT INTO solicitacoes_validacao(id,usuario_id,usuario_nome,tipo,status,origem,livro,paginas,resenha,xp,pontos,dados,created_at,updated_at,criado_em,atualizado_em) VALUES(?,?,?,'finish','pending','Finalização do Livro do Clube',?,?,?, ?,?,?, ?,?,?,?)").bind(id,uid,name,String(book.titulo||"Livro do Clube"),pages,"Finalização do Livro do Clube enviada para aprovação.",xp,points,JSON.stringify({request_kind:"club_finish",tipo_validacao:"club_finish",participant_id:participant.id,clube_participante_id:participant.id,cycle_id:cycle,club_book_id:"atual",club_book_title:String(book.titulo||"Livro do Clube"),club_book_author:String(book.autor||""),v511:true}),stamp,stamp,stamp,stamp).run();
+   return json({ok:true,request_id:id,participant_id:participant.id,cycle_id:cycle,status:"pending"},201,headers);
+  }
   if(url.pathname==="/api/v1/admin/requests/approve-club-finish"&&request.method==="POST"){
    if(!isAdmin)return json({ok:false,error:"Acesso administrativo não confirmado."},403,headers);
    const b=await readBody(request),requestId=validText(b.request_id,128,"ID da solicitação",true),reason=validText(b.reason||"Finalização do Livro do Clube aprovada.",1000,"Motivo");
