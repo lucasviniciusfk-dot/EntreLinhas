@@ -115,3 +115,14 @@ As tabelas do clube, chat, mural, ranking e administração possuem regras difer
 - Não foi implementada nesta etapa a aprovação do Livro do Clube nem recompensas semanais/mensais. Elas têm regras específicas de ciclo/período e não devem ser tratadas como finalização de livro pessoal.
 - A lista e as ações não foram executadas contra dados reais; apenas o código e os contratos foram adicionados à branch de staging.
 - Correção adicional: removida a referência a `epub_url` em consultas/insert de livros pessoais porque essa coluna não existe no esquema D1 de staging; o insert foi alinhado aos 20 campos reais.
+
+## Aprovação do Livro do Clube por ciclo
+
+- `POST /api/v1/admin/requests/approve-club-finish`: operação administrativa específica para pedidos de finalização do Livro do Clube.
+- Exige `cycle_id` no JSON da solicitação; pedidos antigos sem ciclo retornam erro de validação, seguindo o comportamento da RPC v511.
+- Confirma o participante pelo trio participante/usuário/ciclo; se o participante informado não corresponder, procura o participante do mesmo usuário e ciclo, como na RPC.
+- Lê recompensa e total de páginas do registro `clube_livro_atual`; usa fallback para os valores da solicitação e os padrões da função original.
+- A recompensa usa a chave idempotente `clubfinish:<ciclo>:<usuário>` e a tabela `entrel_reward_claims_v510`. Atualiza XP/pontos somente quando o claim ainda não foi aplicado.
+- Atualiza o participante para finalizado, 100% e recompensa recebida, e marca a solicitação como aprovada com os metadados v511.
+- Cliente: `admin.approveClubFinish(requestId, reason)`.
+- Não foi chamada em pedidos reais nem testada via Worker HTTP; a implementação permanece apenas na branch de staging.
