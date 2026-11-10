@@ -96,3 +96,11 @@ As tabelas do clube, chat, mural, ranking e administração possuem regras difer
 - Foram encontradas chamadas de upload no Storage e muitas chamadas a remoção de arquivos. A contagem textual de .remove inclui métodos encadeados e não equivale a exclusões confirmadas.
 - O padrão de acesso é misto: SELECT, INSERT, UPDATE, UPSERT e DELETE aparecem nos domínios principais. A compatibilidade precisa preservar filtros, retornos de linhas, ordenação e semântica de conflito do PostgREST.
 - O código da fila offline v348 guarda URLs REST Supabase e faz replay. A camada v400 trata consolidação de progresso de leitura; a camada de mídia v349 mantém jobs separados. Essas estruturas devem ser preservadas e migradas por adaptadores.
+
+
+## Endpoints acrescentados nesta etapa
+
+- `GET /api/v1/progress/monthly?period=AAAA-MM`: calcula o progresso mensal do próprio usuário autenticado. Reproduz os três modos identificados na RPC `entrel_verified_monthly_progress_v512`: soma de páginas, meta manual (zero verificado) ou contagem distinta de livros/solicitações aprovadas. Filtra registros internos de recompensa e exige marcadores de aprovação para contagem de livros.
+- `POST /api/v1/rewards/daily-epub`: concede 20 XP e 10 pontos para meta diária EPUB elegível, com claim idempotente em `entrel_reward_claims_v510`. O usuário é derivado do token Supabase Auth.
+- O cliente isolado expõe `progress.monthly(period)` e `rewards.awardDailyEpub(date)`. Os testes de contrato validam datas e formatos inválidos.
+- A consulta SQL principal da contagem mensal foi executada somente para um identificador sintético inexistente no D1 de staging; retornou zero, sem escrita. Isso valida sintaxe, não validação funcional ponta a ponta.
