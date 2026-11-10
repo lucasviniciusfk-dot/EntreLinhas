@@ -108,9 +108,21 @@
     request: request,
     me: function () { return request('/api/v1/me'); },
     library: Object.freeze({
+      listPage: async function (options) {
+        options = options || {};
+        var query = new URLSearchParams();
+        if (options.limit !== undefined) query.set('limit', String(options.limit));
+        if (options.before && options.beforeId) {
+          query.set('before', String(options.before));
+          query.set('before_id', String(options.beforeId));
+        }
+        var suffix = query.toString();
+        var result = await request('/api/v1/library/books' + (suffix ? '?' + suffix : ''));
+        return { items: (result && result.items || []).map(fromApiBook), count: Number(result && result.count) || 0, limit: Number(result && result.limit) || 0, nextCursor: result && result.nextCursor || null };
+      },
       list: async function () {
-        var result = await request('/api/v1/library/books');
-        return (result && result.items || []).map(fromApiBook);
+        var page = await api.library.listPage();
+        return page.items;
       },
       get: async function (bookId) {
         var result = await request('/api/v1/library/books/' + id(bookId));
