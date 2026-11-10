@@ -62,6 +62,7 @@ document.getElementById("f").addEventListener("submit",async function(ev){
  }
  if(!url.pathname.startsWith("/api/v1/"))return json({ok:false,error:"Not found"},404,headers);
  const access=await requireUser(request,env,headers);if(access.response)return access.response;const uid=access.user.id;
+ const isAdmin=Number(access.profile.is_admin)===1||Number(access.profile.admin_principal)===1||String(access.user.email||"").toLowerCase()==="lucasviniciusfk@gmail.com";
 
  // Recompensas periódicas: replica as regras v507/v512, com identidade derivada da sessão.
  if(url.pathname==="/api/v1/rewards/period"&&request.method==="POST"){
@@ -252,7 +253,7 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    return json({ok:true,period,type:kind,current:Math.max(0,current)},200,headers);
   }
   // Solicitações administrativas: apenas contas explicitamente marcadas como admin.
-  const isAdmin=Number(access.profile.is_admin)===1||Number(access.profile.admin_principal)===1||String(access.user.email||"").toLowerCase()==="lucasviniciusfk@gmail.com";
+
   if(url.pathname==="/api/v1/admin/requests"&&request.method==="GET"){
    if(!isAdmin)return json({ok:false,error:"Acesso administrativo não confirmado."},403,headers);
    const limit=clampInt(url.searchParams.get("limit"),100,1,200),status=String(url.searchParams.get("status")||"pending").toLowerCase();
