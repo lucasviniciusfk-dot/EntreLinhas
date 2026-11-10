@@ -142,7 +142,7 @@ Contagens são ocorrências aproximadas de .from('nome') no HTML; incluem opera�
 - Os objetos de origem incluem 33 arquivos de zero bytes; também foram preservados no destino com o mesmo ETag.
 - Nenhum objeto foi alterado ou removido no bucket legado `entrelinhas`.
 - Nenhuma linha D1 foi modificada durante a cópia.
-- Próximos passos da Etapa 2: resolver as 13 chaves referenciadas mas ausentes e popular as tabelas auxiliares somente com associações verificadas; testar download/controle de acesso pelo Worker.
+- Próximos passos da Etapa 2: resolver as 14 chaves referenciadas mas ausentes e popular as tabelas auxiliares somente com associações verificadas; testar download/controle de acesso pelo Worker.
 
 
 ### Atualização de reconciliação de metadados R2 — 10/11/2026
@@ -156,3 +156,14 @@ Contagens são ocorrências aproximadas de .from('nome') no HTML; incluem opera�
 
 ### Próximo bloqueio de Etapa 3
 - O Worker já tem rotas e middleware, e o CI local do cliente/Worker passou. A migração do frontend não pode ser marcada como feita enquanto `index.html` não carregar `cloudflare-api-client.js` e os módulos não chamarem os endpoints. A validação real da sessão Google/Supabase Auth e o teste HTTP autenticado continuam pendentes.
+
+
+### Auditoria complementar — 10/11/2026 (continuação)
+- [x] Recontagem atual da origem Supabase e D1 staging: 48/48 tabelas de negócio correspondentes, 9.347 registros em cada banco e contagens idênticas por tabela.
+- [x] Comparação de estrutura: nomes de colunas e chaves primárias coincidem nas 48 tabelas.
+- [x] `PRAGMA foreign_key_check` repetido no D1: zero violações.
+- [x] Comparação detalhada de `usuarios`: identificada divergência real em um registro (XP 6.530→6.550, pontos 3.910→3.920 e `atualizado_em` de 09/11 para 10/11). Correção condicional aplicada somente à linha/valores esperados no D1 staging e conferida por nova leitura.
+- [ ] Comparação campo a campo das outras 47 tabelas ainda não concluída. Diferenças de representação de booleanos (Postgres boolean vs SQLite 0/1) e formatação de timestamp precisam ser normalizadas antes de classificar como divergência real.
+- [ ] Etapa 2 continua bloqueada pelos 14 caminhos históricos sem objeto correspondente, pelas 45 fotos sem proprietário comprovável e pelo teste autenticado de download/permissões do Worker.
+- [ ] Etapa 3 continua bloqueada pela integração do cliente Cloudflare ao frontend, teste real de sessão Supabase Auth e testes funcionais completos. O arquivo `index.html` permanece íntegro e não foi regravado parcialmente.
+- Segurança: a correção foi limitada ao D1 de staging. Nenhuma escrita foi feita no Supabase, nos buckets de produção, na branch principal ou no GitHub Pages.
