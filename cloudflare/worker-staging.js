@@ -304,6 +304,39 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    const rows=await env.DB.prepare("SELECT id,album_id,url,storage_path,usuario_id,usuario_nome,ativo,criado_em,foto_url,origem_arquivo FROM clube_fotos WHERE album_id=? AND COALESCE(ativo,1)=1 ORDER BY criado_em DESC,id DESC LIMIT ?").bind(albumId,limit).all();
    return json({ok:true,album_id:albumId,locked:Number(album.trancado)===1,items:rows.results||[],count:(rows.results||[]).length,limit},200,headers);
   }
+  const clubPhotoContentRoute=url.pathname.match(/^\\/api\\/v1\\/club\\/albums\\/photos\\/([^/]+)\\/content$/);
+  if(clubPhotoContentRoute&&request.method==="GET"){
+   const photoId=decodeURIComponent(clubPhotoContentRoute[1]);
+   const photo=await env.DB.prepare("SELECT f.id,f.storage_path,f.origem_arquivo FROM clube_fotos f JOIN clube_albuns a ON a.id=f.album_id WHERE f.id=? AND COALESCE(f.ativo,1)=1 AND COALESCE(a.ativo,1)=1 LIMIT 1").bind(photoId).first();
+   if(!photo||photo.origem_arquivo!=="r2-private-v1"||!photo.storage_path)return json({ok:false,error:"Foto não encontrada."},404,headers);
+   const asset=await env.DB.prepare("SELECT object_key,content_type,original_name,size_bytes FROM file_assets WHERE id=? AND deleted_at IS NULL LIMIT 1").bind(photo.storage_path).first();
+   if(!asset)return json({ok:false,error:"Arquivo da foto indisponível."},404,headers);
+   const object=await env.FILES.get(asset.object_key);if(!object)return json({ok:false,error:"Arquivo da foto indisponível no R2."},404,headers);
+   const outHeaders=new Headers(headers);outHeaders.set("Content-Type",asset.content_type);outHeaders.set("Content-Length",String(asset.size_bytes));outHeaders.set("Content-Disposition","inline; filename=\\""+String(asset.original_name||"foto").replace(/["\\\\\\r\\n]/g,"_")+"\\"");outHeaders.set("Cache-Control","private, no-store");outHeaders.set("X-Content-Type-Options","nosniff");
+   return new Response(object.body,{status:200,headers:outHeaders});
+  }
+  if(url.pathname==="/api/v1/club/albums/photos"&&request.method==="POST"){
+   if(!isAdmin)return json({ok:false,error:"Somente a administração pode adicionar fotos ao álbum."},403,headers);
+   const body=await readBody(request),albumId=validText(body.album_id,128,"Álbum",true),fileId=validText(body.file_id,128,"Arquivo",true);
+   const album=await env.DB.prepare("SELECT id FROM clube_albuns WHERE id=? AND COALESCE(ativo,1)=1 LIMIT 1").bind(albumId).first();
+   if(!album)return json({ok:false,error:"Álbum não encontrado."},404,headers);
+   const asset=await env.DB.prepare("SELECT id,category FROM file_assets WHERE id=? AND owner_id=? AND deleted_at IS NULL LIMIT 1").bind(fileId,uid).first();
+   if(!asset||asset.category!=="club-photo")return json({ok:false,error:"Envie primeiro uma foto válida para o armazenamento privado do Clube."},404,headers);
+   const existing=await env.DB.prepare("SELECT id FROM clube_fotos WHERE storage_path=? AND origem_arquivo='r2-private-v1' AND COALESCE(ativo,1)=1 LIMIT 1").bind(fileId).first();
+   if(existing)return json({ok:true,already_attached:true,photo_id:existing.id},200,headers);
+   const user=await env.DB.prepare("SELECT nome FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();
+   const photoId=crypto.randomUUID(),stamp=new Date().toISOString(),name=String(user&&user.nome||access.user.email||"Admin");
+   await env.DB.prepare("INSERT INTO clube_fotos(id,album_id,url,storage_path,usuario_id,usuario_nome,ativo,criado_em,foto_url,origem_arquivo) VALUES(?,?,?,?,?,?,1,?,?,?)").bind(photoId,albumId,"private://"+fileId,fileId,uid,name,stamp,"private://"+fileId,"r2-private-v1").run();
+   return json({ok:true,photo:{id:photoId,album_id:albumId,image_url:"/api/v1/club/albums/photos/"+encodeURIComponent(photoId)+"/content",created_at:stamp}},201,headers);
+  }
+  const clubPhotoRoute=url.pathname.match(/^\\/api\\/v1\\/club\\/albums\\/photos\\/([^/]+)$/);
+  if(clubPhotoRoute&&request.method==="DELETE"){
+   if(!isAdmin)return json({ok:false,error:"Somente a administração pode remover fotos do álbum."},403,headers);
+   const photoId=decodeURIComponent(clubPhotoRoute[1]),stamp=new Date().toISOString();
+   const result=await env.DB.prepare("UPDATE clube_fotos SET ativo=0 WHERE id=? AND COALESCE(ativo,1)=1").bind(photoId).run();
+   if(!result.meta||result.meta.changes!==1)return json({ok:false,error:"Foto não encontrada."},404,headers);
+   return json({ok:true,removed:true,id:photoId,removed_at:stamp},200,headers);
+  }
   if(url.pathname==="/api/v1/club/finish-request"&&request.method==="POST"){
    const b=await readBody(request),cycle=validText(b.cycle_id,160,"Identificador do ciclo",true);
    const participant=await env.DB.prepare("SELECT id,recompensa_recebida FROM clube_livro_participantes WHERE usuario_id=? AND ciclo_id=? ORDER BY atualizado_em DESC LIMIT 1").bind(uid,cycle).first();
