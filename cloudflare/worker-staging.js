@@ -290,6 +290,20 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    const upd=await env.DB.prepare("UPDATE solicitacoes_validacao SET status='rejected',dados=json_set(COALESCE(dados,'{}'),'$.v507_rejected',true,'$.v507_rejected_at',?,'$.v507_reject_reason',?),resposta_admin=?,revisado_por=?,revisado_em=?,atualizado_em=? WHERE id=? AND lower(COALESCE(status,'pending')) NOT IN ('approved','aprovado','aprovada','rejected','recusado','recusada')").bind(stamp,reason,reason,uid,stamp,stamp,requestId).run();
    return json({ok:true,applied:Number(upd.meta&&upd.meta.changes)>0,status:"rejected"},200,headers);
   }
+  // Biblioteca de encontros do clube: leitura autenticada, sem expor registros inativos.
+  if(request.method==="GET"&&url.pathname==="/api/v1/club/albums"){
+   const limit=clampInt(url.searchParams.get("limit"),100,1,200);
+   const rows=await env.DB.prepare("SELECT id,nome,data_encontro,local_encontro,livro_titulo,livro_autor,livro_capa_url,dinamicas,capa_url,trancado,ativo,criado_por,criado_em,atualizado_em FROM clube_albuns WHERE COALESCE(ativo,1)=1 ORDER BY COALESCE(data_encontro,criado_em) DESC,id DESC LIMIT ?").bind(limit).all();
+   return json({ok:true,items:rows.results||[],count:(rows.results||[]).length,limit},200,headers);
+  }
+  if(request.method==="GET"&&url.pathname==="/api/v1/club/albums/photos"){
+   const albumId=validText(url.searchParams.get("album_id"),128,"Álbum",true);
+   const album=await env.DB.prepare("SELECT id,trancado FROM clube_albuns WHERE id=? AND COALESCE(ativo,1)=1 LIMIT 1").bind(albumId).first();
+   if(!album)return json({ok:false,error:"Álbum não encontrado."},404,headers);
+   const limit=clampInt(url.searchParams.get("limit"),200,1,300);
+   const rows=await env.DB.prepare("SELECT id,album_id,url,storage_path,usuario_id,usuario_nome,ativo,criado_em,foto_url,origem_arquivo FROM clube_fotos WHERE album_id=? AND COALESCE(ativo,1)=1 ORDER BY criado_em DESC,id DESC LIMIT ?").bind(albumId,limit).all();
+   return json({ok:true,album_id:albumId,locked:Number(album.trancado)===1,items:rows.results||[],count:(rows.results||[]).length,limit},200,headers);
+  }
   if(url.pathname==="/api/v1/club/finish-request"&&request.method==="POST"){
    const b=await readBody(request),cycle=validText(b.cycle_id,160,"Identificador do ciclo",true);
    const participant=await env.DB.prepare("SELECT id,recompensa_recebida FROM clube_livro_participantes WHERE usuario_id=? AND ciclo_id=? ORDER BY atualizado_em DESC LIMIT 1").bind(uid,cycle).first();
