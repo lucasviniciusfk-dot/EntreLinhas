@@ -114,7 +114,31 @@
       }
     }),
     goals: Object.freeze({ list: function () { return request('/api/v1/goals'); } }),
-    challenges: Object.freeze({ list: function () { return request('/api/v1/challenges'); } }),
+    files: Object.freeze({
+      upload: function (file, category, albumId) {
+        var form = new FormData();
+        form.append("file", file);
+        form.append("tipo", category);
+        if (albumId) form.append("albumId", String(albumId));
+        return request("/api/v1/files/upload", { method: "POST", body: form });
+      },
+      download: async function (fileId) {
+        var headers = new Headers({ Authorization: "Bearer " + await token() });
+        var response = await fetch(BASE + "/api/v1/files/" + id(fileId), {
+          method: "GET", headers: headers, cache: "no-store", credentials: "omit"
+        });
+        if (!response.ok) {
+          var message = "Falha ao baixar arquivo (HTTP " + response.status + ").";
+          try { var data = await response.json(); message = data.error || message; } catch (_) {}
+          var error = new Error(message); error.status = response.status; throw error;
+        }
+        return response.blob();
+      },
+      remove: function (fileId) {
+        return request("/api/v1/files/" + id(fileId), { method: "DELETE" });
+      }
+    }),
+    challenges: Object.freeze({ list: function () { return request("/api/v1/challenges"); } }),
     mapping: Object.freeze({ toApiBook: toApiBook, fromApiBook: fromApiBook })
   });
   Object.defineProperty(root, 'EntreLinhasCloudflare', {
