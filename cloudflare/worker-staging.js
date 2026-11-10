@@ -66,7 +66,7 @@ document.getElementById("f").addEventListener("submit",async function(ev){
  if(url.pathname==="/api/v1/rewards/daily-epub"&&request.method==="POST"){
   try{
    const body=await readBody(request),day=validText(body.date,10,"Data",true);
-   if(!/^\d{4}-\d{2}-\d{2}$/.test(day)||Number.isNaN(Date.parse(day+"T00:00:00Z")))return json({ok:false,error:"Data inválida."},400,headers);
+   if(!/^\d{4}-\d{2}-\d{2}$/.test(day)||Number.isNaN(Date.parse(day+"T00:00:00Z"))||new Date(day+"T00:00:00Z").toISOString().slice(0,10)!==day)return json({ok:false,error:"Data inválida."},400,headers);
    const goal=await env.DB.prepare("SELECT paginas_lidas,concluida,recompensada,origem FROM metas_diarias WHERE usuario_id=? AND data=? LIMIT 1").bind(uid,day).first();
    if(!goal)return json({ok:false,applied:false,reason:"meta_not_found"},200,headers);
    const pages=Number(goal.paginas_lidas)||0,done=goal.concluida===1||goal.concluida===true||pages>=20,origin=String(goal.origem||"");
