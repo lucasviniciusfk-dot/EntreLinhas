@@ -117,14 +117,14 @@ assert.throws(() => club.submitFinishRequest(''), /Identificador do ciclo obriga
 const clubAlbums = window.EntreLinhasCloudflare.clubAlbums;
 assert.equal(typeof clubAlbums.list, 'function');
 assert.equal(typeof clubAlbums.listPhotos, 'function');
-assert.throws(() => clubAlbums.listPhotos('', {}), /Identificador do álbum obrigatório/);
+assert.rejects(() => clubAlbums.listPhotos('', {}), /Identificador do álbum obrigatório/);
 
 const clubPhotoApi = window.EntreLinhasCloudflare.clubAlbums;
 assert.equal(typeof clubPhotoApi.addPhoto, 'function');
 assert.equal(typeof clubPhotoApi.downloadPhoto, 'function');
 assert.equal(typeof clubPhotoApi.removePhoto, 'function');
-assert.throws(() => clubPhotoApi.addPhoto('', {}), /Identificador do álbum obrigatório/);
-assert.throws(() => clubPhotoApi.downloadPhoto(''), /ID obrigatório/);
+assert.rejects(() => clubPhotoApi.addPhoto('', {}), /Identificador do álbum obrigatório/);
+assert.rejects(() => clubPhotoApi.downloadPhoto(''), /ID obrigatório/);
 assert.throws(() => clubPhotoApi.removePhoto(''), /ID obrigatório/);
 
 assert.equal(typeof clubPhotoApi.create, 'function');
