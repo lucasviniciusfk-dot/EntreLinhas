@@ -113,3 +113,8 @@ assert.throws(() => admin.approveBookFinish('', 'motivo'), /ID da solicitação 
 const club = window.EntreLinhasCloudflare.club;
 assert.equal(typeof club.submitFinishRequest, 'function');
 assert.throws(() => club.submitFinishRequest(''), /Identificador do ciclo obrigatório/);
+
+const clubAlbums = window.EntreLinhasCloudflare.clubAlbums;
+assert.equal(typeof clubAlbums.list, 'function');
+assert.equal(typeof clubAlbums.listPhotos, 'function');
+assert.throws(() => clubAlbums.listPhotos('', {}), /Identificador do álbum obrigatório/);
