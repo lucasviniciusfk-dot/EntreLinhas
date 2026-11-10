@@ -355,7 +355,7 @@
     goals: Object.freeze({ list: function () { return request('/api/v1/goals'); } }),
     progress: Object.freeze({
       monthly: function (period) {
-        if (typeof period !== 'string' || !/^\\d{4}-\\d{2}$/.test(period) || Number.isNaN(Date.parse(period + '-01T00:00:00Z')) || new Date(period + '-01T00:00:00Z').toISOString().slice(0, 7) !== period) throw new TypeError('Período mensal inválido.');
+        if (typeof period !== 'string' || !/^\d{4}-\d{2}$/.test(period) || Number.isNaN(Date.parse(period + '-01T00:00:00Z')) || new Date(period + '-01T00:00:00Z').toISOString().slice(0, 7) !== period) throw new TypeError('Período mensal inválido.');
         return request('/api/v1/progress/monthly?period=' + encodeURIComponent(period));
       }
     }),
@@ -363,8 +363,8 @@
       awardPeriodGoal: function (kind, periodKey, current, target, xp, points) {
         if (kind !== 'weekly' && kind !== 'monthly') throw new TypeError('Tipo de meta periódica inválido.');
         if (typeof periodKey !== 'string') throw new TypeError('Período obrigatório.');
-        if (kind === 'weekly' && (!/^\\d{4}-\\d{2}-\\d{2}$/.test(periodKey) || Number.isNaN(Date.parse(periodKey + 'T00:00:00Z')) || new Date(periodKey + 'T00:00:00Z').toISOString().slice(0, 10) !== periodKey)) throw new TypeError('Período semanal inválido.');
-        if (kind === 'monthly' && (!/^\\d{4}-\\d{2}$/.test(periodKey) || Number.isNaN(Date.parse(periodKey + '-01T00:00:00Z')) || new Date(periodKey + '-01T00:00:00Z').toISOString().slice(0, 7) !== periodKey)) throw new TypeError('Período mensal inválido.');
+        if (kind === 'weekly' && (!/^\d{4}-\d{2}-\d{2}$/.test(periodKey) || Number.isNaN(Date.parse(periodKey + 'T00:00:00Z')) || new Date(periodKey + 'T00:00:00Z').toISOString().slice(0, 10) !== periodKey)) throw new TypeError('Período semanal inválido.');
+        if (kind === 'monthly' && (!/^\d{4}-\d{2}$/.test(periodKey) || Number.isNaN(Date.parse(periodKey + '-01T00:00:00Z')) || new Date(periodKey + '-01T00:00:00Z').toISOString().slice(0, 7) !== periodKey)) throw new TypeError('Período mensal inválido.');
         [current, target, xp, points].forEach(function (value) {
           if (value !== undefined && value !== null && !Number.isFinite(Number(value))) throw new TypeError('Valores da meta precisam ser numéricos.');
         });
