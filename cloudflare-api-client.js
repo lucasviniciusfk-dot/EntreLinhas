@@ -200,6 +200,10 @@
       approveBookFinish: function (requestId, reason) {
         if (!requestId) throw new TypeError('ID da solicitação obrigatório.');
         return request('/api/v1/admin/requests/approve-book-finish', { method: 'POST', body: { request_id: String(requestId), reason: String(reason || '') } });
+      },
+      approveClubFinish: function (requestId, reason) {
+        if (!requestId) throw new TypeError('ID da solicitação obrigatório.');
+        return request('/api/v1/admin/requests/approve-club-finish', { method: 'POST', body: { request_id: String(requestId), reason: String(reason || '') } });
       }
     }),
     goals: Object.freeze({ list: function () { return request('/api/v1/goals'); } }),
