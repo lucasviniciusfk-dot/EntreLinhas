@@ -290,6 +290,36 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    const upd=await env.DB.prepare("UPDATE solicitacoes_validacao SET status='rejected',dados=json_set(COALESCE(dados,'{}'),'$.v507_rejected',true,'$.v507_rejected_at',?,'$.v507_reject_reason',?),resposta_admin=?,revisado_por=?,revisado_em=?,atualizado_em=? WHERE id=? AND lower(COALESCE(status,'pending')) NOT IN ('approved','aprovado','aprovada','rejected','recusado','recusada')").bind(stamp,reason,reason,uid,stamp,stamp,requestId).run();
    return json({ok:true,applied:Number(upd.meta&&upd.meta.changes)>0,status:"rejected"},200,headers);
   }
+  if(url.pathname==="/api/v1/club/albums"&&request.method==="POST"){
+   if(!isAdmin)return json({ok:false,error:"Somente a administração pode criar álbuns."},403,headers);
+   const body=await readBody(request),name=validText(body.name,180,"Nome do álbum",true);
+   const id=crypto.randomUUID(),stamp=new Date().toISOString();
+   const date=validText(body.meeting_date||"",40,"Data do encontro"),place=validText(body.location||"",240,"Local");
+   const bookTitle=validText(body.book_title||"",240,"Título do livro"),bookAuthor=validText(body.book_author||"",200,"Autor");
+   const cover=validText(body.cover_url||"",2048,"Capa"),dynamics=typeof body.dynamics==="string"?body.dynamics.slice(0,12000):JSON.stringify(body.dynamics||[]);
+   if(cover&&!/^https:\\/\\//i.test(cover))return json({ok:false,error:"A capa precisa ser uma URL HTTPS."},400,headers);
+   await env.DB.prepare("INSERT INTO clube_albuns(id,nome,data_encontro,local_encontro,livro_titulo,livro_autor,livro_capa_url,dinamicas,capa_url,trancado,ativo,criado_por,criado_em,atualizado_em) VALUES(?,?,?,?,?,?,?,?,?,0,1,?,?,?)").bind(id,name,date,place,bookTitle,bookAuthor,cover,dynamics,cover,uid,stamp,stamp).run();
+   return json({ok:true,album:{id,nome:name,data_encontro:date,local_encontro:place,livro_titulo:bookTitle,livro_autor:bookAuthor,capa_url:cover,trancado:0,ativo:1,criado_em:stamp,atualizado_em:stamp}},201,headers);
+  }
+  const clubAlbumRoute=url.pathname.match(new RegExp("^/api/v1/club/albums/([^/]+)$"));
+  if(clubAlbumRoute&&request.method==="PATCH"){
+   if(!isAdmin)return json({ok:false,error:"Somente a administração pode editar álbuns."},403,headers);
+   const id=decodeURIComponent(clubAlbumRoute[1]),old=await env.DB.prepare("SELECT * FROM clube_albuns WHERE id=? LIMIT 1").bind(id).first();
+   if(!old)return json({ok:false,error:"Álbum não encontrado."},404,headers);
+   const body=await readBody(request),name=body.name===undefined?old.nome:validText(body.name,180,"Nome do álbum",true);
+   const date=body.meeting_date===undefined?old.data_encontro:validText(body.meeting_date,40,"Data do encontro");
+   const place=body.location===undefined?old.local_encontro:validText(body.location,240,"Local");
+   const bookTitle=body.book_title===undefined?old.livro_titulo:validText(body.book_title,240,"Título do livro");
+   const bookAuthor=body.book_author===undefined?old.livro_autor:validText(body.book_author,200,"Autor");
+   const cover=body.cover_url===undefined?old.capa_url:validText(body.cover_url,2048,"Capa");
+   const dynamics=body.dynamics===undefined?old.dinamicas:(typeof body.dynamics==="string"?body.dynamics.slice(0,12000):JSON.stringify(body.dynamics||[]));
+   const locked=body.locked===undefined?Number(old.trancado)||0:(body.locked?1:0);
+   const active=body.active===undefined?Number(old.ativo)||0:(body.active?1:0);
+   if(cover&&!/^https:\\/\\//i.test(cover))return json({ok:false,error:"A capa precisa ser uma URL HTTPS."},400,headers);
+   const stamp=new Date().toISOString();
+   await env.DB.prepare("UPDATE clube_albuns SET nome=?,data_encontro=?,local_encontro=?,livro_titulo=?,livro_autor=?,livro_capa_url=?,dinamicas=?,capa_url=?,trancado=?,ativo=?,atualizado_em=? WHERE id=?").bind(name,date,place,bookTitle,bookAuthor,cover,dynamics,cover,locked,active,stamp,id).run();
+   return json({ok:true,album:{id,nome:name,data_encontro:date,local_encontro:place,livro_titulo:bookTitle,livro_autor:bookAuthor,capa_url:cover,trancado:locked,ativo:active,atualizado_em:stamp}},200,headers);
+  }
   // Biblioteca de encontros do clube: leitura autenticada, sem expor registros inativos.
   if(request.method==="GET"&&url.pathname==="/api/v1/club/albums"){
    const limit=clampInt(url.searchParams.get("limit"),100,1,200);
