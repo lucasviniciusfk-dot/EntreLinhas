@@ -19,6 +19,47 @@ function validText(value,max,label,required=false){const s=String(value??"").tri
 export default {async fetch(request,env){
  const headers=cors(request.headers.get("Origin")||"");if(request.method==="OPTIONS")return new Response(null,{status:204,headers});
  const url=new URL(request.url);if(url.pathname==="/health"&&request.method==="GET"){let d1=false;try{const x=await env.DB.prepare("SELECT 1 AS ok").first();d1=!!x&&x.ok===1;}catch(_){}const authReady=!!env.SUPABASE_URL&&!!env.SUPABASE_PUBLISHABLE_KEY;return json({ok:d1&&!!env.FILES&&authReady,environment:"staging",service:"entrelinhas-api-staging",bindings:{d1,r2:!!env.FILES,authConfig:authReady},readRoutesEnabled:true,writeRoutesEnabled:true},200,headers);}
+ if(url.pathname==="/__staging-file-check"&&request.method==="GET"){
+  const html = `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Entre Linhas — teste de arquivos</title><style>body{font:16px system-ui;background:#111;color:#eee;max-width:560px;margin:32px auto;padding:20px}main{background:#1d1d1d;padding:22px;border-radius:16px}label{display:block;margin:14px 0 6px}input,button{box-sizing:border-box;width:100%;padding:13px;border-radius:8px;border:1px solid #555;font:inherit}input{background:#090909;color:#fff}button{margin-top:18px;background:#e8e8e8;color:#111;font-weight:700}button:disabled{opacity:.5}#out{white-space:pre-wrap;overflow-wrap:anywhere;background:#090909;padding:12px;border-radius:8px;margin-top:16px}.note{color:#bbb;font-size:14px}</style><main><h2>Teste privado de arquivos — staging</h2><p>Esta página valida upload, download, integridade e exclusão de um PNG sintético no ambiente de testes.</p><p class="note">A senha é enviada diretamente do navegador ao Supabase Auth. Ela não é enviada ao Worker nem armazenada nesta página. Não compartilhe sua senha ou token no chat.</p><form id="f"><label for="email">E-mail da sua conta</label><input id="email" type="email" autocomplete="username" required><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" required><button id="go">Entrar e executar teste</button></form><pre id="out">Aguardando autenticação.</pre></main><script>
+const SUPABASE_URL="https://jxzcuqwlnqxnhftffbjx.supabase.co";
+const SUPABASE_KEY="sb_publishable_LyHzFw6vbzqAPXlLPPPFYA_pQMNyqQc";
+const API=location.origin;
+const out=document.getElementById("out"),btn=document.getElementById("go");
+function log(s){out.textContent+= "\\n"+s;}
+document.getElementById("f").addEventListener("submit",async function(ev){
+ ev.preventDefault();btn.disabled=true;out.textContent="Autenticando diretamente com Supabase Auth…";
+ let token=null,fileId=null,deleted=false;
+ try{
+  const email=document.getElementById("email").value.trim(),pass=document.getElementById("password");
+  const auth=await fetch(SUPABASE_URL+"/auth/v1/token?grant_type=password",{method:"POST",headers:{"apikey":SUPABASE_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:email,password:pass.value})});
+  pass.value="";
+  const session=await auth.json();
+  if(!auth.ok||!session.access_token)throw new Error("Falha no login: "+(session.msg||session.message||session.error_description||session.error||auth.status));
+  token=session.access_token;log("Autenticação Supabase: OK. Senha limpa do formulário.");
+  const bytes=Uint8Array.from([137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,1,0,0,0,1,8,6,0,0,0,31,21,196,137,0,0,0,13,73,68,65,84,120,156,99,248,207,192,240,31,0,5,0,1,255,137,153,61,29,0,0,0,0,73,69,78,68,174,66,96,130]);
+  const form=new FormData();form.append("file",new Blob([bytes],{type:"image/png"}),"staging-test.png");form.append("tipo","avatar");
+  const up=await fetch(API+"/api/v1/files/upload",{method:"POST",headers:{Authorization:"Bearer "+token},body:form});
+  const upData=await up.json();if(!up.ok||!upData.file||!upData.file.id)throw new Error("Upload falhou (HTTP "+up.status+"): "+(upData.error||"resposta inválida"));
+  fileId=upData.file.id;log("Upload R2 + metadados D1: OK. ID temporário: "+fileId);
+  const down=await fetch(API+"/api/v1/files/"+encodeURIComponent(fileId),{headers:{Authorization:"Bearer "+token},cache:"no-store"});
+  if(!down.ok)throw new Error("Download falhou (HTTP "+down.status+").");
+  const got=new Uint8Array(await down.arrayBuffer());
+  if(got.length!==bytes.length||got.some((v,i)=>v!==bytes[i]))throw new Error("Integridade do arquivo: conteúdo diferente do enviado.");
+  log("Download e comparação byte a byte: OK ("+got.length+" bytes).");
+  const del=await fetch(API+"/api/v1/files/"+encodeURIComponent(fileId),{method:"DELETE",headers:{Authorization:"Bearer "+token}});
+  const delData=await del.json();if(!del.ok||!delData.deleted)throw new Error("Exclusão falhou (HTTP "+del.status+").");
+  deleted=true;log("Exclusão no D1/R2: OK.");
+  const check=await fetch(API+"/api/v1/files/"+encodeURIComponent(fileId),{headers:{Authorization:"Bearer "+token}});
+  if(check.status!==404)throw new Error("Verificação pós-exclusão inesperada: HTTP "+check.status);
+  log("Verificação pós-exclusão: HTTP 404, arquivo não acessível.");
+  out.textContent="SUCESSO — teste completo.\\n"+out.textContent;
+ }catch(e){log("FALHA: "+e.message);if(fileId&&!deleted){try{const clean=await fetch(API+"/api/v1/files/"+encodeURIComponent(fileId),{method:"DELETE",headers:{Authorization:"Bearer "+token}});if(clean.ok){deleted=true;log("Limpeza automática do arquivo temporário: OK.");}else log("ATENÇÃO: limpeza automática não confirmada (HTTP "+clean.status+").");}catch(_){log("ATENÇÃO: não foi possível confirmar a limpeza automática.");}}}
+ finally{token=null;btn.disabled=false;}
+});
+</script></html>`;
+  const h=new Headers(headers);h.set("Content-Type","text/html; charset=utf-8");h.set("Cache-Control","no-store");h.set("Content-Security-Policy","default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self' https://jxzcuqwlnqxnhftffbjx.supabase.co; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+  return new Response(html,{status:200,headers:h});
+ }
  if(!url.pathname.startsWith("/api/v1/"))return json({ok:false,error:"Not found"},404,headers);
  const access=await requireUser(request,env,headers);if(access.response)return access.response;const uid=access.user.id;
  // Arquivos privados: o proprietário vem exclusivamente da sessão validada.
