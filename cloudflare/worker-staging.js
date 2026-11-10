@@ -22,7 +22,7 @@ export default {async fetch(request,env){
  if(!url.pathname.startsWith("/api/v1/"))return json({ok:false,error:"Not found"},404,headers);
  const access=await requireUser(request,env,headers);if(access.response)return access.response;const uid=access.user.id;
  // Arquivos privados: o proprietário vem exclusivamente da sessão validada.
- const fileRoute=url.pathname.match(/^\\/api\\/v1\\/files\\/([^/]+)$/);
+ const fileRoute=url.pathname.match(/^\/api\/v1\/files\/([^/]+)$/);
  if(request.method==="POST"&&url.pathname==="/api/v1/files/upload"){
   try{
    const form=await request.formData(),file=form.get("file"),rawType=String(form.get("tipo")||"").toLowerCase();
@@ -48,7 +48,7 @@ export default {async fetch(request,env){
    const id=decodeURIComponent(fileRoute[1]),asset=await env.DB.prepare("SELECT id,owner_id,object_key,content_type,original_name,size_bytes FROM file_assets WHERE id=? AND owner_id=? AND deleted_at IS NULL LIMIT 1").bind(id,uid).first();
    if(!asset)return json({ok:false,error:"Arquivo não encontrado."},404,headers);
    const object=await env.FILES.get(asset.object_key);if(!object)return json({ok:false,error:"Arquivo indisponível no armazenamento."},404,headers);
-   const outHeaders=new Headers(headers);outHeaders.set("Content-Type",asset.content_type);outHeaders.set("Content-Length",String(asset.size_bytes));outHeaders.set("Content-Disposition",'inline; filename="'+asset.original_name.replace(/["\\\\\\r\\n]/g,"_")+'"');outHeaders.set("Cache-Control","private, no-store");outHeaders.set("X-Content-Type-Options","nosniff");
+   const outHeaders=new Headers(headers);outHeaders.set("Content-Type",asset.content_type);outHeaders.set("Content-Length",String(asset.size_bytes));outHeaders.set("Content-Disposition",'inline; filename="'+asset.original_name.replace(/["\\\r\n]/g,"_")+'"');outHeaders.set("Cache-Control","private, no-store");outHeaders.set("X-Content-Type-Options","nosniff");
    return new Response(object.body,{status:200,headers:outHeaders});
   }catch(e){return json({ok:false,error:"Não foi possível recuperar o arquivo."},500,headers);}
  }
