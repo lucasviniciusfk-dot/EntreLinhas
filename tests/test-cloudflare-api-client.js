@@ -62,4 +62,9 @@ assert.equal(roundTrip.currentPage, 87);
 assert.equal(roundTrip.personalFingerprint, 'fingerprint-1');
 assert.equal(roundTrip.epubFileName, 'travessia.epub');
 
+const rewards = window.EntreLinhasCloudflare.rewards;
+assert.equal(typeof rewards.awardDailyEpub, 'function');
+assert.throws(() => rewards.awardDailyEpub('09/11/2026'), /Data inválida/);
+assert.throws(() => rewards.awardDailyEpub('2026-99-99'), /Data inválida/);
+
 console.log('OK: mapeamento de livro e validação local de arquivos ↔ API');
