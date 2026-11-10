@@ -74,7 +74,7 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    if(!/(leitor|reader|epub|auto_pending_admin)/i.test(origin))return json({ok:false,applied:false,reason:"invalid_origin"},200,headers);
    const claim="daily-epub:"+uid+":"+day,stamp=new Date().toISOString();
    await env.DB.batch([
-    env.DB.prepare("INSERT OR IGNORE INTO entrel_reward_claims_v510 (claim_key,usuario_id,source_type,source_id,xp,pontos,applied,created_at) SELECT ?,?,?,?,20,10,0,? WHERE EXISTS (SELECT 1 FROM metas_diarias WHERE usuario_id=? AND data=? AND paginas_lidas>=20 AND (concluida=1 OR concluida IS TRUE))").bind(claim,uid,"daily-epub",day,stamp,uid,day),
+    env.DB.prepare("INSERT OR IGNORE INTO entrel_reward_claims_v510 (claim_key,usuario_id,source_type,source_id,xp,pontos,applied,created_at) SELECT ?,?,?,?,20,10,0,? WHERE EXISTS (SELECT 1 FROM metas_diarias WHERE usuario_id=? AND data=? AND paginas_lidas>=20 AND (concluida=1 OR concluida IS TRUE OR paginas_lidas>=20))").bind(claim,uid,"daily-epub",day,stamp,uid,day),
     env.DB.prepare("UPDATE usuarios SET xp=COALESCE(xp,0)+20,pontos=COALESCE(pontos,0)+10,atualizado_em=? WHERE id=? AND EXISTS (SELECT 1 FROM entrel_reward_claims_v510 WHERE claim_key=? AND applied=0)").bind(stamp,uid,claim),
     env.DB.prepare("UPDATE metas_diarias SET meta_paginas=20,recompensada=1,concluida=1,concluida_em=COALESCE(concluida_em,?),atualizado_em=? WHERE usuario_id=? AND data=? AND EXISTS (SELECT 1 FROM entrel_reward_claims_v510 WHERE claim_key=? AND applied=0)").bind(stamp,stamp,uid,day,claim),
     env.DB.prepare("UPDATE entrel_reward_claims_v510 SET applied=1,applied_at=? WHERE claim_key=? AND applied=0").bind(stamp,claim)
@@ -83,6 +83,7 @@ document.getElementById("f").addEventListener("submit",async function(ev){
     env.DB.prepare("SELECT applied,xp,pontos FROM entrel_reward_claims_v510 WHERE claim_key=? LIMIT 1").bind(claim).first(),
     env.DB.prepare("SELECT xp,pontos FROM usuarios WHERE id=? LIMIT 1").bind(uid).first()
    ]);
+   if(!c)return json({ok:false,applied:false,reason:"meta_not_eligible"},200,headers);
    const applied=!!c&&c.applied===1;
    return json({ok:true,applied,already_rewarded:!applied,xp_added:applied?20:0,points_added:applied?10:0,xp:Number(p&&p.xp)||0,points:Number(p&&p.pontos)||0,target:20},200,headers);
   }catch(_){return json({ok:false,error:"Não foi possível processar a recompensa diária."},500,headers);}
