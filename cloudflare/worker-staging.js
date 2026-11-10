@@ -207,6 +207,38 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    const upd=await env.DB.prepare("UPDATE solicitacoes_validacao SET status='rejected',dados=json_set(COALESCE(dados,'{}'),'$.v507_rejected',true,'$.v507_rejected_at',?,'$.v507_reject_reason',?),resposta_admin=?,revisado_por=?,revisado_em=?,atualizado_em=? WHERE id=? AND lower(COALESCE(status,'pending')) NOT IN ('approved','aprovado','aprovada','rejected','recusado','recusada')").bind(stamp,reason,reason,uid,stamp,stamp,requestId).run();
    return json({ok:true,applied:Number(upd.meta&&upd.meta.changes)>0,status:"rejected"},200,headers);
   }
+  if(url.pathname==="/api/v1/admin/requests/approve-club-finish"&&request.method==="POST"){
+   if(!isAdmin)return json({ok:false,error:"Acesso administrativo não confirmado."},403,headers);
+   const b=await readBody(request),requestId=validText(b.request_id,128,"ID da solicitação",true),reason=validText(b.reason||"Finalização do Livro do Clube aprovada.",1000,"Motivo");
+   const req=await env.DB.prepare("SELECT * FROM solicitacoes_validacao WHERE id=? LIMIT 1").bind(requestId).first();
+   if(!req)return json({ok:false,error:"Solicitação não encontrada."},404,headers);
+   const status=String(req.status||"pending").toLowerCase();
+   if(["approved","aprovado","aprovada"].includes(status))return json({ok:true,applied:false,already_reviewed:true,status:"approved"},200,headers);
+   if(["rejected","recusado","recusada"].includes(status))return json({ok:false,error:"Esta solicitação já foi recusada."},409,headers);
+   const data=parseObject(req.dados),userId=String(req.usuario_id||""),cycle=String(data.cycle_id||""),requestedParticipant=String(data.participant_id||data.clube_participante_id||"");
+   if(!cycle)return json({ok:false,error:"Solicitação antiga sem identificação de ciclo. Reenvie a finalização no ciclo atual."},422,headers);
+   if(!userId)return json({ok:false,error:"Solicitação sem usuário associado."},422,headers);
+   let participant=null;
+   if(requestedParticipant)participant=await env.DB.prepare("SELECT id,usuario_id,ciclo_id,pagina_atual,recompensa_recebida FROM clube_livro_participantes WHERE id=? AND usuario_id=? AND ciclo_id=? LIMIT 1").bind(requestedParticipant,userId,cycle).first();
+   if(!participant)participant=await env.DB.prepare("SELECT id,usuario_id,ciclo_id,pagina_atual,recompensa_recebida FROM clube_livro_participantes WHERE usuario_id=? AND ciclo_id=? ORDER BY atualizado_em DESC LIMIT 1").bind(userId,cycle).first();
+   if(!participant)return json({ok:false,error:"A participação deste usuário neste ciclo não foi localizada."},404,headers);
+   const book=await env.DB.prepare("SELECT titulo,autor,paginas_total,xp_recompensa,pontos_recompensa FROM clube_livro_atual WHERE id='atual' LIMIT 1").first();
+   const target=await env.DB.prepare("SELECT id FROM usuarios WHERE id=? LIMIT 1").bind(userId).first();
+   if(!target)return json({ok:false,error:"O perfil do usuário não está disponível no banco de staging."},404,headers);
+   const xp=Math.max(0,Number(book&&book.xp_recompensa)||Number(req.xp)||25),points=Math.max(0,Number(book&&book.pontos_recompensa)||Number(req.pontos)||10),total=Math.max(0,Number(book&&book.paginas_total)||Number(req.paginas)||0),stamp=new Date().toISOString(),claim="clubfinish:"+cycle+":"+userId;
+   const batch=[
+    env.DB.prepare("INSERT OR IGNORE INTO entrel_reward_claims_v510(claim_key,usuario_id,source_type,source_id,xp,pontos,applied,created_at) VALUES(?,?,?,?,?,?,0,?)").bind(claim,userId,"club_finish",requestId,xp,points,stamp),
+    env.DB.prepare("UPDATE usuarios SET xp=COALESCE(xp,0)+(SELECT xp FROM entrel_reward_claims_v510 WHERE claim_key=? AND applied=0),pontos=COALESCE(pontos,0)+(SELECT pontos FROM entrel_reward_claims_v510 WHERE claim_key=? AND applied=0),atualizado_em=? WHERE id=? AND EXISTS(SELECT 1 FROM entrel_reward_claims_v510 WHERE claim_key=? AND applied=0)").bind(claim,claim,stamp,userId,claim),
+    env.DB.prepare("UPDATE entrel_reward_claims_v510 SET applied=1,applied_at=? WHERE claim_key=? AND applied=0").bind(stamp,claim),
+    env.DB.prepare("UPDATE clube_livro_participantes SET finalizado=1,progresso_pct=100,pagina_atual=CASE WHEN ?>0 THEN MAX(COALESCE(pagina_atual,0),?) ELSE COALESCE(pagina_atual,0) END,recompensa_recebida=1,atualizado_em=? WHERE id=? AND usuario_id=? AND ciclo_id=?").bind(total,total,stamp,participant.id,userId,cycle),
+    env.DB.prepare("UPDATE solicitacoes_validacao SET status='approved',dados=json_set(COALESCE(dados,'{}'),'$.v511_approved',true,'$.v511_approved_at',?,'$.v511_cycle_id',?,'$.v511_reward_claim',?,'$.v511_admin_reason',?),resposta_admin=?,revisado_por=?,revisado_em=?,atualizado_em=? WHERE id=? AND lower(COALESCE(status,'pending')) NOT IN ('approved','aprovado','aprovada','rejected','recusado','recusada')").bind(stamp,cycle,claim,reason,reason,uid,stamp,stamp,requestId)
+   ];
+   await env.DB.batch(batch);
+   const balances=await env.DB.prepare("SELECT xp,pontos FROM usuarios WHERE id=?").bind(userId).first();
+   const finalParticipant=await env.DB.prepare("SELECT finalizado,recompensa_recebida,progresso_pct,pagina_atual FROM clube_livro_participantes WHERE id=? AND usuario_id=? AND ciclo_id=?").bind(participant.id,userId,cycle).first();
+   const finalRequest=await env.DB.prepare("SELECT status FROM solicitacoes_validacao WHERE id=?").bind(requestId).first();
+   return json({ok:true,status:finalRequest&&finalRequest.status||"approved",participant_id:participant.id,cycle_id:cycle,user_id:userId,book_title:book&&book.titulo||"Livro do Clube",xp:Number(balances&&balances.xp)||0,points:Number(balances&&balances.pontos)||0,participant:finalParticipant,claim_key:claim},200,headers);
+  }
   if(url.pathname==="/api/v1/admin/requests/approve-book-finish"&&request.method==="POST"){
    if(!isAdmin)return json({ok:false,error:"Acesso administrativo não confirmado."},403,headers);
    const b=await readBody(request),requestId=validText(b.request_id,128,"ID da solicitação",true),reason=validText(b.reason||"Solicitação aprovada.",1000,"Motivo");
