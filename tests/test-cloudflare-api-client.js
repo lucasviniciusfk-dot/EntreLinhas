@@ -126,3 +126,7 @@ assert.equal(typeof clubPhotoApi.removePhoto, 'function');
 assert.throws(() => clubPhotoApi.addPhoto('', {}), /Identificador do álbum obrigatório/);
 assert.throws(() => clubPhotoApi.downloadPhoto(''), /ID obrigatório/);
 assert.throws(() => clubPhotoApi.removePhoto(''), /ID obrigatório/);
+
+assert.equal(typeof clubPhotoApi.create, 'function');
+assert.equal(typeof clubPhotoApi.update, 'function');
+assert.throws(() => clubPhotoApi.update('', { name: 'Encontro' }), /ID do álbum obrigatório/);
