@@ -67,6 +67,13 @@ assert.equal(typeof rewards.awardDailyEpub, 'function');
 assert.throws(() => rewards.awardDailyEpub('09/11/2026'), /Data inválida/);
 assert.throws(() => rewards.awardDailyEpub('2026-99-99'), /Data inválida/);
 
+const notifications = window.EntreLinhasCloudflare.notifications;
+assert.equal(typeof notifications.list, 'function');
+assert.equal(typeof notifications.markRead, 'function');
+assert.equal(typeof notifications.hide, 'function');
+assert.throws(() => notifications.markRead(''), /ID obrigatório/);
+assert.throws(() => notifications.hide(''), /ID obrigatório/);
+
 const periodicRewards = window.EntreLinhasCloudflare.rewards;
 assert.equal(typeof periodicRewards.awardPeriodGoal, 'function');
 assert.throws(() => periodicRewards.awardPeriodGoal('yearly', '2026-11-01', 10, 10, 5, 2), /Tipo de meta periódica inválido/);
