@@ -184,6 +184,24 @@
         }});
       }
     }),
+    admin: Object.freeze({
+      listRequests: function (options) {
+        options = options || {};
+        var query = new URLSearchParams();
+        if (options.status) query.set('status', String(options.status));
+        if (options.limit) query.set('limit', String(options.limit));
+        var suffix = query.toString();
+        return request('/api/v1/admin/requests' + (suffix ? '?' + suffix : ''));
+      },
+      rejectRequest: function (requestId, reason) {
+        if (!requestId) throw new TypeError('ID da solicitação obrigatório.');
+        return request('/api/v1/admin/requests/reject', { method: 'POST', body: { request_id: String(requestId), reason: String(reason || '') } });
+      },
+      approveBookFinish: function (requestId, reason) {
+        if (!requestId) throw new TypeError('ID da solicitação obrigatório.');
+        return request('/api/v1/admin/requests/approve-book-finish', { method: 'POST', body: { request_id: String(requestId), reason: String(reason || '') } });
+      }
+    }),
     goals: Object.freeze({ list: function () { return request('/api/v1/goals'); } }),
     progress: Object.freeze({
       monthly: function (period) {
