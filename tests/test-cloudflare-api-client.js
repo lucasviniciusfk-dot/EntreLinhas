@@ -1,0 +1,39 @@
+// Testes sem rede para os mapeadores do cliente Cloudflare.
+const fs = require('node:fs');
+const vm = require('node:vm');
+const assert = require('node:assert/strict');
+
+const window = {};
+vm.runInNewContext(fs.readFileSync('cloudflare-api-client.js', 'utf8'), {
+  window,
+  Headers,
+  FormData,
+  fetch: async () => { throw new Error('fetch não deveria ser chamado neste teste'); }
+});
+
+const map = window.EntreLinhasCloudflare.mapping;
+const appBook = {
+  id: 'book-1', onlinePersonalId: 'personal-1', title: 'A Travessia',
+  author: 'Autora', genre: 'Fantasia', pages: 320, currentPage: 87,
+  epubCfi: 'epubcfi(/6/4)', cover: 'https://example.invalid/cover.jpg'
+};
+const api = map.toApiBook(appBook);
+assert.equal(api.id, 'personal-1');
+assert.equal(api.title, 'A Travessia');
+assert.equal(api.current_page, 87);
+assert.equal(api.epub_cfi, 'epubcfi(/6/4)');
+
+const roundTrip = map.fromApiBook({
+  id: 'personal-1', usuario_id: 'user-1', livro_id: 'fingerprint-1',
+  titulo: 'A Travessia', autor: 'Autora', genero: 'Fantasia',
+  paginas: 320, pagina_atual: 87, progresso: 27, epub_cfi: 'epubcfi(/6/4)',
+  capa_url: 'https://example.invalid/cover.jpg', status: 'reading',
+  dados: JSON.stringify({ fingerprint: 'fingerprint-1', epubFileName: 'travessia.epub' })
+});
+assert.equal(roundTrip.id, 'personal-1');
+assert.equal(roundTrip.title, 'A Travessia');
+assert.equal(roundTrip.currentPage, 87);
+assert.equal(roundTrip.personalFingerprint, 'fingerprint-1');
+assert.equal(roundTrip.epubFileName, 'travessia.epub');
+
+console.log('OK: mapeamento de livro app ↔ API');
