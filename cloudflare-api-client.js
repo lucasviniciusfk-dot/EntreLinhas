@@ -212,6 +212,21 @@
         return request('/api/v1/admin/requests/approve-club-finish', { method: 'POST', body: { request_id: String(requestId), reason: String(reason || '') } });
       }
     }),
+    notifications: Object.freeze({
+      list: function (options) {
+        options = options || {};
+        var query = new URLSearchParams();
+        if (options.limit !== undefined) query.set('limit', String(options.limit));
+        var suffix = query.toString();
+        return request('/api/v1/notifications' + (suffix ? '?' + suffix : ''));
+      },
+      markRead: function (notificationId) {
+        return request('/api/v1/notifications/' + id(notificationId) + '/read', { method: 'POST' });
+      },
+      hide: function (notificationId) {
+        return request('/api/v1/notifications/' + id(notificationId) + '/hide', { method: 'POST' });
+      }
+    }),
     goals: Object.freeze({ list: function () { return request('/api/v1/goals'); } }),
     progress: Object.freeze({
       monthly: function (period) {
