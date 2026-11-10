@@ -71,6 +71,7 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    if(!goal)return json({ok:false,applied:false,reason:"meta_not_found"},200,headers);
    const pages=Number(goal.paginas_lidas)||0,done=goal.concluida===1||goal.concluida===true||pages>=20,origin=String(goal.origem||"");
    if(!done||pages<20)return json({ok:false,applied:false,reason:"meta_not_completed"},200,headers);
+   if(goal.recompensada===1||goal.recompensada===true){const current=await env.DB.prepare("SELECT xp,pontos FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();return json({ok:true,applied:false,already_rewarded:true,xp_added:0,points_added:0,xp:Number(current&&current.xp)||0,points:Number(current&&current.pontos)||0},200,headers);}
    if(!/(leitor|reader|epub|auto_pending_admin)/i.test(origin))return json({ok:false,applied:false,reason:"invalid_origin"},200,headers);
    const claim="daily-epub:"+uid+":"+day,stamp=new Date().toISOString();
    await env.DB.batch([
