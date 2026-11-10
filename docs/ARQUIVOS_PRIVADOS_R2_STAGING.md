@@ -35,7 +35,7 @@ Limites preparados:
 - A migration D1 foi aplicada em staging e a tabela/índices foram verificados.
 - O Worker foi implantado em staging e o endpoint `/health` foi confirmado pelo usuário.
 - A última verificação direta encontrou `file_assets` vazia e o bucket R2 sem objetos.
-- A correção mais recente da ordem de exclusão está salva nesta branch, mas ainda **não foi implantada** no Worker.
+- A correção mais recente da ordem de exclusão foi implantada no Worker staging (versão/deployment `28252a7bc1b6438fafb843bb720f08a8`); os bindings D1, R2, Supabase URL e publishable key foram conferidos após o deploy.
 - Upload/download/exclusão autenticados ainda não foram executados. É necessária uma sessão Supabase Auth válida pertencente a um perfil existente no D1 staging.
 - Nenhum objeto de teste ou dado real de usuário foi criado, alterado ou excluído.
 
