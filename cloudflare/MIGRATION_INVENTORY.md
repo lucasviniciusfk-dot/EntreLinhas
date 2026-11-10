@@ -92,11 +92,13 @@ Contagens são ocorrências aproximadas de .from('nome') no HTML; incluem opera�
 
 ### Etapa 2 — R2 (auditoria de arquivos)
 - [x] Buckets Supabase identificados: `capas` (público) e `epubs` (privado); consulta a `storage.objects` retornou zero objetos.
-- [x] Bucket R2 legado `entrelinhas` auditado somente por metadados: 1.171 objetos, 2.320.923.595 bytes (~2,16 GiB): 818 EPUBs, 220 capas, 113 fotos de encontros e 20 avatares.
-- [x] Bucket privado de staging `entrelinhas-staging-private` confirmado vazio.
-- [x] Referências em `livros` e `livros_pessoais` comparadas com as chaves do R2 legado: 222 referências públicas R2, 127 chaves únicas; 206 referências encontradas e 16 referências ausentes (13 chaves únicas). Também existem referências em data URI, caminhos locais/legados e URLs externas, que não devem ser tratadas como objetos R2.
-- [ ] Cópia dos objetos para o bucket privado de staging e criação das linhas em `file_assets`/associações ainda pendentes. Não copiar dados reais de usuários para staging sem fluxo de migração aprovado; não modificar nem apagar o bucket legado de produção.
-- [ ] Corrigir ou reconciliar as 13 chaves R2 referenciadas mas ausentes antes de marcar a migração de arquivos como concluída.
+- [x] Bucket R2 legado `entrelinhas` inventariado: 1.171 entradas listadas (inclui 4 marcadores de pasta sem conteúdo) e 1.167 objetos reais, totalizando 2.320.923.595 bytes (~2,16 GiB): 817 EPUBs, 219 capas, 112 fotos de encontros e 19 avatares.
+- [x] Autorização do usuário para copiar objetos reais do bucket legado para o bucket privado de staging recebida em 10/11/2026.
+- [x] Cópia concluída para `entrelinhas-staging-private`: 1.167/1.167 objetos reais, 2.320.923.595 bytes. Comparação final por chave, tamanho e ETag: 1.167 correspondências, zero ausências e zero divergências.
+- [x] Os 7 objetos adicionais encontrados no destino são partes de um arquivo de snapshots de migração (`migration-archive/user-snapshots-v260/...`), não são contados como objetos do bucket legado.
+- [ ] Reconciliar as 13 chaves R2 referenciadas mas ausentes no bucket legado antes de marcar a etapa de arquivos como totalmente concluída. A cópia não cria os arquivos que já não existem na origem.
+- [ ] Criar/popular `file_assets` e associações D1 após definir o mapeamento de chaves e executar testes de leitura autorizada no Worker. As tabelas auxiliares continuam sem linhas nesta verificação.
+- Observação: existem também referências em data URI, caminhos locais/legados e URLs externas, que não devem ser tratadas como objetos R2.
 
 ### Limites de segurança preservados
 - Nenhum objeto foi criado, alterado ou excluído nos buckets de produção.
@@ -128,3 +130,12 @@ Contagens são ocorrências aproximadas de .from('nome') no HTML; incluem opera�
 - A leitura da configuração e dos deployments foi feita pela API Cloudflare. O teste HTTP direto de `/health` não pôde ser concluído neste ambiente de execução; portanto não declarar o endpoint funcional com base apenas na configuração.
 - Nenhum segredo foi exibido ou alterado.
 - Nenhum deploy, alteração em produção, merge ou cutover foi realizado nesta auditoria.
+
+
+### Atualização da cópia R2 — 10/11/2026
+- Resultado final da comparação: origem com 1.167 objetos reais / 2.320.923.595 bytes; destino com os mesmos 1.167 objetos, além de 7 partes de arquivo de snapshots previamente existentes.
+- Todos os objetos da origem têm correspondência no destino com tamanho e ETag iguais; zero divergências.
+- Os objetos de origem incluem 33 arquivos de zero bytes; também foram preservados no destino com o mesmo ETag.
+- Nenhum objeto foi alterado ou removido no bucket legado `entrelinhas`.
+- Nenhuma linha D1 foi modificada durante a cópia.
+- Próximos passos da Etapa 2: resolver as 13 chaves referenciadas mas ausentes e popular as tabelas auxiliares somente com associações verificadas; testar download/controle de acesso pelo Worker.
