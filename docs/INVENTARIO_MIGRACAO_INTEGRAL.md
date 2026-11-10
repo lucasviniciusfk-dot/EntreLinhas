@@ -126,3 +126,11 @@ As tabelas do clube, chat, mural, ranking e administração possuem regras difer
 - Atualiza o participante para finalizado, 100% e recompensa recebida, e marca a solicitação como aprovada com os metadados v511.
 - Cliente: `admin.approveClubFinish(requestId, reason)`.
 - Não foi chamada em pedidos reais nem testada via Worker HTTP; a implementação permanece apenas na branch de staging.
+
+## Fluxo de solicitação de finalização do Livro do Clube
+
+- `POST /api/v1/club/finish-request`: membro autenticado envia `cycle_id`; o usuário é derivado da sessão, não do corpo.
+- Confirma participação do próprio usuário no ciclo, bloqueia novo pedido se a recompensa já foi recebida e evita pedidos pendentes duplicados para o mesmo ciclo.
+- Persiste solicitação com participante, ciclo, livro do clube, páginas e recompensa prevista, mantendo os metadados `request_kind=club_finish` e `v511=true` usados pelo fluxo original.
+- Cliente: `club.submitFinishRequest(cycleId)`.
+- A instrução de inserção foi validada por `EXPLAIN` no D1 de staging com valores sintéticos; a operação não gravou linhas. A execução ponta a ponta ainda depende de publicação e autenticação real do Worker.
