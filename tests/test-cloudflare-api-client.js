@@ -12,6 +12,11 @@ vm.runInNewContext(fs.readFileSync('cloudflare-api-client.js', 'utf8'), {
 });
 
 const files = window.EntreLinhasCloudflare.files;
+const library = window.EntreLinhasCloudflare.library;
+assert.equal(typeof library.listFiles, 'function');
+assert.equal(typeof library.attachFile, 'function');
+assert.throws(() => library.attachFile('book-1', 'file-1', 'avatar'), /Função do arquivo inválida/);
+
 assert.equal(files.validate({ size: 1024, type: 'application/epub+zip' }, 'epub'), 'epub');
 assert.equal(files.validate({ size: 1024, type: 'image/jpeg' }, 'capa'), 'cover');
 assert.equal(files.validate({ size: 1024, type: 'application/pdf' }, 'comprovante'), 'receipt');
