@@ -64,6 +64,25 @@
       status: book.status || 'reading'
     };
   }
+  function toApiBookPatch(patch) {
+    patch = patch || {};
+    var out = {};
+    function copy(target, names, transform) {
+      for (var i = 0; i < names.length; i++) {
+        if (Object.prototype.hasOwnProperty.call(patch, names[i])) {
+          var value = patch[names[i]];
+          out[target] = transform ? transform(value) : value;
+          return;
+        }
+      }
+    }
+    copy('title', ['title', 'titulo']);
+    copy('author', ['author', 'autor']);
+    copy('genre', ['genre', 'genero']);
+    copy('pages', ['pages', 'paginas']);
+    copy('cover_url', ['cover_url', 'cover', 'capa_url', 'capa']);
+    return out;
+  }
   function fromApiBook(row) {
     row = row || {};
     var dados = row.dados;
@@ -95,7 +114,7 @@
         return fromApiBook(result && result.book);
       },
       update: async function (bookId, patch) {
-        var result = await request('/api/v1/library/books/' + id(bookId), { method: 'PATCH', body: toApiBook(patch) });
+        var result = await request('/api/v1/library/books/' + id(bookId), { method: 'PATCH', body: toApiBookPatch(patch) });
         return fromApiBook(result && result.book);
       },
       deactivate: function (bookId) {
@@ -139,7 +158,7 @@
       }
     }),
     challenges: Object.freeze({ list: function () { return request("/api/v1/challenges"); } }),
-    mapping: Object.freeze({ toApiBook: toApiBook, fromApiBook: fromApiBook })
+    mapping: Object.freeze({ toApiBook: toApiBook, toApiBookPatch: toApiBookPatch, fromApiBook: fromApiBook })
   });
   Object.defineProperty(root, 'EntreLinhasCloudflare', {
     value: api, configurable: false, enumerable: false, writable: false
