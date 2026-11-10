@@ -14,14 +14,18 @@ vm.runInNewContext(fs.readFileSync('cloudflare-api-client.js', 'utf8'), {
 const map = window.EntreLinhasCloudflare.mapping;
 const appBook = {
   id: 'book-1', onlinePersonalId: 'personal-1', title: 'A Travessia',
-  author: 'Autora', genre: 'Fantasia', pages: 320, currentPage: 87,
+  author: 'Autora', genre: 'Fantasia', pages: 320, currentPage: 87, status: 'pending_finish',
   epubCfi: 'epubcfi(/6/4)', cover: 'https://example.invalid/cover.jpg'
 };
 const api = map.toApiBook(appBook);
 assert.equal(api.id, 'personal-1');
 assert.equal(api.title, 'A Travessia');
 assert.equal(api.current_page, 87);
+assert.equal(api.status, 'pending_finish');
 assert.equal(api.epub_cfi, 'epubcfi(/6/4)');
+const newBook = map.toApiBook({ title: 'Novo', author: 'Pessoa', pages: 100, currentPage: 12, status: 'reading' });
+assert.equal(newBook.current_page, 12);
+assert.equal(newBook.status, 'reading');
 
 const partialPatch = map.toApiBookPatch({ author: 'Novo nome' });
 assert.deepEqual(JSON.parse(JSON.stringify(partialPatch)), { author: 'Novo nome' });
