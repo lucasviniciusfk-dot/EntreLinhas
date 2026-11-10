@@ -225,6 +225,7 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    if(!book&&title)book=await env.DB.prepare("SELECT id,paginas,dados FROM livros_pessoais WHERE usuario_id=? AND lower(trim(titulo))=lower(?) AND (?='' OR lower(trim(COALESCE(autor,'')))=lower(?)) ORDER BY atualizado_em DESC LIMIT 1").bind(userId,title,author,author).first();
    if(!book&&title)book=await env.DB.prepare("SELECT id,paginas,dados FROM livros_pessoais WHERE usuario_id=? AND lower(trim(titulo))=lower(?) ORDER BY atualizado_em DESC LIMIT 1").bind(userId,title).first();
    if(!book)return json({ok:false,error:"O livro não foi localizado na biblioteca online do usuário."},404,headers);
+   const targetUser=await env.DB.prepare("SELECT id FROM usuarios WHERE id=? LIMIT 1").bind(userId).first();if(!targetUser)return json({ok:false,error:"O perfil do usuário não está disponível no banco de staging."},404,headers);
    const total=Math.max(1,Number(book.paginas)||Number(req.paginas)||Number(data.paginas)||1),xp=Math.max(0,Number(req.xp??data.xp??data.rewardXp)||0),points=Math.max(0,Number(req.pontos??data.pontos??data.rewardPoints)||10),stamp=new Date().toISOString(),claim="bookfinish:"+userId+":"+book.id;
    const oldBookData=parseObject(book.dados);const newBookData=JSON.stringify({...oldBookData,finishPending:false,finished:true,finalizado:true,finishedAt:oldBookData.finishedAt||stamp,finishApprovedAt:stamp,finishRequestId:requestId,finishRewardClaim:claim,v510:true});
    const batch=[
