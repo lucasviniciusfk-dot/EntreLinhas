@@ -112,6 +112,10 @@
         var result = await request('/api/v1/library/books');
         return (result && result.items || []).map(fromApiBook);
       },
+      get: async function (bookId) {
+        var result = await request('/api/v1/library/books/' + id(bookId));
+        return fromApiBook(result && result.book);
+      },
       create: async function (book) {
         var result = await request('/api/v1/library/books', { method: 'POST', body: toApiBook(book) });
         return fromApiBook(result && result.book);
