@@ -204,6 +204,24 @@
         return result && result.book || null;
       }
     }),
+    clubAlbums: Object.freeze({
+      list: async function (options) {
+        options = options || {};
+        var query = new URLSearchParams();
+        if (options.limit !== undefined) query.set('limit', String(options.limit));
+        var suffix = query.toString();
+        var result = await request('/api/v1/club/albums' + (suffix ? '?' + suffix : ''));
+        return result && result.items || [];
+      },
+      listPhotos: async function (albumId, options) {
+        if (!albumId || !String(albumId).trim()) throw new TypeError('Identificador do álbum obrigatório.');
+        options = options || {};
+        var query = new URLSearchParams({ album_id: String(albumId) });
+        if (options.limit !== undefined) query.set('limit', String(options.limit));
+        var result = await request('/api/v1/club/albums/photos?' + query.toString());
+        return { items: result && result.items || [], locked: !!(result && result.locked), albumId: String(albumId) };
+      }
+    }),
     club: Object.freeze({
       submitFinishRequest: function (cycleId) {
         if (!cycleId || !String(cycleId).trim()) throw new TypeError('Identificador do ciclo obrigatório.');
