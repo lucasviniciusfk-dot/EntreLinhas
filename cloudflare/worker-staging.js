@@ -357,7 +357,7 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    const limit=clampInt(url.searchParams.get("limit"),50,1,100);
    const rows=await env.DB.prepare(`SELECT id,usuario_id,target_id,titulo,mensagem,tipo,lida,lida_por,ocultada_por,origem,dados,criada_em,atualizado_em
     FROM app_notificacoes
-    WHERE (usuario_id=? OR usuario_id='all' OR target_id=? OR target_id='all')
+    WHERE (usuario_id=? OR target_id=? OR (usuario_id='all' AND target_id='all'))
       AND NOT EXISTS (SELECT 1 FROM json_each(CASE WHEN json_valid(ocultada_por) THEN ocultada_por ELSE '[]' END) WHERE value=?)
     ORDER BY criada_em DESC,id DESC LIMIT ?`).bind(uid,uid,uid,limit).all();
    const items=(rows.results||[]).map(n=>{
