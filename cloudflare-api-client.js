@@ -81,6 +81,9 @@
     copy('genre', ['genre', 'genero']);
     copy('pages', ['pages', 'paginas']);
     copy('cover_url', ['cover_url', 'cover', 'capa_url', 'capa']);
+    copy('current_page', ['current_page', 'currentPage', 'readerPage', 'pagina_atual']);
+    copy('epub_cfi', ['epub_cfi', 'epubCfi']);
+    copy('status', ['status']);
     return out;
   }
   function fromApiBook(row) {
