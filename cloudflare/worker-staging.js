@@ -62,6 +62,72 @@ document.getElementById("f").addEventListener("submit",async function(ev){
  }
  if(!url.pathname.startsWith("/api/v1/"))return json({ok:false,error:"Not found"},404,headers);
  const access=await requireUser(request,env,headers);if(access.response)return access.response;const uid=access.user.id;
+
+ // Recompensas periódicas: replica as regras v507/v512, com identidade derivada da sessão.
+ if(url.pathname==="/api/v1/rewards/period"&&request.method==="POST"){
+  try{
+   const body=await readBody(request),kind=validText(body.kind,10,"Tipo",true).toLowerCase(),period=validText(body.period_key,10,"Período",true);
+   if(kind!=="weekly"&&kind!=="monthly")return json({ok:false,error:"Tipo de meta periódica inválido."},400,headers);
+   let start,end;
+   if(kind==="weekly"){
+    if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(period)||Number.isNaN(Date.parse(period+"T00:00:00Z"))||new Date(period+"T00:00:00Z").toISOString().slice(0,10)!==period)return json({ok:false,error:"Período semanal inválido."},400,headers);
+    start=new Date(period+"T00:00:00Z");end=new Date(start.getTime()+7*86400000);
+   }else{
+    if(!/^\\d{4}-\\d{2}$/.test(period)||Number.isNaN(Date.parse(period+"-01T00:00:00Z"))||new Date(period+"-01T00:00:00Z").toISOString().slice(0,7)!==period)return json({ok:false,error:"Período mensal inválido."},400,headers);
+    start=new Date(period+"-01T00:00:00Z");end=new Date(Date.UTC(start.getUTCFullYear(),start.getUTCMonth()+1,1));
+   }
+   // O RPC original interpreta os limites de período no fuso America/Manaus (UTC-4).
+   const from=new Date(start.getTime()+4*3600000).toISOString(),to=new Date(end.getTime()+4*3600000).toISOString();
+   let current=Number(body.current),target=Number(body.target),xpAdd=Math.max(0,Math.floor(Number(body.xp)||0)),pointsAdd=Math.max(0,Math.floor(Number(body.points)||0));
+   if(!Number.isFinite(current)||!Number.isFinite(target))return json({ok:false,error:"Progresso e meta precisam ser números válidos."},400,headers);
+   current=Math.floor(current);target=Math.floor(target);
+   let verifiedCurrent=current,monthlyType=null;
+   if(kind==="monthly"){
+    const cfg=await env.DB.prepare("SELECT valor FROM app_configuracoes WHERE chave='meta_mensal' AND usuario_id IN ('global','00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000181') ORDER BY atualizado_em DESC LIMIT 1").first();
+    const cfgValue=parseObject(cfg&&cfg.valor);
+    monthlyType=String(cfgValue.tipo||cfgValue.type||"livros").toLowerCase();
+    if(monthlyType.includes("pagina")){
+     const row=await env.DB.prepare("SELECT COALESCE(SUM(MAX(0,paginas_lidas)),0) AS total FROM metas_diarias WHERE usuario_id=? AND data>=? AND data<?").bind(uid,period+"-01",new Date(end.getTime()).toISOString().slice(0,10)).first();
+     verifiedCurrent=Number(row&&row.total)||0;
+    }else if(monthlyType.includes("manual")){
+     verifiedCurrent=0;
+    }else{
+     const row=await env.DB.prepare(`SELECT COUNT(DISTINCT COALESCE(NULLIF(json_extract(dados,'$.v511_cycle_id'),''),NULLIF(json_extract(dados,'$.v508_resolved_book_id'),''),NULLIF(json_extract(dados,'$.book_id'),''),NULLIF(json_extract(dados,'$.livro_id'),''),NULLIF(lower(trim(COALESCE(json_extract(dados,'$.bookTitle'),json_extract(dados,'$.livro_titulo'),''))),''),id)) AS total
+      FROM solicitacoes_validacao
+      WHERE usuario_id=? AND lower(status) IN ('approved','aprovado','aprovada')
+      AND lower(COALESCE(json_extract(dados,'$.system_hidden'),'false'))<>'true'
+      AND COALESCE(origem,'') NOT LIKE 'auto_reward_%'
+      AND (lower(COALESCE(json_extract(dados,'$.v512_approved'),'false'))='true' OR lower(COALESCE(json_extract(dados,'$.v511_approved'),'false'))='true' OR lower(COALESCE(json_extract(dados,'$.v510_approved'),'false'))='true' OR lower(COALESCE(json_extract(dados,'$.v509_approved'),'false'))='true' OR lower(COALESCE(json_extract(dados,'$.v508_approved'),'false'))='true' OR lower(COALESCE(json_extract(dados,'$.v507_approved'),'false'))='true' OR lower(COALESCE(json_extract(dados,'$.v506_approved'),'false'))='true' OR lower(COALESCE(json_extract(dados,'$.v483_monthly_applied'),'false'))='true' OR COALESCE(json_extract(dados,'$.v483_book_finalized_at'),'')<>'' OR COALESCE(json_extract(dados,'$.finishApprovedAt'),'')<>'')
+      AND substr(COALESCE(json_extract(dados,'$.v512_approved_at'),json_extract(dados,'$.v511_approved_at'),json_extract(dados,'$.v510_approved_at'),json_extract(dados,'$.v509_approved_at'),json_extract(dados,'$.v508_approved_at'),json_extract(dados,'$.v507_approved_at'),json_extract(dados,'$.v506_approved_at'),json_extract(dados,'$.v483_book_finalized_at'),json_extract(dados,'$.finishApprovedAt'),created_at),1,7)=?
+      AND ((lower(COALESCE(tipo,'')||'|'||COALESCE(origem,'')||'|'||COALESCE(json_extract(dados,'$.request_kind'),'')||'|'||COALESCE(json_extract(dados,'$.v508_type'),'')||'|'||COALESCE(json_extract(dados,'$.v506_type'),'')) LIKE '%finish%' OR lower(COALESCE(tipo,'')||'|'||COALESCE(origem,'')||'|'||COALESCE(json_extract(dados,'$.request_kind'),'')) LIKE '%finaliz%' OR lower(COALESCE(tipo,'')||'|'||COALESCE(origem,'')||'|'||COALESCE(json_extract(dados,'$.request_kind'),'')) LIKE '%club_finish%')
+       OR ((lower(COALESCE(tipo,'')||'|'||COALESCE(origem,'')||'|'||COALESCE(json_extract(dados,'$.request_kind'),'')) LIKE '%monthly%' OR lower(COALESCE(tipo,'')||'|'||COALESCE(origem,'')||'|'||COALESCE(json_extract(dados,'$.request_kind'),'')) LIKE '%mensal%') AND COALESCE(json_extract(dados,'$.bookTitle'),json_extract(dados,'$.livro_titulo'),json_extract(dados,'$.v508_resolved_book_id'),json_extract(dados,'$.book_id'),json_extract(dados,'$.livro_id'),'')<>''))
+      AND (? NOT LIKE '%clube%' OR lower(COALESCE(tipo,'')||'|'||COALESCE(origem,'')||'|'||COALESCE(json_extract(dados,'$.request_kind'),'')) LIKE '%club_finish%' OR lower(COALESCE(tipo,'')||'|'||COALESCE(origem,'')||'|'||COALESCE(json_extract(dados,'$.request_kind'),'')) LIKE '%livro do clube%' OR lower(COALESCE(tipo,'')||'|'||COALESCE(origem,'')||'|'||COALESCE(json_extract(dados,'$.request_kind'),'')) LIKE '%clube%')`).bind(uid,period,monthlyType).first();
+     verifiedCurrent=Number(row&&row.total)||0;
+    }
+    current=verifiedCurrent;
+   }
+   if(current<Math.max(1,target))return json({ok:false,applied:false,reason:"target_not_reached",verified_current:current},200,headers);
+   const origin="auto_reward_v507:"+kind+":"+period;
+   const existing=await env.DB.prepare("SELECT id FROM solicitacoes_validacao WHERE usuario_id=? AND origem=? LIMIT 1").bind(uid,origin).first();
+   if(existing){const u=await env.DB.prepare("SELECT xp,pontos FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();return json({ok:true,applied:false,already_rewarded:true,xp_added:0,points_added:0,xp:Number(u&&u.xp)||0,points:Number(u&&u.pontos)||0},200,headers);}
+   const manual=await env.DB.prepare("SELECT id FROM solicitacoes_validacao WHERE usuario_id=? AND created_at>=? AND created_at<? AND lower(status) IN ('approved','aprovado','aprovada') AND ((?='weekly' AND (lower(tipo) LIKE '%seman%' OR lower(COALESCE(json_extract(dados,'$.request_kind'),''))='weekly')) OR (?='monthly' AND (lower(tipo) LIKE '%mens%' OR lower(COALESCE(json_extract(dados,'$.request_kind'),''))='monthly'))) AND (lower(COALESCE(json_extract(dados,'$.v507_reward_applied'),'false'))='true' OR lower(COALESCE(json_extract(dados,'$.v506_reward_applied'),'false'))='true' OR lower(COALESCE(json_extract(dados,'$.v491_reward_applied'),'false'))='true' OR lower(COALESCE(json_extract(dados,'$.v488_reward_applied'),'false'))='true') LIMIT 1").bind(uid,from,to,kind,kind).first();
+   if(manual){const u=await env.DB.prepare("SELECT xp,pontos FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();return json({ok:true,applied:false,already_rewarded:true,manual_reward_exists:true,xp_added:0,points_added:0,xp:Number(u&&u.xp)||0,points:Number(u&&u.pontos)||0},200,headers);}
+   const user=await env.DB.prepare("SELECT nome,xp,pontos FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();
+   if(!user)return json({ok:false,error:"Perfil não encontrado."},404,headers);
+   const claim="period:"+uid+":"+kind+":"+period,stamp=new Date().toISOString(),requestId=crypto.randomUUID();
+   const rewardData=JSON.stringify({system_hidden:true,v512_system_reward:true,v512_reward_applied:true,v512_reward_applied_at:stamp,v512_period_reward_key:kind+":"+period,request_kind:kind,current:current,target:target});
+   const results=await env.DB.batch([
+    env.DB.prepare("INSERT OR IGNORE INTO entrel_reward_claims_v510 (claim_key,usuario_id,source_type,source_id,xp,pontos,applied,created_at) VALUES (?,?,?,?,?,?,0,?)").bind(claim,uid,"period-goal",period,xpAdd,pointsAdd,stamp),
+    env.DB.prepare("UPDATE usuarios SET xp=COALESCE(xp,0)+?,pontos=COALESCE(pontos,0)+?,atualizado_em=? WHERE id=? AND EXISTS (SELECT 1 FROM entrel_reward_claims_v510 WHERE claim_key=? AND applied=0)").bind(xpAdd,pointsAdd,stamp,uid,claim),
+    env.DB.prepare("INSERT INTO solicitacoes_validacao (id,usuario_id,usuario_nome,tipo,status,origem,resenha,xp,pontos,dados,created_at,updated_at,criado_em) SELECT ?,?,?, 'system_reward','approved',?,'Registro automático interno da meta. Não requer revisão administrativa.',?,?,?, ?,?,? WHERE EXISTS (SELECT 1 FROM entrel_reward_claims_v510 WHERE claim_key=? AND applied=0)").bind(requestId,uid,user.nome||"Membro",origin,xpAdd,pointsAdd,rewardData,stamp,stamp,stamp,claim),
+    env.DB.prepare("UPDATE entrel_reward_claims_v510 SET applied=1,applied_at=? WHERE claim_key=? AND applied=0").bind(stamp,claim)
+   ]);
+   const claimRow=await env.DB.prepare("SELECT applied,xp,pontos FROM entrel_reward_claims_v510 WHERE claim_key=?").bind(claim).first();
+   const updated=await env.DB.prepare("SELECT xp,pontos FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();
+   const applied=!!claimRow&&claimRow.applied===1;
+   return json({ok:true,applied,already_rewarded:!applied,xp_added:applied?Number(claimRow.xp)||0:0,points_added:applied?Number(claimRow.pontos)||0:0,xp:Number(updated&&updated.xp)||0,points:Number(updated&&updated.pontos)||0,period_key:period,verified_current:current},200,headers);
+  }catch(e){return json({ok:false,error:e&&e.message?e.message:"Não foi possível processar a recompensa periódica."},400,headers);}
+ }
  // Recompensa diária de EPUB: o usuário é sempre obtido da sessão; claim único evita pagamento duplicado.
  if(url.pathname==="/api/v1/rewards/daily-epub"&&request.method==="POST"){
   try{
