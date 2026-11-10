@@ -82,3 +82,7 @@ assert.equal(typeof admin.approveClubFinish, 'function');
 assert.throws(() => admin.approveClubFinish('', 'motivo'), /ID da solicitação obrigatório/);
 assert.throws(() => admin.rejectRequest('', 'motivo'), /ID da solicitação obrigatório/);
 assert.throws(() => admin.approveBookFinish('', 'motivo'), /ID da solicitação obrigatório/);
+
+const club = window.EntreLinhasCloudflare.club;
+assert.equal(typeof club.submitFinishRequest, 'function');
+assert.throws(() => club.submitFinishRequest(''), /Identificador do ciclo obrigatório/);
