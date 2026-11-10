@@ -212,6 +212,34 @@
         return request('/api/v1/admin/requests/approve-club-finish', { method: 'POST', body: { request_id: String(requestId), reason: String(reason || '') } });
       }
     }),
+    chat: Object.freeze({
+      list: async function (options) {
+        options = options || {};
+        var query = new URLSearchParams();
+        if (options.limit !== undefined) query.set('limit', String(options.limit));
+        var suffix = query.toString();
+        var result = await request('/api/v1/chat/messages' + (suffix ? '?' + suffix : ''));
+        return { items: result && result.items || [], reactions: result && result.reactions || [], count: Number(result && result.count) || 0 };
+      },
+      send: function (message, reply) {
+        if (typeof message !== 'string' || !message.trim()) throw new TypeError('Mensagem obrigatória.');
+        return request('/api/v1/chat/messages', { method: 'POST', body: { message: message, reply: reply || null } });
+      },
+      edit: function (messageId, message) {
+        if (typeof message !== 'string' || !message.trim()) throw new TypeError('Mensagem obrigatória.');
+        return request('/api/v1/chat/messages/' + id(messageId), { method: 'PATCH', body: { message: message } });
+      },
+      remove: function (messageId) {
+        return request('/api/v1/chat/messages/' + id(messageId), { method: 'DELETE' });
+      },
+      setReaction: function (messageId, emoji) {
+        if (typeof emoji !== 'string' || !emoji.trim()) throw new TypeError('Emoji obrigatório.');
+        return request('/api/v1/chat/messages/' + id(messageId) + '/reaction', { method: 'PUT', body: { emoji: emoji } });
+      },
+      removeReaction: function (messageId) {
+        return request('/api/v1/chat/messages/' + id(messageId) + '/reaction', { method: 'DELETE' });
+      }
+    }),
     notifications: Object.freeze({
       list: function (options) {
         options = options || {};
