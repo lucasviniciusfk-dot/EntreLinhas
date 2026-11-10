@@ -1,0 +1,26 @@
+name: Cloudflare staging checks
+
+on:
+  push:
+    branches:
+      - migration/cloudflare-staging-adapter
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check Worker syntax
+        run: node --input-type=module --check < cloudflare/worker-staging.js
+      - name: Check client syntax
+        run: node --check cloudflare-api-client.js
+      - name: Run client contract tests
+        run: node tests/test-cloudflare-api-client.js
