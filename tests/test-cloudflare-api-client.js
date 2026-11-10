@@ -67,6 +67,13 @@ assert.equal(typeof rewards.awardDailyEpub, 'function');
 assert.throws(() => rewards.awardDailyEpub('09/11/2026'), /Data inválida/);
 assert.throws(() => rewards.awardDailyEpub('2026-99-99'), /Data inválida/);
 
+const periodicRewards = window.EntreLinhasCloudflare.rewards;
+assert.equal(typeof periodicRewards.awardPeriodGoal, 'function');
+assert.throws(() => periodicRewards.awardPeriodGoal('yearly', '2026-11-01', 10, 10, 5, 2), /Tipo de meta periódica inválido/);
+assert.throws(() => periodicRewards.awardPeriodGoal('weekly', '2026-02-30', 10, 10, 5, 2), /Período semanal inválido/);
+assert.throws(() => periodicRewards.awardPeriodGoal('monthly', '2026-13', 10, 10, 5, 2), /Período mensal inválido/);
+assert.throws(() => periodicRewards.awardPeriodGoal('monthly', '2026-11', 'dez', 10, 5, 2), /numéricos/);
+
 const progress = window.EntreLinhasCloudflare.progress;
 assert.equal(typeof progress.monthly, 'function');
 assert.throws(() => progress.monthly('2026-13'), /Período mensal inválido/);
