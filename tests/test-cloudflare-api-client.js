@@ -73,3 +73,10 @@ assert.throws(() => progress.monthly('2026-13'), /Período mensal inválido/);
 assert.throws(() => progress.monthly('2026-02-30'), /Período mensal inválido/);
 
 console.log('OK: mapeamento de livro e validação local de arquivos ↔ API');
+
+const admin = window.EntreLinhasCloudflare.admin;
+assert.equal(typeof admin.listRequests, 'function');
+assert.equal(typeof admin.rejectRequest, 'function');
+assert.equal(typeof admin.approveBookFinish, 'function');
+assert.throws(() => admin.rejectRequest('', 'motivo'), /ID da solicitação obrigatório/);
+assert.throws(() => admin.approveBookFinish('', 'motivo'), /ID da solicitação obrigatório/);
