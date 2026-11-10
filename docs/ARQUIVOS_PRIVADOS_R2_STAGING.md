@@ -12,6 +12,10 @@
 ## Contrato
 
 ### Upload
+O adaptador valida categoria, MIME e tamanho antes de enviar, usando os mesmos limites definidos no Worker. Isso melhora o feedback, mas a validação do servidor continua sendo a autoridade.
+
+Categorias aceitas pelo adaptador: `epub`, `capa`/`cover`, `avatar`, `foto-encontro`/`club-photo`, `comprovante`/`receipt`.
+
 `POST /api/v1/files/upload` — multipart:
 - `file`: arquivo binário
 - `tipo`: `epub`, `capa`, `avatar`, `foto-encontro`, `comprovante`
@@ -31,6 +35,8 @@ Limites preparados:
 `DELETE /api/v1/files/:id` — autenticação e propriedade obrigatórias. A versão mais recente do Worker primeiro grava `deleted_at` no D1 e só então remove o objeto do R2. Se a remoção do R2 falhar, o registro fica bloqueado para download pela API; pode restar um objeto órfão que exige rotina de limpeza controlada.
 
 ## Estado da validação
+
+- O adaptador possui validação local de categoria, MIME e tamanho, com testes automatizados adicionados; isso ainda não substitui a validação no Worker nem o teste integrado autenticado.
 
 - A migration D1 foi aplicada em staging e a tabela/índices foram verificados.
 - O Worker foi implantado em staging e o endpoint `/health` foi confirmado pelo usuário.
