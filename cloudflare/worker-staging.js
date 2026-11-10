@@ -387,6 +387,66 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    }
    return json({ok:true,id:notificationId,action:action},200,headers);
   }
+  // Chat: identidade e permissões derivadas da sessão; mensagens removidas ficam preservadas para auditoria.
+  if(request.method==="GET"&&url.pathname==="/api/v1/chat/messages"){
+   const limit=clampInt(url.searchParams.get("limit"),250,1,300);
+   const rows=await env.DB.prepare("SELECT id,usuario_id,mensagem,fixada,criado_em,editada,apagada,atualizado_em,reacoes,reagido_por,curtidas,nome,texto,removida,dados,editado_em FROM chat_mensagens WHERE COALESCE(removida,0)=0 AND COALESCE(apagada,0)=0 ORDER BY criado_em DESC,id DESC LIMIT ?").bind(limit).all();
+   const items=(rows.results||[]).reverse();
+   const ids=items.map(x=>String(x.id));
+   let reactions=[];
+   if(ids.length){
+    const marks=ids.map(()=>"?").join(",");
+    const rr=await env.DB.prepare("SELECT id,mensagem_id,usuario_id,emoji,criado_em,atualizado_em FROM chat_reacoes WHERE mensagem_id IN ("+marks+") ORDER BY criado_em ASC").bind(...ids).all();
+    reactions=rr.results||[];
+   }
+   const byMessage={};for(const r of reactions){const key=String(r.mensagem_id);if(!byMessage[key])byMessage[key]=[];byMessage[key].push(r);}
+   for(const m of items){m.dados=parseObject(m.dados);m.reacoes=parseObject(m.reacoes);m.reaction_items=byMessage[String(m.id)]||[];}
+   return json({ok:true,items,reactions,count:items.length,limit},200,headers);
+  }
+  if(request.method==="POST"&&url.pathname==="/api/v1/chat/messages"){
+   const b=await readBody(request),message=validText(b.message,4000,"Mensagem",true);
+   const profile=await env.DB.prepare("SELECT nome FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();
+   const stamp=new Date().toISOString(),id=crypto.randomUUID(),reply=b.reply&&typeof b.reply==="object"?{id:validText(b.reply.id,128,"ID da resposta"),userName:validText(b.reply.userName||"Membro",120,"Nome"),text:validText(b.reply.text||"",240,"Trecho")}:null;
+   const dados=JSON.stringify(Object.assign({tipo:"mensagem"},reply?{reply}:{}));
+   await env.DB.prepare("INSERT INTO chat_mensagens (id,usuario_id,mensagem,fixada,criado_em,editada,apagada,atualizado_em,reacoes,reagido_por,curtidas,nome,texto,removida,dados,editado_em) VALUES (?,?,?,0,?,0,0,?,'{}','[]','[]',?,?,0,?,NULL)").bind(id,uid,message,stamp,stamp,String(profile&&profile.nome||access.user.email||"Membro"),message,dados).run();
+   const item=await env.DB.prepare("SELECT id,usuario_id,mensagem,fixada,criado_em,editada,apagada,atualizado_em,reacoes,reagido_por,curtidas,nome,texto,removida,dados,editado_em FROM chat_mensagens WHERE id=?").bind(id).first();
+   item.dados=parseObject(item.dados);item.reaction_items=[];
+   return json({ok:true,message:item},201,headers);
+  }
+  const chatMessageRoute=url.pathname.match(/^\/api\/v1\/chat\/messages\/([^/]+)$/);
+  if(chatMessageRoute&&(request.method==="PATCH"||request.method==="DELETE")){
+   const messageId=decodeURIComponent(chatMessageRoute[1]),row=await env.DB.prepare("SELECT id,usuario_id,mensagem,criado_em,fixada,removida FROM chat_mensagens WHERE id=? LIMIT 1").bind(messageId).first();
+   if(!row||row.removida===1)return json({ok:false,error:"Mensagem não encontrada."},404,headers);
+   const owner=String(row.usuario_id||"")===uid;
+   if(request.method==="PATCH"){
+    if(!owner)return json({ok:false,error:"Somente o autor pode editar esta mensagem."},403,headers);
+    const body=await readBody(request),message=validText(body.message,4000,"Mensagem",true),stamp=new Date().toISOString();
+    await env.DB.prepare("UPDATE chat_mensagens SET mensagem=?,texto=?,editada=1,editado_em=?,atualizado_em=? WHERE id=? AND usuario_id=? AND COALESCE(removida,0)=0").bind(message,message,stamp,stamp,messageId,uid).run();
+    return json({ok:true,id:messageId,message,edited_at:stamp},200,headers);
+   }
+   const created=Date.parse(row.criado_em||"")||0,withinWindow=created>0&&Date.now()-created<=30*60*1000;
+   if(!isAdmin&&!(owner&&withinWindow))return json({ok:false,error:"Você só pode apagar suas mensagens por até 30 minutos."},403,headers);
+   const stamp=new Date().toISOString();
+   await env.DB.batch([
+    env.DB.prepare("UPDATE chat_mensagens SET removida=1,apagada=1,atualizado_em=? WHERE id=? AND COALESCE(removida,0)=0").bind(stamp,messageId),
+    env.DB.prepare("DELETE FROM chat_reacoes WHERE mensagem_id=?").bind(messageId)
+   ]);
+   return json({ok:true,id:messageId,removed:true},200,headers);
+  }
+  const chatReactionRoute=url.pathname.match(/^\/api\/v1\/chat\/messages\/([^/]+)\/reaction$/);
+  if(chatReactionRoute&&request.method==="PUT"){
+   const messageId=decodeURIComponent(chatReactionRoute[1]),body=await readBody(request),emoji=validText(body.emoji,16,"Emoji",true);
+   const message=await env.DB.prepare("SELECT id FROM chat_mensagens WHERE id=? AND COALESCE(removida,0)=0 AND COALESCE(apagada,0)=0 LIMIT 1").bind(messageId).first();
+   if(!message)return json({ok:false,error:"Mensagem não encontrada."},404,headers);
+   const stamp=new Date().toISOString();
+   await env.DB.prepare("INSERT INTO chat_reacoes (id,mensagem_id,usuario_id,emoji,criado_em,atualizado_em) VALUES (?,?,?,?,?,?) ON CONFLICT(mensagem_id,usuario_id) DO UPDATE SET emoji=excluded.emoji,atualizado_em=excluded.atualizado_em").bind(crypto.randomUUID(),messageId,uid,emoji,stamp,stamp).run();
+   return json({ok:true,message_id:messageId,emoji},200,headers);
+  }
+  if(chatReactionRoute&&request.method==="DELETE"){
+   const messageId=decodeURIComponent(chatReactionRoute[1]);
+   await env.DB.prepare("DELETE FROM chat_reacoes WHERE mensagem_id=? AND usuario_id=?").bind(messageId,uid).run();
+   return json({ok:true,message_id:messageId,removed:true},200,headers);
+  }
   if(request.method==="GET"&&url.pathname==="/api/v1/challenges"){const [c,p]=await Promise.all([env.DB.prepare("SELECT * FROM desafios WHERE COALESCE(ativo,1)=1 ORDER BY criado_em DESC LIMIT 200").all(),env.DB.prepare("SELECT * FROM usuario_desafios WHERE usuario_id=? ORDER BY atualizado_em DESC LIMIT 500").bind(uid).all()]);return json({ok:true,items:c.results||[],progress:p.results||[]},200,headers);}
   if(request.method==="POST"&&url.pathname==="/api/v1/library/books"){const b=await readBody(request),title=validText(b.title,240,"Título",true),author=validText(b.author,200,"Autor",true),genre=validText(b.genre||"Outro",100,"Gênero"),pages=clampInt(b.pages,100,1,100000);if(b.current_page!==undefined&&(!Number.isInteger(Number(b.current_page))||Number(b.current_page)<0||Number(b.current_page)>pages))return json({ok:false,error:"A página atual precisa estar entre 0 e o total de páginas."},400,headers);const currentPage=clampInt(b.current_page,0,0,pages),cover=validText(b.cover_url||"",2048,"Capa"),cfi=validText(b.epub_cfi||"",4096,"Posição EPUB"),requestedStatus=String(b.status||"reading").toLowerCase(),status=["reading","pending_finish","finished"].includes(requestedStatus)?requestedStatus:"reading",progress=Math.max(0,Math.min(100,Math.round(currentPage/pages*100))),finished=status==="finished"||currentPage>=pages,finalStatus=finished?"finished":status;if(cover&&!/^https:\/\//i.test(cover))return json({ok:false,error:"A capa precisa ser uma URL HTTPS."},400,headers);const all=await env.DB.prepare("SELECT id,titulo,autor FROM livros_pessoais WHERE usuario_id=? AND COALESCE(ativo,1)=1 LIMIT 500").bind(uid).all();const dup=(all.results||[]).find(x=>clean(x.titulo)===clean(title)&&clean(x.autor)===clean(author));if(dup)return json({ok:false,error:"Este livro já está na sua biblioteca.",existing_book_id:dup.id},409,headers);const id=crypto.randomUUID(),stamp=new Date().toISOString(),dados=JSON.stringify({source:"personal-manual-online",finishPending:finalStatus==="pending_finish",createdFrom:"manual",schemaVersion:1});await env.DB.prepare("INSERT INTO livros_pessoais (id,usuario_id,livro_id,titulo,autor,genero,paginas,capa,capa_url,epub_storage_path,pagina_atual,progresso,epub_cfi,status,ativo,dados,publico,criado_em,atualizado_em,finalizado_em) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").bind(id,uid,id,title,author,genre,pages,cover,cover,"",currentPage,progress,cfi,finalStatus,1,dados,0,stamp,stamp,finished?stamp:null).run();const book=await env.DB.prepare("SELECT * FROM livros_pessoais WHERE id=? AND usuario_id=? LIMIT 1").bind(id,uid).first();return json({ok:true,book},201,headers);}
   const route=url.pathname.match(/^\/api\/v1\/library\/books\/([^/]+)$/);if(route&&request.method==="GET"){const id=decodeURIComponent(route[1]),book=await env.DB.prepare("SELECT * FROM livros_pessoais WHERE id=? AND usuario_id=? AND COALESCE(ativo,1)=1 LIMIT 1").bind(id,uid).first();if(!book)return json({ok:false,error:"Livro não encontrado."},404,headers);return json({ok:true,book},200,headers);}if(route&&(request.method==="PATCH"||request.method==="DELETE")){const id=decodeURIComponent(route[1]),book=await env.DB.prepare("SELECT * FROM livros_pessoais WHERE id=? AND usuario_id=? LIMIT 1").bind(id,uid).first();if(!book)return json({ok:false,error:"Livro não encontrado."},404,headers);if(request.method==="DELETE"){const stamp=new Date().toISOString();await env.DB.prepare("UPDATE livros_pessoais SET ativo=0,atualizado_em=? WHERE id=? AND usuario_id=?").bind(stamp,id,uid).run();return json({ok:true,removed:true,book_id:id},200,headers);}const b=await readBody(request),title=b.title===undefined?book.titulo:validText(b.title,240,"Título",true),author=b.author===undefined?book.autor:validText(b.author,200,"Autor",true),genre=b.genre===undefined?book.genero:validText(b.genre,100,"Gênero"),pages=b.pages===undefined?(Number(book.paginas)||100):clampInt(b.pages,Number(book.paginas)||100,1,100000);if(b.current_page!==undefined&&(!Number.isInteger(Number(b.current_page))||Number(b.current_page)<0||Number(b.current_page)>pages))return json({ok:false,error:"A página atual precisa estar entre 0 e o total de páginas."},400,headers);if(b.pages!==undefined&&Number(book.pagina_atual)>pages&&b.current_page===undefined)return json({ok:false,error:"O total de páginas não pode ficar abaixo da página de leitura atual."},409,headers);const cover=b.cover_url===undefined?(book.capa_url||""):validText(b.cover_url,2048,"Capa"),page=b.current_page===undefined?clampInt(book.pagina_atual,0,0,pages):clampInt(b.current_page,0,0,pages),cfi=b.epub_cfi===undefined?String(book.epub_cfi||""):validText(b.epub_cfi,4096,"Posição EPUB"),rawStatus=b.status===undefined?String(book.status||"reading"):String(b.status).toLowerCase();if(!["reading","pending_finish","finished"].includes(rawStatus))return json({ok:false,error:"Status de leitura inválido."},400,headers);if(cover&&!/^https:\/\//i.test(cover))return json({ok:false,error:"A capa precisa ser uma URL HTTPS."},400,headers);const progress=Math.max(0,Math.min(100,Math.round(page/pages*100))),status=page>=pages?"finished":rawStatus,finished=status==="finished",stamp=new Date().toISOString(),dados=JSON.stringify(Object.assign({},parseObject(book.dados),{finishPending:status==="pending_finish"})),bookKey=String(book.livro_id||book.id),rid=crypto.randomUUID();await env.DB.batch([env.DB.prepare("UPDATE livros_pessoais SET titulo=?,autor=?,genero=?,paginas=?,capa=?,capa_url=?,pagina_atual=?,progresso=?,epub_cfi=?,status=?,finalizado_em=CASE WHEN ?=1 THEN COALESCE(finalizado_em,?) ELSE NULL END,dados=?,atualizado_em=? WHERE id=? AND usuario_id=?").bind(title,author,genre,pages,cover,cover,page,progress,cfi,status,finished?1:0,stamp,dados,stamp,id,uid),env.DB.prepare("INSERT INTO leituras (id,usuario_id,livro_id,pagina_atual,porcentagem,finalizado,atualizado_em,progresso,epub_cfi,status,dados) VALUES (?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(usuario_id,livro_id) DO UPDATE SET pagina_atual=excluded.pagina_atual,porcentagem=excluded.porcentagem,finalizado=excluded.finalizado,atualizado_em=excluded.atualizado_em,progresso=excluded.progresso,epub_cfi=excluded.epub_cfi,status=excluded.status,dados=excluded.dados").bind(rid,uid,bookKey,page,progress,finished?1:0,stamp,progress,cfi,status,dados)]);const updated=await env.DB.prepare("SELECT * FROM livros_pessoais WHERE id=? AND usuario_id=? LIMIT 1").bind(id,uid).first();return json({ok:true,book:updated},200,headers);}
