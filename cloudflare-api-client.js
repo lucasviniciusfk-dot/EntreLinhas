@@ -103,6 +103,29 @@
       updatedAt: row.atualizado_em || row.criado_em || null
     };
   }
+  var fileRules = Object.freeze({
+    epub: { max: 25 * 1024 * 1024, types: ['application/epub+zip', 'application/octet-stream'] },
+    cover: { max: 5 * 1024 * 1024, types: ['image/jpeg', 'image/png', 'image/webp'] },
+    avatar: { max: 5 * 1024 * 1024, types: ['image/jpeg', 'image/png', 'image/webp'] },
+    'club-photo': { max: 5 * 1024 * 1024, types: ['image/jpeg', 'image/png', 'image/webp'] },
+    receipt: { max: 10 * 1024 * 1024, types: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'] }
+  });
+  var fileCategories = Object.freeze({
+    epub: 'epub', capa: 'cover', cover: 'cover', avatar: 'avatar',
+    'foto-encontro': 'club-photo', 'club-photo': 'club-photo',
+    comprovante: 'receipt', receipt: 'receipt'
+  });
+  function validateFile(file, category) {
+    var normalized = fileCategories[String(category || '').toLowerCase()];
+    if (!normalized || !file || typeof file.size !== 'number') {
+      throw new TypeError('Arquivo ou categoria inválida.');
+    }
+    var rule = fileRules[normalized], mime = String(file.type || 'application/octet-stream').toLowerCase();
+    if (file.size < 1 || file.size > rule.max) throw new RangeError('Tamanho do arquivo fora do limite permitido.');
+    if (rule.types.indexOf(mime) === -1) throw new TypeError('Tipo de arquivo não permitido.');
+    return normalized;
+  }
+
   var api = Object.freeze({
     version: '0.2.0-staging',
     request: request,
@@ -153,10 +176,12 @@
     }),
     goals: Object.freeze({ list: function () { return request('/api/v1/goals'); } }),
     files: Object.freeze({
+      validate: validateFile,
       upload: function (file, category, albumId) {
+        var normalized = validateFile(file, category);
         var form = new FormData();
         form.append("file", file);
-        form.append("tipo", category);
+        form.append("tipo", normalized);
         if (albumId) form.append("albumId", String(albumId));
         return request("/api/v1/files/upload", { method: "POST", body: form });
       },
@@ -177,7 +202,8 @@
       }
     }),
     challenges: Object.freeze({ list: function () { return request("/api/v1/challenges"); } }),
-    mapping: Object.freeze({ toApiBook: toApiBook, toApiBookPatch: toApiBookPatch, fromApiBook: fromApiBook })
+    mapping: Object.freeze({ toApiBook: toApiBook, toApiBookPatch: toApiBookPatch, fromApiBook: fromApiBook }),
+    fileRules: fileRules
   });
   Object.defineProperty(root, 'EntreLinhasCloudflare', {
     value: api, configurable: false, enumerable: false, writable: false
