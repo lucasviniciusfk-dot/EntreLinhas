@@ -20,13 +20,13 @@ export default {async fetch(request,env){
  const headers=cors(request.headers.get("Origin")||"");if(request.method==="OPTIONS")return new Response(null,{status:204,headers});
  const url=new URL(request.url);if(url.pathname==="/health"&&request.method==="GET"){let d1=false;try{const x=await env.DB.prepare("SELECT 1 AS ok").first();d1=!!x&&x.ok===1;}catch(_){}const authReady=!!env.SUPABASE_URL&&!!env.SUPABASE_PUBLISHABLE_KEY;return json({ok:d1&&!!env.FILES&&authReady,environment:"staging",service:"entrelinhas-api-staging",bindings:{d1,r2:!!env.FILES,authConfig:authReady},readRoutesEnabled:true,writeRoutesEnabled:true},200,headers);}
  if(url.pathname==="/__staging-file-check"&&request.method==="GET"){
-  const html = `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Entre Linhas — teste de arquivos</title><style>body{font:16px system-ui;background:#111;color:#eee;max-width:560px;margin:32px auto;padding:20px}main{background:#1d1d1d;padding:22px;border-radius:16px}button{box-sizing:border-box;width:100%;padding:14px;border-radius:8px;border:1px solid #555;font:inherit;margin-top:16px;background:#e8e8e8;color:#111;font-weight:700}button:disabled{opacity:.5}#out{white-space:pre-wrap;overflow-wrap:anywhere;background:#090909;padding:12px;border-radius:8px;margin-top:16px}.note{color:#bbb;font-size:14px}</style><main><h2>Teste privado de arquivos — staging</h2><p>Entre com a mesma conta Google usada no Entre Linhas. Não é necessário informar senha.</p><p class="note">A autenticação acontece pelo Supabase Auth com OAuth/PKCE. O token é usado somente neste teste, no navegador, e a sessão temporária é limpa ao terminar. Nenhum arquivo pessoal será enviado: será usado um PNG sintético.</p><button id="go">Continuar com Google e testar</button><pre id="out">Preparando autenticação…</pre></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+  const html = `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Entre Linhas — teste de arquivos</title><style>body{font:16px system-ui;background:#111;color:#eee;max-width:560px;margin:32px auto;padding:20px}main{background:#1d1d1d;padding:22px;border-radius:16px}button{box-sizing:border-box;width:100%;padding:14px;border-radius:8px;border:1px solid #555;font:inherit;margin-top:16px;background:#e8e8e8;color:#111;font-weight:700}button:disabled{opacity:.5}#out{white-space:pre-wrap;overflow-wrap:anywhere;background:#090909;padding:12px;border-radius:8px;margin-top:16px}.note{color:#bbb;font-size:14px}</style><main><h2>Teste privado de arquivos — staging</h2><p>Entre com a mesma conta Google usada no Entre Linhas. Não é necessário informar senha.</p><p class="note">A autenticação acontece pelo Supabase Auth com OAuth/PKCE. O token é usado somente neste teste, no navegador, e a sessão temporária é limpa ao terminar. Nenhum arquivo pessoal será enviado: será usado um PNG sintético.</p><button id="go">Continuar com Google e testar</button><pre id="out">Preparando autenticação…</pre></main><script type="module">\nimport { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL="https://jxzcuqwlnqxnhftffbjx.supabase.co";
 const SUPABASE_KEY="sb_publishable_LyHzFw6vbzqAPXlLPPPFYA_pQMNyqQc";
 const API=location.origin;
 const STORAGE_KEY="entrelinhas-staging-oauth-test";
 const out=document.getElementById("out"),btn=document.getElementById("go");
-const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{flowType:"pkce",persistSession:true,autoRefreshToken:false,detectSessionInUrl:true,storage:window.sessionStorage,storageKey:STORAGE_KEY}});
+const supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{flowType:"pkce",persistSession:true,autoRefreshToken:false,detectSessionInUrl:true,storage:window.sessionStorage,storageKey:STORAGE_KEY}});
 function log(s){out.textContent+="\n"+s;}
 async function runTest(token){
  let fileId=null,deleted=false;
@@ -71,8 +71,8 @@ btn.addEventListener("click",async()=>{
  if(data.session&&data.session.access_token){btn.disabled=true;await runTest(data.session.access_token);}
  else out.textContent="Pronto. Toque em “Continuar com Google e testar”.";
 })();
-</script></html>`
-  const h=new Headers(headers);h.set("Content-Type","text/html; charset=utf-8");h.set("Cache-Control","no-store");h.set("Content-Security-Policy","default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://jxzcuqwlnqxnhftffbjx.supabase.co; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+})().catch(e=>{out.textContent="Falha ao iniciar o teste: "+(e&&e.message?e.message:String(e));btn.disabled=false;});\n</script></html>`
+  const h=new Headers(headers);h.set("Content-Type","text/html; charset=utf-8");h.set("Cache-Control","no-store");h.set("Content-Security-Policy","default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline' https://esm.sh; connect-src 'self' https://jxzcuqwlnqxnhftffbjx.supabase.co; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
   return new Response(html,{status:200,headers:h});
  }
  if(!url.pathname.startsWith("/api/v1/"))return json({ok:false,error:"Not found"},404,headers);
