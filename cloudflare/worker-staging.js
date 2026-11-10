@@ -124,7 +124,7 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    ]);
    const claimRow=await env.DB.prepare("SELECT applied,xp,pontos FROM entrel_reward_claims_v510 WHERE claim_key=?").bind(claim).first();
    const updated=await env.DB.prepare("SELECT xp,pontos FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();
-   const applied=!!claimRow&&claimRow.applied===1;
+   const applied=!!results[1]&&!!results[1].meta&&Number(results[1].meta.changes)>0;
    return json({ok:true,applied,already_rewarded:!applied,xp_added:applied?Number(claimRow.xp)||0:0,points_added:applied?Number(claimRow.pontos)||0:0,xp:Number(updated&&updated.xp)||0,points:Number(updated&&updated.pontos)||0,period_key:period,verified_current:current},200,headers);
   }catch(e){return json({ok:false,error:e&&e.message?e.message:"Não foi possível processar a recompensa periódica."},400,headers);}
  }
