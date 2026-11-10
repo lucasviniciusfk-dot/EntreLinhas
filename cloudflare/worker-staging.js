@@ -56,10 +56,13 @@ export default {async fetch(request,env){
   try{
    const id=decodeURIComponent(fileRoute[1]),asset=await env.DB.prepare("SELECT id,object_key FROM file_assets WHERE id=? AND owner_id=? AND deleted_at IS NULL LIMIT 1").bind(id,uid).first();
    if(!asset)return json({ok:false,error:"Arquivo não encontrado."},404,headers);
+   // Primeiro bloqueia o acesso no D1; se a exclusão do R2 falhar, o objeto fica inacessível pela API e pode ser limpo depois.
+   const stamp=new Date().toISOString();
+   const result=await env.DB.prepare("UPDATE file_assets SET deleted_at=? WHERE id=? AND owner_id=? AND deleted_at IS NULL").bind(stamp,id,uid).run();
+   if(!result.meta||result.meta.changes!==1)return json({ok:false,error:"Não foi possível confirmar a remoção do arquivo."},409,headers);
    await env.FILES.delete(asset.object_key);
-   await env.DB.prepare("UPDATE file_assets SET deleted_at=? WHERE id=? AND owner_id=?").bind(new Date().toISOString(),id,uid).run();
    return json({ok:true,deleted:true,id:id},200,headers);
-  }catch(e){return json({ok:false,error:"Não foi possível remover o arquivo."},500,headers);}
+  }catch(e){return json({ok:false,error:"Arquivo bloqueado para acesso; a limpeza do armazenamento pode precisar ser repetida."},500,headers);}
  }
  try{
   if(request.method==="GET"&&url.pathname==="/api/v1/me"){const p=await env.DB.prepare("SELECT id,nome,email,foto_url,bio,livro_favorito,nivel,xp,paginas_lidas,livros_finalizados,sequencia_dias,moldura_ativa,perfil_privado,biblioteca_publica,moldura_atual,criado_em,estado FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();return json({ok:true,user:{id:uid,email:access.user.email||p.email},profile:p},200,headers);}
