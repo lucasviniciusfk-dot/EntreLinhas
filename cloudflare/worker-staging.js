@@ -71,10 +71,10 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    if(kind!=="weekly"&&kind!=="monthly")return json({ok:false,error:"Tipo de meta periódica inválido."},400,headers);
    let start,end;
    if(kind==="weekly"){
-    if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(period)||Number.isNaN(Date.parse(period+"T00:00:00Z"))||new Date(period+"T00:00:00Z").toISOString().slice(0,10)!==period)return json({ok:false,error:"Período semanal inválido."},400,headers);
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(period)||Number.isNaN(Date.parse(period+"T00:00:00Z"))||new Date(period+"T00:00:00Z").toISOString().slice(0,10)!==period)return json({ok:false,error:"Período semanal inválido."},400,headers);
     start=new Date(period+"T00:00:00Z");end=new Date(start.getTime()+7*86400000);
    }else{
-    if(!/^\\d{4}-\\d{2}$/.test(period)||Number.isNaN(Date.parse(period+"-01T00:00:00Z"))||new Date(period+"-01T00:00:00Z").toISOString().slice(0,7)!==period)return json({ok:false,error:"Período mensal inválido."},400,headers);
+    if(!/^\d{4}-\d{2}$/.test(period)||Number.isNaN(Date.parse(period+"-01T00:00:00Z"))||new Date(period+"-01T00:00:00Z").toISOString().slice(0,7)!==period)return json({ok:false,error:"Período mensal inválido."},400,headers);
     start=new Date(period+"-01T00:00:00Z");end=new Date(Date.UTC(start.getUTCFullYear(),start.getUTCMonth()+1,1));
    }
    // O RPC original interpreta os limites de período no fuso America/Manaus (UTC-4).
@@ -251,7 +251,7 @@ document.getElementById("f").addEventListener("submit",async function(ev){
   if(request.method==="GET"&&url.pathname==="/api/v1/goals"){const limit=clampInt(url.searchParams.get("daily_limit"),90,1,366);const [s,d]=await Promise.all([env.DB.prepare("SELECT * FROM metas_usuarios WHERE usuario_id=? LIMIT 1").bind(uid).first(),env.DB.prepare("SELECT * FROM metas_diarias WHERE usuario_id=? ORDER BY data DESC LIMIT ?").bind(uid,limit).all()]);return json({ok:true,summary:s||null,daily:d.results||[],dailyCount:(d.results||[]).length},200,headers);}
   if(request.method==="GET"&&url.pathname==="/api/v1/progress/monthly"){
    const period=url.searchParams.get("period")||"";
-   if(!/^\\d{4}-\\d{2}$/.test(period)||Number.isNaN(Date.parse(period+"-01T00:00:00Z"))||new Date(period+"-01T00:00:00Z").toISOString().slice(0,7)!==period)return json({ok:false,error:"Período mensal inválido. Use AAAA-MM."},400,headers);
+   if(!/^\d{4}-\d{2}$/.test(period)||Number.isNaN(Date.parse(period+"-01T00:00:00Z"))||new Date(period+"-01T00:00:00Z").toISOString().slice(0,7)!==period)return json({ok:false,error:"Período mensal inválido. Use AAAA-MM."},400,headers);
    const start=period+"-01",date=new Date(start+"T00:00:00Z"),endDate=new Date(Date.UTC(date.getUTCFullYear(),date.getUTCMonth()+1,1)).toISOString().slice(0,10);
    let kind="livros";
    try{
