@@ -184,6 +184,12 @@
         }});
       }
     }),
+    clubCurrent: Object.freeze({
+      get: async function () {
+        var result = await request('/api/v1/club/current-book');
+        return result && result.book || null;
+      }
+    }),
     clubLibrary: Object.freeze({
       listBooks: async function (options) {
         options = options || {};
