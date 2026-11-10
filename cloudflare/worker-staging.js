@@ -239,7 +239,7 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    const r=await env.DB.prepare("SELECT id,titulo,autor,genero,paginas_total,capa_url,epub_storage_path,nome_arquivo,ativo,criado_por,criado_em,atualizado_em,origem_arquivo FROM clube_biblioteca WHERE COALESCE(ativo,1)=1 ORDER BY atualizado_em DESC,id DESC LIMIT ?").bind(limit).all();
    return json({ok:true,items:r.results||[],count:(r.results||[]).length,limit},200,headers);
   }
-  const clubBookRoute=url.pathname.match(/^\\/api\\/v1\\/club\\/library\\/books\\/([^/]+)$/);
+  const clubBookRoute=url.pathname.match(/^\/api\/v1\/club\/library\/books\/([^/]+)$/);
   if(request.method==="GET"&&clubBookRoute){
    const bookId=decodeURIComponent(clubBookRoute[1]);
    const row=await env.DB.prepare("SELECT id,titulo,autor,genero,paginas_total,capa_url,epub_storage_path,nome_arquivo,ativo,criado_por,criado_em,atualizado_em,origem_arquivo FROM clube_biblioteca WHERE id=? AND COALESCE(ativo,1)=1 LIMIT 1").bind(bookId).first();
