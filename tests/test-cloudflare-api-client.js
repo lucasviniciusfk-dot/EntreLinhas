@@ -23,6 +23,12 @@ assert.equal(api.title, 'A Travessia');
 assert.equal(api.current_page, 87);
 assert.equal(api.epub_cfi, 'epubcfi(/6/4)');
 
+const partialPatch = map.toApiBookPatch({ author: 'Novo nome' });
+assert.deepEqual(JSON.parse(JSON.stringify(partialPatch)), { author: 'Novo nome' });
+assert.deepEqual(JSON.parse(JSON.stringify(map.toApiBookPatch({ pages: 410, cover: '' }))), {
+  pages: 410, cover_url: ''
+});
+
 const roundTrip = map.fromApiBook({
   id: 'personal-1', usuario_id: 'user-1', livro_id: 'fingerprint-1',
   titulo: 'A Travessia', autor: 'Autora', genero: 'Fantasia',
