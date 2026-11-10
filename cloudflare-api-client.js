@@ -185,6 +185,12 @@
       }
     }),
     goals: Object.freeze({ list: function () { return request('/api/v1/goals'); } }),
+    rewards: Object.freeze({
+      awardDailyEpub: function (date) {
+        if (typeof date !== 'string' || !/^\\d{4}-\\d{2}-\\d{2}$/.test(date)) throw new TypeError('Data inválida.');
+        return request('/api/v1/rewards/daily-epub', { method: 'POST', body: { date: date } });
+      }
+    }),
     files: Object.freeze({
       validate: validateFile,
       upload: function (file, category, albumId) {
