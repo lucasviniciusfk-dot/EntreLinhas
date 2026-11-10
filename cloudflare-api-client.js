@@ -184,6 +184,16 @@
         }});
       }
     }),
+    clubLibrary: Object.freeze({
+      listBooks: async function (options) {
+        options = options || {};
+        var query = new URLSearchParams();
+        if (options.limit !== undefined) query.set('limit', String(options.limit));
+        var suffix = query.toString();
+        var result = await request('/api/v1/club/library/books' + (suffix ? '?' + suffix : ''));
+        return result && result.items || [];
+      }
+    }),
     club: Object.freeze({
       submitFinishRequest: function (cycleId) {
         if (!cycleId || !String(cycleId).trim()) throw new TypeError('Identificador do ciclo obrigatório.');
