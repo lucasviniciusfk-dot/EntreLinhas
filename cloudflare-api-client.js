@@ -184,6 +184,12 @@
         }});
       }
     }),
+    club: Object.freeze({
+      submitFinishRequest: function (cycleId) {
+        if (!cycleId || !String(cycleId).trim()) throw new TypeError('Identificador do ciclo obrigatório.');
+        return request('/api/v1/club/finish-request', { method: 'POST', body: { cycle_id: String(cycleId).trim() } });
+      }
+    }),
     admin: Object.freeze({
       listRequests: function (options) {
         options = options || {};
