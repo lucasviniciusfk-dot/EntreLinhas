@@ -103,3 +103,28 @@ Contagens são ocorrências aproximadas de .from('nome') no HTML; incluem opera�
 - Nenhuma linha de usuário foi alterada nesta auditoria.
 - Supabase Auth permanece preservado.
 - Nenhuma publicação, merge ou alteração em GitHub Pages/main foi feita.
+
+
+### Etapa 3 — autenticação Google e integração do app com Worker (iniciada em 10/11/2026)
+
+**Verificações realizadas**
+- [x] Confirmado no Cloudflare que o Worker `entrelinhas-api-staging` está implantado e com deployment ativo em 100%.
+- [x] Confirmado binding D1 `DB` apontando para o banco `entrelinhas-staging`.
+- [x] Confirmado binding R2 `FILES` apontando para `entrelinhas-staging-private`.
+- [x] Confirmadas as configurações `SUPABASE_URL` e `SUPABASE_PUBLISHABLE_KEY` usadas para validar tokens Supabase Auth no Worker.
+- [x] Revisado o middleware do Worker: valida o Bearer token em `/auth/v1/user`, deriva o UID do token e consulta o perfil em D1; não confia em UID enviado pelo navegador.
+- [x] Inventariadas rotas de staging existentes para perfil, biblioteca, leitura, metas, progresso, desafios, arquivos, clube, notificações, chat, solicitações administrativas e recompensas.
+- [x] Confirmada a existência do cliente isolado `cloudflare-api-client.js` e do adaptador `cloudflare-club-adapter.js`.
+
+**Pendências desta etapa**
+- [ ] Validar a sessão Google/Supabase Auth em execução real no ambiente de staging, sem compartilhar senha ou token.
+- [ ] Integrar/carregar o cliente Cloudflare no frontend de staging; a integração ainda não está marcada como ativa.
+- [ ] Migrar os módulos do frontend gradualmente para os contratos do Worker, começando por perfil, biblioteca e leitura.
+- [ ] Mapear e portar as regras/RPCs/triggers restantes com autorização, idempotência e semântica equivalente.
+- [ ] Adaptar a fila offline sem perder nem descartar operações antigas.
+- [ ] Testar permissões de usuário comum e administrador, erros de sessão e isolamento de dados.
+
+**Limites desta verificação**
+- A leitura da configuração e dos deployments foi feita pela API Cloudflare. O teste HTTP direto de `/health` não pôde ser concluído neste ambiente de execução; portanto não declarar o endpoint funcional com base apenas na configuração.
+- Nenhum segredo foi exibido ou alterado.
+- Nenhum deploy, alteração em produção, merge ou cutover foi realizado nesta auditoria.
