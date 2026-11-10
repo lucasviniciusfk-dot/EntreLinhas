@@ -232,8 +232,15 @@ document.getElementById("f").addEventListener("submit",async function(ev){
   if(request.method==="GET"&&url.pathname==="/api/v1/me"){const p=await env.DB.prepare("SELECT id,nome,email,foto_url,bio,livro_favorito,nivel,xp,paginas_lidas,livros_finalizados,sequencia_dias,moldura_ativa,perfil_privado,biblioteca_publica,moldura_atual,criado_em,estado FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();return json({ok:true,user:{id:uid,email:access.user.email||p.email},profile:p},200,headers);}
   if(request.method==="GET"&&url.pathname==="/api/v1/club/library/books"){
    const limit=clampInt(url.searchParams.get("limit"),200,1,500);
-   const r=await env.DB.prepare("SELECT id,titulo,autor,genero,paginas,capa_url,epub_url,livro_mes,ativo,criado_por,criado_em FROM livros WHERE COALESCE(ativo,1)=1 AND COALESCE(epub_url,'') LIKE 'club/%' ORDER BY criado_em DESC,id DESC LIMIT ?").bind(limit).all();
+   const r=await env.DB.prepare("SELECT id,titulo,autor,genero,paginas_total,capa_url,epub_storage_path,nome_arquivo,ativo,criado_por,criado_em,atualizado_em,origem_arquivo FROM clube_biblioteca WHERE COALESCE(ativo,1)=1 ORDER BY atualizado_em DESC,id DESC LIMIT ?").bind(limit).all();
    return json({ok:true,items:r.results||[],count:(r.results||[]).length,limit},200,headers);
+  }
+  const clubBookRoute=url.pathname.match(/^\\/api\\/v1\\/club\\/library\\/books\\/([^/]+)$/);
+  if(request.method==="GET"&&clubBookRoute){
+   const bookId=decodeURIComponent(clubBookRoute[1]);
+   const row=await env.DB.prepare("SELECT id,titulo,autor,genero,paginas_total,capa_url,epub_storage_path,nome_arquivo,ativo,criado_por,criado_em,atualizado_em,origem_arquivo FROM clube_biblioteca WHERE id=? AND COALESCE(ativo,1)=1 LIMIT 1").bind(bookId).first();
+   if(!row)return json({ok:false,error:"Livro não encontrado na Biblioteca do Clube."},404,headers);
+   return json({ok:true,book:row},200,headers);
   }
   if(request.method==="GET"&&url.pathname==="/api/v1/library/books"){const limit=clampInt(url.searchParams.get("limit"),200,1,500),cursor=url.searchParams.get("before"),cursorId=url.searchParams.get("before_id");if((cursor&&!cursorId)||(!cursor&&cursorId))return json({ok:false,error:"Use before e before_id juntos para paginar."},400,headers);const sql="SELECT id,usuario_id,livro_id,titulo,autor,genero,paginas,capa,capa_url,epub_storage_path,pagina_atual,progresso,epub_cfi,status,ativo,dados,publico,criado_em,atualizado_em,finalizado_em FROM livros_pessoais WHERE usuario_id=? AND COALESCE(ativo,1)=1 AND (? IS NULL OR atualizado_em < ? OR (atualizado_em = ? AND id < ?)) ORDER BY atualizado_em DESC,id DESC LIMIT ?";const r=await env.DB.prepare(sql).bind(uid,cursor,cursor,cursor,cursorId,limit).all();const items=r.results||[],last=items.length?items[items.length-1]:null;return json({ok:true,items,count:items.length,limit,nextCursor:last?{before:last.atualizado_em,before_id:last.id}:null},200,headers);}
   if(request.method==="GET"&&url.pathname==="/api/v1/reading"){const limit=clampInt(url.searchParams.get("limit"),200,1,1000);const r=await env.DB.prepare("SELECT * FROM leituras WHERE usuario_id=? ORDER BY atualizado_em DESC LIMIT ?").bind(uid,limit).all();return json({ok:true,items:r.results||[],count:(r.results||[]).length,limit},200,headers);}
