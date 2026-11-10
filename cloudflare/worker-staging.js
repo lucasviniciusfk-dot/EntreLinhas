@@ -63,6 +63,35 @@ document.getElementById("f").addEventListener("submit",async function(ev){
  if(!url.pathname.startsWith("/api/v1/"))return json({ok:false,error:"Not found"},404,headers);
  const access=await requireUser(request,env,headers);if(access.response)return access.response;const uid=access.user.id;
  // Arquivos privados: o proprietário vem exclusivamente da sessão validada.
+ // Associação privada entre arquivos R2 e livros pessoais. IDs legados são preservados.
+ const bookAssetsRoute=url.pathname.match(/^\\/api\\/v1\\/library\\/books\\/([^/]+)\\/assets$/);
+ if(bookAssetsRoute&&request.method==="GET"){
+  try{
+   const bookId=decodeURIComponent(bookAssetsRoute[1]);
+   const book=await env.DB.prepare("SELECT id FROM livros_pessoais WHERE id=? AND usuario_id=? AND COALESCE(ativo,1)=1 LIMIT 1").bind(bookId,uid).first();
+   if(!book)return json({ok:false,error:"Livro ativo não encontrado."},404,headers);
+   const result=await env.DB.prepare("SELECT l.id,l.role,l.asset_id,l.created_at,a.original_name,a.content_type,a.size_bytes FROM book_file_assets l JOIN file_assets a ON a.id=l.asset_id AND a.owner_id=l.owner_id WHERE l.owner_id=? AND l.book_id=? AND l.deleted_at IS NULL AND a.deleted_at IS NULL ORDER BY l.created_at DESC").bind(uid,bookId).all();
+   return json({ok:true,items:result.results||[]},200,headers);
+  }catch(_){return json({ok:false,error:"Não foi possível consultar os arquivos do livro."},500,headers);}
+ }
+ if(bookAssetsRoute&&request.method==="POST"){
+  try{
+   const bookId=decodeURIComponent(bookAssetsRoute[1]),body=await readBody(request);
+   const role=String(body.role||"").toLowerCase(),assetId=validText(body.file_id,128,"ID do arquivo",true);
+   if(!["epub","cover"].includes(role))return json({ok:false,error:"Função do arquivo inválida."},400,headers);
+   const book=await env.DB.prepare("SELECT id FROM livros_pessoais WHERE id=? AND usuario_id=? AND COALESCE(ativo,1)=1 LIMIT 1").bind(bookId,uid).first();
+   if(!book)return json({ok:false,error:"Livro ativo não encontrado."},404,headers);
+   const asset=await env.DB.prepare("SELECT id,category FROM file_assets WHERE id=? AND owner_id=? AND deleted_at IS NULL LIMIT 1").bind(assetId,uid).first();
+   if(!asset)return json({ok:false,error:"Arquivo privado não encontrado."},404,headers);
+   if((role==="epub"&&asset.category!=="epub")||(role==="cover"&&asset.category!=="cover"))return json({ok:false,error:"A categoria do arquivo não corresponde à função solicitada."},400,headers);
+   const linkId=crypto.randomUUID(),stamp=new Date().toISOString();
+   await env.DB.batch([
+    env.DB.prepare("UPDATE book_file_assets SET deleted_at=? WHERE owner_id=? AND book_id=? AND role=? AND deleted_at IS NULL").bind(stamp,uid,bookId,role),
+    env.DB.prepare("INSERT INTO book_file_assets (id,owner_id,book_id,asset_id,role,created_at) VALUES (?,?,?,?,?,?)").bind(linkId,uid,bookId,assetId,role,stamp)
+   ]);
+   return json({ok:true,link:{id:linkId,book_id:bookId,file_id:assetId,role:role,created_at:stamp}},201,headers);
+  }catch(error){const msg=String(error&&error.message||error);return json({ok:false,error:/obrigatório|inválida|limite/i.test(msg)?msg:"Não foi possível associar o arquivo ao livro."},400,headers);}
+ }
  const fileRoute=url.pathname.match(/^\/api\/v1\/files\/([^/]+)$/);
  if(request.method==="POST"&&url.pathname==="/api/v1/files/upload"){
   try{
