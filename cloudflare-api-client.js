@@ -213,6 +213,30 @@
         var result = await request('/api/v1/club/albums' + (suffix ? '?' + suffix : ''));
         return result && result.items || [];
       },
+      create: function (album) {
+        album = album || {};
+        return request('/api/v1/club/albums', { method: 'POST', body: {
+          name: album.name, meeting_date: album.meetingDate || '',
+          location: album.location || '', book_title: album.bookTitle || '',
+          book_author: album.bookAuthor || '', cover_url: album.coverUrl || '',
+          dynamics: album.dynamics || ''
+        } });
+      },
+      update: function (albumId, album) {
+        if (!albumId) throw new TypeError('ID do álbum obrigatório.');
+        album = album || {};
+        var body = {};
+        if (album.name !== undefined) body.name = album.name;
+        if (album.meetingDate !== undefined) body.meeting_date = album.meetingDate;
+        if (album.location !== undefined) body.location = album.location;
+        if (album.bookTitle !== undefined) body.book_title = album.bookTitle;
+        if (album.bookAuthor !== undefined) body.book_author = album.bookAuthor;
+        if (album.coverUrl !== undefined) body.cover_url = album.coverUrl;
+        if (album.dynamics !== undefined) body.dynamics = album.dynamics;
+        if (album.locked !== undefined) body.locked = !!album.locked;
+        if (album.active !== undefined) body.active = !!album.active;
+        return request('/api/v1/club/albums/' + id(albumId), { method: 'PATCH', body: body });
+      },
       listPhotos: async function (albumId, options) {
         if (!albumId || !String(albumId).trim()) throw new TypeError('Identificador do álbum obrigatório.');
         options = options || {};
