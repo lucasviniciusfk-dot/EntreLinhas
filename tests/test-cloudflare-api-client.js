@@ -11,6 +11,15 @@ vm.runInNewContext(fs.readFileSync('cloudflare-api-client.js', 'utf8'), {
   fetch: async () => { throw new Error('fetch não deveria ser chamado neste teste'); }
 });
 
+const files = window.EntreLinhasCloudflare.files;
+assert.equal(files.validate({ size: 1024, type: 'application/epub+zip' }, 'epub'), 'epub');
+assert.equal(files.validate({ size: 1024, type: 'image/jpeg' }, 'capa'), 'cover');
+assert.equal(files.validate({ size: 1024, type: 'application/pdf' }, 'comprovante'), 'receipt');
+assert.throws(() => files.validate({ size: 0, type: 'image/png' }, 'avatar'), /Tamanho/);
+assert.throws(() => files.validate({ size: 1024, type: 'text/html' }, 'avatar'), /Tipo/);
+assert.throws(() => files.validate({ size: 6 * 1024 * 1024, type: 'image/png' }, 'club-photo'), /Tamanho/);
+assert.throws(() => files.validate({ size: 1024, type: 'image/png' }, 'categoria-desconhecida'), /categoria/);
+
 const map = window.EntreLinhasCloudflare.mapping;
 const appBook = {
   id: 'book-1', onlinePersonalId: 'personal-1', title: 'A Travessia',
@@ -48,4 +57,4 @@ assert.equal(roundTrip.currentPage, 87);
 assert.equal(roundTrip.personalFingerprint, 'fingerprint-1');
 assert.equal(roundTrip.epubFileName, 'travessia.epub');
 
-console.log('OK: mapeamento de livro app ↔ API');
+console.log('OK: mapeamento de livro e validação local de arquivos ↔ API');
