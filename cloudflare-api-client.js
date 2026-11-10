@@ -266,8 +266,9 @@
         }
       },
       downloadPhoto: async function (photoId) {
+        var photoKey = id(photoId);
         var headers = new Headers({ Authorization: 'Bearer ' + await token() });
-        var response = await fetch(BASE + '/api/v1/club/albums/photos/' + id(photoId) + '/content', {
+        var response = await fetch(BASE + '/api/v1/club/albums/photos/' + photoKey + '/content', {
           method: 'GET', headers: headers, cache: 'no-store', credentials: 'omit'
         });
         if (!response.ok) {
