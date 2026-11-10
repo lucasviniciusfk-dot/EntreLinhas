@@ -78,3 +78,28 @@ Contagens são ocorrências aproximadas de .from('nome') no HTML; incluem opera�
 5. Não migrar nem executar admin_remover_conta_app_v69 até revisão específica por ser operação destrutiva.
 6. Não desligar Supabase, não alterar GitHub Pages/main e não alterar buckets/Workers de produção durante esta etapa.
 7. Nenhum módulo será marcado como migrado só por ter endpoint: a interface deve chamar o endpoint e passar teste funcional.
+
+
+## Auditoria de reconciliação — 10/11/2026
+
+### Etapa 1 — D1 (reconciliação de dados)
+- [x] Comparadas as 48 tabelas públicas da origem Supabase com as 48 tabelas de negócio correspondentes no D1 staging.
+- [x] Contagens iguais em todas as 48 tabelas: 9.347 registros na origem e 9.347 no D1.
+- [x] Divergências anteriormente observadas foram reconciliadas: `solicitacoes_validacao` 232/232, `ranking_snapshots` 1.573/1.573 e `entrel_user_snapshot_v260` 17/17.
+- [x] `PRAGMA foreign_key_check` retornou zero violações.
+- [ ] `PRAGMA integrity_check` não pôde ser executado: a API D1 retornou SQLITE_AUTH para esse PRAGMA. Não declarar integridade física total verificada por esse comando.
+- Observação: o D1 contém também as duas tabelas auxiliares `file_assets` e `book_file_assets`, além das 48 tabelas da origem. As duas auxiliares estão vazias neste momento.
+
+### Etapa 2 — R2 (auditoria de arquivos)
+- [x] Buckets Supabase identificados: `capas` (público) e `epubs` (privado); consulta a `storage.objects` retornou zero objetos.
+- [x] Bucket R2 legado `entrelinhas` auditado somente por metadados: 1.171 objetos, 2.320.923.595 bytes (~2,16 GiB): 818 EPUBs, 220 capas, 113 fotos de encontros e 20 avatares.
+- [x] Bucket privado de staging `entrelinhas-staging-private` confirmado vazio.
+- [x] Referências em `livros` e `livros_pessoais` comparadas com as chaves do R2 legado: 222 referências públicas R2, 127 chaves únicas; 206 referências encontradas e 16 referências ausentes (13 chaves únicas). Também existem referências em data URI, caminhos locais/legados e URLs externas, que não devem ser tratadas como objetos R2.
+- [ ] Cópia dos objetos para o bucket privado de staging e criação das linhas em `file_assets`/associações ainda pendentes. Não copiar dados reais de usuários para staging sem fluxo de migração aprovado; não modificar nem apagar o bucket legado de produção.
+- [ ] Corrigir ou reconciliar as 13 chaves R2 referenciadas mas ausentes antes de marcar a migração de arquivos como concluída.
+
+### Limites de segurança preservados
+- Nenhum objeto foi criado, alterado ou excluído nos buckets de produção.
+- Nenhuma linha de usuário foi alterada nesta auditoria.
+- Supabase Auth permanece preservado.
+- Nenhuma publicação, merge ou alteração em GitHub Pages/main foi feita.
