@@ -370,7 +370,7 @@ document.getElementById("f").addEventListener("submit",async function(ev){
    });
    return json({ok:true,items,count:items.length},200,headers);
   }
-  const notificationAction=url.pathname.match(/^\\/api\\/v1\\/notifications\\/([^/]+)\\/(read|hide)$/);
+  const notificationAction=url.pathname.match(/^\/api\/v1\/notifications\/([^/]+)\/(read|hide)$/);
   if(request.method==="POST"&&notificationAction){
    const notificationId=decodeURIComponent(notificationAction[1]),action=notificationAction[2];
    const row=await env.DB.prepare("SELECT id,usuario_id,target_id,lida,lida_por,ocultada_por FROM app_notificacoes WHERE id=? AND (usuario_id=? OR usuario_id='all' OR target_id=? OR target_id='all') LIMIT 1").bind(notificationId,uid,uid).first();
