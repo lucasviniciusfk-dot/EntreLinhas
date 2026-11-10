@@ -19,7 +19,8 @@ O progresso também é salvo em `leituras`, com conflito em `usuario_id,livro_id
 
 ## Contrato atual do Worker
 
-- GET `/api/v1/library/books`: retorna `{ ok, items, count, limit }`, itens em formato D1 (snake_case).
+- GET `/api/v1/library/books`: retorna `{ ok, items, count, limit, nextCursor }`, com campos explicitamente selecionados (sem `SELECT *`).
+- Paginação estável por `atualizado_em DESC, id DESC`; a próxima página recebe `before` e `before_id` do `nextCursor`. O adaptador oferece `library.listPage({ limit, before, beforeId })`; `library.list()` preserva o retorno legado como array.
 - POST `/api/v1/library/books`: espera `title, author, genre, pages, cover_url`; cria livro manual sem EPUB.
 - PATCH `/api/v1/library/books/:id`: atualiza título, autor, gênero, páginas e capa. Não atualiza progresso.
 - DELETE `/api/v1/library/books/:id`: desativa logicamente.
