@@ -219,7 +219,42 @@
         var query = new URLSearchParams({ album_id: String(albumId) });
         if (options.limit !== undefined) query.set('limit', String(options.limit));
         var result = await request('/api/v1/club/albums/photos?' + query.toString());
-        return { items: result && result.items || [], locked: !!(result && result.locked), albumId: String(albumId) };
+        var items = (result && result.items || []).map(function (photo) {
+          if (photo && photo.origem_arquivo === 'r2-private-v1') {
+            photo.image_endpoint = '/api/v1/club/albums/photos/' + id(photo.id) + '/content';
+          }
+          return photo;
+        });
+        return { items: items, locked: !!(result && result.locked), albumId: String(albumId) };
+      },
+      addPhoto: async function (albumId, file) {
+        if (!albumId || !String(albumId).trim()) throw new TypeError('Identificador do álbum obrigatório.');
+        var uploaded = await api.files.upload(file, 'club-photo');
+        var fileId = uploaded && uploaded.file && uploaded.file.id;
+        if (!fileId) throw new Error('O upload não retornou o identificador do arquivo.');
+        try {
+          return await request('/api/v1/club/albums/photos', {
+            method: 'POST', body: { album_id: String(albumId), file_id: String(fileId) }
+          });
+        } catch (error) {
+          error.uploadedFileId = String(fileId);
+          throw error;
+        }
+      },
+      downloadPhoto: async function (photoId) {
+        var headers = new Headers({ Authorization: 'Bearer ' + await token() });
+        var response = await fetch(BASE + '/api/v1/club/albums/photos/' + id(photoId) + '/content', {
+          method: 'GET', headers: headers, cache: 'no-store', credentials: 'omit'
+        });
+        if (!response.ok) {
+          var message = 'Falha ao baixar foto (HTTP ' + response.status + ').';
+          try { var data = await response.json(); message = data.error || message; } catch (_) {}
+          var error = new Error(message); error.status = response.status; throw error;
+        }
+        return response.blob();
+      },
+      removePhoto: function (photoId) {
+        return request('/api/v1/club/albums/photos/' + id(photoId), { method: 'DELETE' });
       }
     }),
     club: Object.freeze({
