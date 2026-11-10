@@ -70,8 +70,8 @@ btn.addEventListener("click",async()=>{
  if(error){out.textContent="Erro ao recuperar a sessão Google: "+error.message;return;}
  if(data.session&&data.session.access_token){btn.disabled=true;await runTest(data.session.access_token);}
  else out.textContent="Pronto. Toque em “Continuar com Google e testar”.";
-})();
-})().catch(e=>{out.textContent="Falha ao iniciar o teste: "+(e&&e.message?e.message:String(e));btn.disabled=false;});\n</script></html>`
+})().catch(e=>{out.textContent="Falha ao iniciar o teste: "+(e&&e.message?e.message:String(e));btn.disabled=false;});
+</script></html>`
   const h=new Headers(headers);h.set("Content-Type","text/html; charset=utf-8");h.set("Cache-Control","no-store");h.set("Content-Security-Policy","default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline' https://esm.sh; connect-src 'self' https://jxzcuqwlnqxnhftffbjx.supabase.co; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
   return new Response(html,{status:200,headers:h});
  }
