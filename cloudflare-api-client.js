@@ -161,6 +161,16 @@
       },
       deactivate: function (bookId) {
         return request('/api/v1/library/books/' + id(bookId), { method: 'DELETE' });
+      },
+      listFiles: async function (bookId) {
+        var result = await request('/api/v1/library/books/' + id(bookId) + '/assets');
+        return result && result.items || [];
+      },
+      attachFile: function (bookId, fileId, role) {
+        if (role !== 'epub' && role !== 'cover') throw new TypeError('Função do arquivo inválida.');
+        return request('/api/v1/library/books/' + id(bookId) + '/assets', {
+          method: 'POST', body: { file_id: String(fileId), role: role }
+        });
       }
     }),
     reading: Object.freeze({
