@@ -67,4 +67,9 @@ assert.equal(typeof rewards.awardDailyEpub, 'function');
 assert.throws(() => rewards.awardDailyEpub('09/11/2026'), /Data inválida/);
 assert.throws(() => rewards.awardDailyEpub('2026-99-99'), /Data inválida/);
 
+const progress = window.EntreLinhasCloudflare.progress;
+assert.equal(typeof progress.monthly, 'function');
+assert.throws(() => progress.monthly('2026-13'), /Período mensal inválido/);
+assert.throws(() => progress.monthly('2026-02-30'), /Período mensal inválido/);
+
 console.log('OK: mapeamento de livro e validação local de arquivos ↔ API');
