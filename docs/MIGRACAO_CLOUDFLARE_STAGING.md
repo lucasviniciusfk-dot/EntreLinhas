@@ -21,7 +21,8 @@ Não alterar o Worker/R2 de produção, o schema/dados/Auth do Supabase, a branc
 - D1 staging contém as 26 tabelas referenciadas diretamente pelo frontend.
 - O frontend também usa três buckets/áreas de arquivo: `capas`, `epubs` e `comprovantes`; isso não são tabelas D1.
 - O Worker staging responde em `/health` e confirma bindings D1, R2 e configuração de Auth.
-- Rotas existentes no Worker: `/api/v1/me`, biblioteca pessoal, leituras, metas e desafios (conjunto inicial).
+- Rotas existentes no Worker: `/api/v1/me`, biblioteca pessoal (lista, consulta individual, criação, atualização e desativação), leituras, metas, desafios e arquivos privados (conjunto inicial).
+- Criação e atualização de livros contemplam página atual, progresso, posição EPUB e status; a atualização também sincroniza a tabela `leituras` no mesmo batch D1.
 - O frontend ainda faz chamadas diretas ao Supabase PostgREST em vários módulos.
 - A fila offline `entrel_offline_v348` guarda operações REST endereçadas ao host Supabase. Não trocar sua URL sem uma camada de compatibilidade e replay testada.
 - Upload legado envia FormData (`file`, `tipo`, `userId`, `albumId`) ao Worker antigo e espera URL pública. O novo bucket é privado; o novo contrato deve usar identificadores de arquivo e leitura autenticada. O servidor deve derivar o proprietário do token validado, nunca confiar no `userId` do formulário.
@@ -59,7 +60,7 @@ Não retornar URL pública permanente para objetos privados.
 
 ## Pendências técnicas antes de integração no frontend
 
-- Revisar o código-fonte atual do Worker staging antes de modificá-lo ou implantá-lo.
+- Revalidar e publicar as alterações mais recentes do Worker em staging; uma tentativa de deploy posterior foi bloqueada e não deve ser considerada concluída.
 - Definir contratos de request/response por domínio a partir dos usos reais do frontend.
 - Implementar tratamento de erros D1 no middleware de autenticação.
 - Substituir consultas `SELECT *` por listas explícitas de campos.
