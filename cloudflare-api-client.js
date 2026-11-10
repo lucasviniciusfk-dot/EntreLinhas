@@ -192,6 +192,10 @@
         var suffix = query.toString();
         var result = await request('/api/v1/club/library/books' + (suffix ? '?' + suffix : ''));
         return result && result.items || [];
+      },
+      getBook: async function (bookId) {
+        var result = await request('/api/v1/club/library/books/' + id(bookId));
+        return result && result.book || null;
       }
     }),
     club: Object.freeze({
