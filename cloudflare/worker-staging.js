@@ -64,7 +64,7 @@ document.getElementById("f").addEventListener("submit",async function(ev){
  const access=await requireUser(request,env,headers);if(access.response)return access.response;const uid=access.user.id;
  // Arquivos privados: o proprietário vem exclusivamente da sessão validada.
  // Associação privada entre arquivos R2 e livros pessoais. IDs legados são preservados.
- const bookAssetsRoute=url.pathname.match(/^\\/api\\/v1\\/library\\/books\\/([^/]+)\\/assets$/);
+ const bookAssetsRoute=url.pathname.match(/^\/api\/v1\/library\/books\/([^/]+)\/assets$/);
  if(bookAssetsRoute&&request.method==="GET"){
   try{
    const bookId=decodeURIComponent(bookAssetsRoute[1]);
