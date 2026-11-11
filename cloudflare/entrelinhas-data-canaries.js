@@ -1,4 +1,4 @@
-/* Reversible, per-page canaries for settings and personal library data. */
+/* Reversible, per-page canaries for settings, library data and challenge definitions. */
 (function (root) {
   'use strict';
   const params = () => new URLSearchParams(root.location.search);
@@ -232,6 +232,9 @@
     getWeeklyProgress:period=>{if(!enabled('cf_library')||!enabled('cf_settings'))throw new Error('Ative cf_library e cf_settings para ler metas no Cloudflare.');return api().getWeeklyProgress(period)},
     getMonthlyProgress:period=>{if(!enabled('cf_library')||!enabled('cf_settings'))throw new Error('Ative cf_library e cf_settings para ler metas no Cloudflare.');return api().getMonthlyProgress(period)},
     awardPeriod:(kind,period)=>{if(!enabled('cf_library')||!enabled('cf_settings'))throw new Error('Ative cf_library e cf_settings para confirmar recompensas periódicas.');return api().awardPeriod(kind,period)},
+    readChallenges:()=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para ler desafios no Cloudflare.');return api().listChallenges()},
+    saveChallenge:(id,value)=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para salvar desafios no Cloudflare.');return id?api().updateChallenge(id,value):api().createChallenge(value)},
+    removeChallenge:id=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para remover desafios no Cloudflare.');return api().removeChallenge(id)},
     claimDailyReward:date=>{if(!enabled('cf_library'))throw new Error('Ative cf_library para confirmar a recompensa diária.');return api().awardDailyEpub(date)}
   });
 })(typeof window !== 'undefined' ? window : globalThis);

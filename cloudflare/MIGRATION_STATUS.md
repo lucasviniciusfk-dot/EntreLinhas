@@ -75,7 +75,7 @@
 | Configurações | preferências e escopos pessoais/globais implementados em canário; migration remota pendente; demais chaves continuam com operações específicas |
 | Biblioteca e leituras | CRUD pessoal, progresso e pedido de conclusão integrados em canário; leitura/escrita EPUB e migração de arquivos legados ainda pendentes |
 | Metas/progresso | gravação diária idempotente por livro/dia, metas canônicas semanais/mensais e leitura do progresso/recompensas no canário; outras rotinas de desafios e calendário ainda exigem revisão |
-| Desafios/medalhas/molduras | autorização de seleção própria validada e reconciliação de medalhas/molduras implementada em canário; fluxos administrativos e desafios ainda legados |
+| Desafios/medalhas/molduras | catálogo e editor de definições de desafios no canário; progresso, solicitações e recompensas ainda Supabase; seleção própria e reconciliação de medalhas/molduras validadas em canário |
 | Clube | RPCs canário e correções de aprovação; mural, gestão completa de ciclos e interface de álbuns ainda incompletos |
 | Chat | operações normais integradas; editor administrativo de cards fixados e demais wrappers legados pendentes |
 | Notificações | leitura/lida/ocultação em canário; composição administrativa e entrega push ainda Supabase |
@@ -92,7 +92,7 @@ Foram concluídos localmente novos contratos de backend e integração opt-in do
 - Configurações: rotas autenticadas para preferências da própria conta e leitura/escrita por escopo; alterações globais exigem permissão administrativa e marcadores de recompensa permanecem exclusivos do servidor. A migration `0002_scoped_settings.sql` cria armazenamento com escopo e importa as configurações legadas sem sobrescrever chaves irmãs.
 - Biblioteca/leitura: rotas para listar, criar, editar, remover logicamente e sincronizar progresso preservando IDs; validação de identidade, proteção contra regressão de progresso antigo, prevenção de livros duplicados e solicitação idempotente de finalização sem conceder recompensa antes da aprovação. A migration `0003_library_identities.sql` adiciona a chave de deduplicação. Assets privados ficam vinculados ao livro e não são removidos enquanto referenciados.
 - Conquistas: `POST /api/v1/me/awards/reconcile` calcula medalhas e molduras a partir de evidência no D1, é idempotente e não altera XP nem pontos. O corpo da requisição não escolhe usuário nem prêmios.
-- Frontend: `index.html` carrega o adaptador opt-in. `cf_settings=1` e `cf_library=1` encaminham os fluxos cobertos ao Cloudflare; `cf_admin=1` limita a fila e a revisão às finalizações pessoais originadas no canário. O caminho padrão permanece no Supabase. A reconciliação manual de conquistas é exposta apenas com `cf_awards=1`.
+- Frontend: `index.html` carrega o adaptador opt-in. `cf_settings=1` e `cf_library=1` encaminham os fluxos cobertos ao Cloudflare; `cf_admin=1` limita a fila e a revisão às finalizações pessoais originadas no canário; `cf_challenges=1` encaminha o catálogo e a edição das definições de desafios. O caminho padrão permanece no Supabase. A reconciliação manual de conquistas é exposta apenas com `cf_awards=1`.
 
 Validação local: **37 testes aprovados**, incluindo D1/R2 em workerd, e `npm run check` compilou os 264 scripts inline e módulos do navegador; `git diff --check` passou. Esses resultados não substituem autenticação Google real nem execução contra o staging remoto.
 
@@ -106,9 +106,17 @@ Validação local: **37 testes aprovados**, incluindo D1/R2 em workerd, e `npm r
 - O progresso semanal e mensal pode ser consultado no Worker. Meta semanal alterada durante a semana usa o mesmo início efetivo na tela e na validação da recompensa; uma alteração no meio da semana não conta páginas anteriores para alcançar o novo alvo.
 - No modo normal, os parâmetros do canário permanecem desligados e Supabase continua ativo. Nenhuma alteração foi aplicada à produção.
 
-Validação local desta etapa: **40 testes aprovados** com D1/R2 em workerd; `npm run check` compilou os 264 scripts inline e módulos Cloudflare; `git diff --check` passou. Os testes não substituem sessão Google real nem validação no D1/R2 remoto.
+Validação local acumulada nesta continuação: **42 testes aprovados** com D1/R2 em workerd; `npm run check` compilou os 264 scripts inline e módulos Cloudflare; `git diff --check` passou. Os testes não substituem sessão Google real nem validação no D1/R2 remoto.
 
 **Pendências externas e de cobertura:** reautenticar a conexão Cloudflare para aplicar migrations e publicar o Worker de staging; executar a página de validação com a sessão Google real; comparar/reconciliar as diferenças de dados já listadas; migrar os leitores e escritores ainda legados nos demais domínios. Supabase Auth segue ligado. Não houve mudança em produção.
+
+## Continuação local — catálogo e editor administrativo de desafios
+
+- `GET /api/v1/challenges` retorna desafios ativos para membros, desafios inativos apenas para administradores e progresso individual da conta autenticada.
+- `POST`, `PUT` e `DELETE` permitem que apenas administradores criem, editem campos validados e removam logicamente definições no D1. IDs e histórico não são apagados.
+- Com `cf_challenges=1`, o catálogo e o editor administrativo usam o Worker. O caminho padrão permanece no Supabase.
+- O progresso/conclusão automática, solicitação de validação, upload de comprovante e aprovação/recompensa de desafios ainda usam Supabase. Portanto, este canário cobre definições, não o domínio inteiro, e não pode ser tratado como paridade completa.
+- Os testes de rota cobrem listagem por papel, isolamento do progresso, criação/edição, validação, remoção lógica e a recusa de gravações por membro. O total validado nesta continuação é 42 testes.
 
 ### Reversão
 
