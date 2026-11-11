@@ -22,7 +22,6 @@
       'entrel_approve_club_finish_v507',
       'entrel_approve_club_finish_v509',
       'entrel_approve_club_finish_v511',
-      'entrel_submit_club_finish_v509',
       'entrel_submit_club_finish_v511'
     ]);
 
@@ -70,10 +69,6 @@
         case 'entrel_approve_club_finish_v511':
           return call('/api/v1/admin/requests/approve-club-finish', 'POST', {
             request_id: a.p_request_id, reason: a.p_reason
-          });
-        case 'entrel_submit_club_finish_v509':
-          return call('/api/v1/club/finish-request', 'POST', {
-            cycle_id: global.__ENTREL_ACTIVE_CLUB_CYCLE_ID__ || ''
           });
         case 'entrel_submit_club_finish_v511':
           return call('/api/v1/club/finish-request', 'POST', { cycle_id: a.p_cycle_id });
