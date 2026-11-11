@@ -29,3 +29,25 @@ test('monthly verified progress recognizes JSON booleans from approved club requ
   const response=await r.api('/api/v1/progress/monthly?period='+month,'alice');
   assert.equal(response.status,200);const data=await response.json();assert.ok(data.current>=1,JSON.stringify(data));
 });
+test('club albums preserve separate covers and allow owner photo actions only while unlocked',async()=>{
+  const created=await r.api('/api/v1/club/albums','admin','POST',{name:'Encontro teste',meeting_date:'2026-11-11',book_title:'Livro',book_author:'Autora',book_cover_url:'https://cdn.test/livro.png',cover_url:'https://cdn.test/album.png'});
+  assert.equal(created.status,201,await created.clone().text());const album=(await created.json()).album;
+  assert.equal(album.livro_capa_url,'https://cdn.test/livro.png');assert.equal(album.capa_url,'https://cdn.test/album.png');
+  const upload=async token=>{const form=new FormData();form.append('file',new Blob(['img'],{type:'image/png'}),'foto.png');form.append('tipo','club-photo');const response=await r.api('/api/v1/files/upload',token,'POST',form);assert.equal(response.status,201,await response.clone().text());return (await response.json()).file.id;};
+  const fileId=await upload('alice');
+  const foreign=await r.api('/api/v1/club/albums/photos','bob','POST',{album_id:album.id,file_id:fileId});assert.equal(foreign.status,404);
+  const pair=await Promise.all(Array.from({length:2},()=>r.api('/api/v1/club/albums/photos','alice','POST',{album_id:album.id,file_id:fileId})));
+  const attached=pair.find(response=>response.status===201),duplicate=pair.find(response=>response.status===200);assert.ok(attached);assert.ok(duplicate);const photo=(await attached.json()).photo;assert.equal((await duplicate.json()).already_attached,true);
+  const gallery=await r.api('/api/v1/club/albums/photos?album_id='+encodeURIComponent(album.id),'alice');const photos=await gallery.json();assert.equal(photos.items[0].image_url,'/api/v1/club/albums/photos/'+photo.id+'/content');
+  const content=await r.api('/api/v1/club/albums/photos/'+encodeURIComponent(photo.id)+'/content','bob');assert.equal(content.status,200);assert.equal(await content.text(),'img');
+  const deniedDelete=await r.api('/api/v1/club/albums/photos/'+encodeURIComponent(photo.id),'bob','DELETE');assert.equal(deniedDelete.status,403);
+  const bobFile=await upload('bob'),bobAttach=await r.api('/api/v1/club/albums/photos','bob','POST',{album_id:album.id,file_id:bobFile});assert.equal(bobAttach.status,201);
+  const bobPhoto=(await bobAttach.json()).photo,bobDelete=await r.api('/api/v1/club/albums/photos/'+encodeURIComponent(bobPhoto.id),'bob','DELETE');assert.equal(bobDelete.status,200);
+  assert.equal((await r.db.prepare('SELECT COUNT(*) AS total FROM clube_fotos WHERE album_id=? AND COALESCE(ativo,1)=1').bind(album.id).first()).total,1);
+  const locked=await r.api('/api/v1/club/albums/'+encodeURIComponent(album.id),'admin','PATCH',{locked:true});assert.equal(locked.status,200);
+  const preserved=await r.db.prepare('SELECT livro_capa_url,capa_url FROM clube_albuns WHERE id=?').bind(album.id).first();assert.equal(preserved.livro_capa_url,'https://cdn.test/livro.png');assert.equal(preserved.capa_url,'https://cdn.test/album.png');
+  const lockedFile=await upload('alice');const deniedUpload=await r.api('/api/v1/club/albums/photos','alice','POST',{album_id:album.id,file_id:lockedFile});assert.equal(deniedUpload.status,403);
+  const ownerLockedDelete=await r.api('/api/v1/club/albums/photos/'+encodeURIComponent(photo.id),'alice','DELETE');assert.equal(ownerLockedDelete.status,403);
+  const adminDelete=await r.api('/api/v1/club/albums/photos/'+encodeURIComponent(photo.id),'admin','DELETE');assert.equal(adminDelete.status,200);assert.equal((await r.db.prepare('SELECT ativo FROM clube_fotos WHERE id=?').bind(photo.id).first()).ativo,0);
+  const removeFile=await r.api('/api/v1/files/'+encodeURIComponent(fileId),'alice','DELETE');assert.equal(removeFile.status,200,await removeFile.clone().text());
+});

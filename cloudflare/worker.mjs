@@ -379,10 +379,10 @@ btn.addEventListener("click",async()=>{
    const id=crypto.randomUUID(),stamp=new Date().toISOString();
    const date=validText(body.meeting_date||"",40,"Data do encontro"),place=validText(body.location||"",240,"Local");
    const bookTitle=validText(body.book_title||"",240,"Título do livro"),bookAuthor=validText(body.book_author||"",200,"Autor");
-   const cover=validText(body.cover_url||"",2048,"Capa"),dynamics=typeof body.dynamics==="string"?body.dynamics.slice(0,12000):JSON.stringify(body.dynamics||[]);
-   if(cover&&!/^https:/i.test(cover))return json({ok:false,error:"A capa precisa ser uma URL HTTPS."},400,headers);
-   await env.DB.prepare("INSERT INTO clube_albuns(id,nome,data_encontro,local_encontro,livro_titulo,livro_autor,livro_capa_url,dinamicas,capa_url,trancado,ativo,criado_por,criado_em,atualizado_em) VALUES(?,?,?,?,?,?,?,?,?,0,1,?,?,?)").bind(id,name,date,place,bookTitle,bookAuthor,cover,dynamics,cover,uid,stamp,stamp).run();
-   return json({ok:true,album:{id,nome:name,data_encontro:date,local_encontro:place,livro_titulo:bookTitle,livro_autor:bookAuthor,capa_url:cover,trancado:0,ativo:1,criado_em:stamp,atualizado_em:stamp}},201,headers);
+   const cover=validText(body.cover_url||"",2048,"Capa"),bookCover=validText(body.book_cover_url||"",2048,"Capa do livro"),dynamics=typeof body.dynamics==="string"?body.dynamics.slice(0,12000):JSON.stringify(body.dynamics||[]);
+   if((cover&&!/^https:/i.test(cover))||(bookCover&&!/^https:/i.test(bookCover)))return json({ok:false,error:"As capas precisam ser URLs HTTPS."},400,headers);
+   await env.DB.prepare("INSERT INTO clube_albuns(id,nome,data_encontro,local_encontro,livro_titulo,livro_autor,livro_capa_url,dinamicas,capa_url,trancado,ativo,criado_por,criado_em,atualizado_em) VALUES(?,?,?,?,?,?,?,?,?,0,1,?,?,?)").bind(id,name,date,place,bookTitle,bookAuthor,bookCover,dynamics,cover,uid,stamp,stamp).run();
+   return json({ok:true,album:{id,nome:name,data_encontro:date,local_encontro:place,livro_titulo:bookTitle,livro_autor:bookAuthor,livro_capa_url:bookCover,capa_url:cover,trancado:0,ativo:1,criado_em:stamp,atualizado_em:stamp}},201,headers);
   }
   const clubAlbumRoute=url.pathname.match(new RegExp("^/api/v1/club/albums/([^/]+)$"));
   if(clubAlbumRoute&&request.method==="PATCH"){
@@ -394,14 +394,14 @@ btn.addEventListener("click",async()=>{
    const place=body.location===undefined?old.local_encontro:validText(body.location,240,"Local");
    const bookTitle=body.book_title===undefined?old.livro_titulo:validText(body.book_title,240,"Título do livro");
    const bookAuthor=body.book_author===undefined?old.livro_autor:validText(body.book_author,200,"Autor");
-   const cover=body.cover_url===undefined?old.capa_url:validText(body.cover_url,2048,"Capa");
+   const cover=body.cover_url===undefined?old.capa_url:validText(body.cover_url,2048,"Capa"),bookCover=body.book_cover_url===undefined?old.livro_capa_url:validText(body.book_cover_url,2048,"Capa do livro");
    const dynamics=body.dynamics===undefined?old.dinamicas:(typeof body.dynamics==="string"?body.dynamics.slice(0,12000):JSON.stringify(body.dynamics||[]));
    const locked=body.locked===undefined?Number(old.trancado)||0:(body.locked?1:0);
    const active=body.active===undefined?Number(old.ativo)||0:(body.active?1:0);
-   if(cover&&!/^https:/i.test(cover))return json({ok:false,error:"A capa precisa ser uma URL HTTPS."},400,headers);
+   if((cover&&!/^https:/i.test(cover))||(bookCover&&!/^https:/i.test(bookCover)))return json({ok:false,error:"As capas precisam ser URLs HTTPS."},400,headers);
    const stamp=new Date().toISOString();
-   await env.DB.prepare("UPDATE clube_albuns SET nome=?,data_encontro=?,local_encontro=?,livro_titulo=?,livro_autor=?,livro_capa_url=?,dinamicas=?,capa_url=?,trancado=?,ativo=?,atualizado_em=? WHERE id=?").bind(name,date,place,bookTitle,bookAuthor,cover,dynamics,cover,locked,active,stamp,id).run();
-   return json({ok:true,album:{id,nome:name,data_encontro:date,local_encontro:place,livro_titulo:bookTitle,livro_autor:bookAuthor,capa_url:cover,trancado:locked,ativo:active,atualizado_em:stamp}},200,headers);
+   await env.DB.prepare("UPDATE clube_albuns SET nome=?,data_encontro=?,local_encontro=?,livro_titulo=?,livro_autor=?,livro_capa_url=?,dinamicas=?,capa_url=?,trancado=?,ativo=?,atualizado_em=? WHERE id=?").bind(name,date,place,bookTitle,bookAuthor,bookCover,dynamics,cover,locked,active,stamp,id).run();
+   return json({ok:true,album:{id,nome:name,data_encontro:date,local_encontro:place,livro_titulo:bookTitle,livro_autor:bookAuthor,livro_capa_url:bookCover,capa_url:cover,trancado:locked,ativo:active,atualizado_em:stamp}},200,headers);
   }
   // Biblioteca de encontros do clube: leitura autenticada, sem expor registros inativos.
   if(request.method==="GET"&&url.pathname==="/api/v1/club/albums"){
@@ -415,7 +415,8 @@ btn.addEventListener("click",async()=>{
    if(!album)return json({ok:false,error:"Álbum não encontrado."},404,headers);
    const limit=clampInt(url.searchParams.get("limit"),200,1,300);
    const rows=await env.DB.prepare("SELECT id,album_id,url,storage_path,usuario_id,usuario_nome,ativo,criado_em,foto_url,origem_arquivo FROM clube_fotos WHERE album_id=? AND COALESCE(ativo,1)=1 ORDER BY criado_em DESC,id DESC LIMIT ?").bind(albumId,limit).all();
-   return json({ok:true,album_id:albumId,locked:Number(album.trancado)===1,items:rows.results||[],count:(rows.results||[]).length,limit},200,headers);
+   const items=(rows.results||[]).map(row=>Object.assign({},row,{image_url:row.origem_arquivo==="r2-private-v1"?"/api/v1/club/albums/photos/"+encodeURIComponent(row.id)+"/content":(row.url||row.foto_url||row.storage_path||"")}));
+   return json({ok:true,album_id:albumId,locked:Number(album.trancado)===1,items,count:items.length,limit},200,headers);
   }
   const clubPhotoContentRoute=url.pathname.match(new RegExp("^/api/v1/club/albums/photos/([^/]+)/content$"));
   if(clubPhotoContentRoute&&request.method==="GET"){
@@ -430,24 +431,29 @@ btn.addEventListener("click",async()=>{
    return new Response(object.body,{status:200,headers:outHeaders});
   }
   if(url.pathname==="/api/v1/club/albums/photos"&&request.method==="POST"){
-   if(!isAdmin)return json({ok:false,error:"Somente a administração pode adicionar fotos ao álbum."},403,headers);
    const body=await readBody(request),albumId=validText(body.album_id,128,"Álbum",true),fileId=validText(body.file_id,128,"Arquivo",true);
-   const album=await env.DB.prepare("SELECT id FROM clube_albuns WHERE id=? AND COALESCE(ativo,1)=1 LIMIT 1").bind(albumId).first();
+   const album=await env.DB.prepare("SELECT id,trancado FROM clube_albuns WHERE id=? AND COALESCE(ativo,1)=1 LIMIT 1").bind(albumId).first();
    if(!album)return json({ok:false,error:"Álbum não encontrado."},404,headers);
+   if(Number(album.trancado)===1&&!isAdmin)return json({ok:false,error:"O álbum está trancado para novos envios."},403,headers);
    const asset=await env.DB.prepare("SELECT id,category FROM file_assets WHERE id=? AND owner_id=? AND deleted_at IS NULL LIMIT 1").bind(fileId,uid).first();
    if(!asset||asset.category!=="club-photo")return json({ok:false,error:"Envie primeiro uma foto válida para o armazenamento privado do Clube."},404,headers);
-   const existing=await env.DB.prepare("SELECT id FROM clube_fotos WHERE storage_path=? AND origem_arquivo='r2-private-v1' AND COALESCE(ativo,1)=1 LIMIT 1").bind(fileId).first();
+   const existing=await env.DB.prepare("SELECT id FROM clube_fotos WHERE album_id=? AND storage_path=? AND origem_arquivo='r2-private-v1' AND COALESCE(ativo,1)=1 LIMIT 1").bind(albumId,fileId).first();
    if(existing)return json({ok:true,already_attached:true,photo_id:existing.id},200,headers);
    const user=await env.DB.prepare("SELECT nome FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();
-   const photoId=crypto.randomUUID(),stamp=new Date().toISOString(),name=String(user&&user.nome||access.user.email||"Admin");
-   await env.DB.prepare("INSERT INTO clube_fotos(id,album_id,url,storage_path,usuario_id,usuario_nome,ativo,criado_em,foto_url,origem_arquivo) VALUES(?,?,?,?,?,?,1,?,?,?)").bind(photoId,albumId,"private://"+fileId,fileId,uid,name,stamp,"private://"+fileId,"r2-private-v1").run();
+   const photoId=crypto.randomUUID(),stamp=new Date().toISOString(),name=String(user&&user.nome||access.user.email||"Membro");
+   await env.DB.prepare("INSERT INTO clube_fotos(id,album_id,url,storage_path,usuario_id,usuario_nome,ativo,criado_em,foto_url,origem_arquivo) SELECT ?,?,?,?,?,?,1,?,?,? WHERE EXISTS(SELECT 1 FROM clube_albuns WHERE id=? AND COALESCE(ativo,1)=1 AND (COALESCE(trancado,0)=0 OR ?=1)) AND NOT EXISTS(SELECT 1 FROM clube_fotos WHERE album_id=? AND storage_path=? AND origem_arquivo='r2-private-v1' AND COALESCE(ativo,1)=1)").bind(photoId,albumId,"private://"+fileId,fileId,uid,name,stamp,"private://"+fileId,"r2-private-v1",albumId,isAdmin?1:0,albumId,fileId).run();
+   const attached=await env.DB.prepare("SELECT id,album_id,criado_em FROM clube_fotos WHERE album_id=? AND storage_path=? AND origem_arquivo='r2-private-v1' AND COALESCE(ativo,1)=1 LIMIT 1").bind(albumId,fileId).first();
+   if(!attached)return json({ok:false,error:"O álbum foi trancado antes de confirmar o envio."},409,headers);
+   if(attached.id!==photoId)return json({ok:true,already_attached:true,photo_id:attached.id},200,headers);
    return json({ok:true,photo:{id:photoId,album_id:albumId,image_url:"/api/v1/club/albums/photos/"+encodeURIComponent(photoId)+"/content",created_at:stamp}},201,headers);
   }
   const clubPhotoRoute=url.pathname.match(new RegExp("^/api/v1/club/albums/photos/([^/]+)$"));
   if(clubPhotoRoute&&request.method==="DELETE"){
-   if(!isAdmin)return json({ok:false,error:"Somente a administração pode remover fotos do álbum."},403,headers);
    const photoId=decodeURIComponent(clubPhotoRoute[1]),stamp=new Date().toISOString();
-   const result=await env.DB.prepare("UPDATE clube_fotos SET ativo=0 WHERE id=? AND COALESCE(ativo,1)=1").bind(photoId).run();
+   const photo=await env.DB.prepare("SELECT f.id,f.usuario_id,a.trancado FROM clube_fotos f JOIN clube_albuns a ON a.id=f.album_id WHERE f.id=? AND COALESCE(f.ativo,1)=1 AND COALESCE(a.ativo,1)=1 LIMIT 1").bind(photoId).first();
+   if(!photo)return json({ok:false,error:"Foto não encontrada."},404,headers);
+   if(!isAdmin&&(String(photo.usuario_id)!==String(uid)||Number(photo.trancado)===1))return json({ok:false,error:"Você só pode remover suas fotos de álbuns destrancados."},403,headers);
+   const result=await env.DB.prepare("UPDATE clube_fotos SET ativo=0 WHERE id=? AND COALESCE(ativo,1)=1 AND EXISTS(SELECT 1 FROM clube_albuns a WHERE a.id=clube_fotos.album_id AND COALESCE(a.ativo,1)=1 AND (?=1 OR (clube_fotos.usuario_id=? AND COALESCE(a.trancado,0)=0)))").bind(photoId,isAdmin?1:0,uid).run();
    if(!result.meta||result.meta.changes!==1)return json({ok:false,error:"Foto não encontrada."},404,headers);
    return json({ok:true,removed:true,id:photoId,removed_at:stamp},200,headers);
   }

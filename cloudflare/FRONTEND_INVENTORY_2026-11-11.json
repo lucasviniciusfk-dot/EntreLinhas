@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-11T18:35:54.053Z",
+  "generatedAt": "2026-11-11T19:10:02.706Z",
   "method": "AST; includes old overridden functions; does not prove runtime activity",
   "tableCalls": 566,
   "tables": 26,
@@ -282,82 +282,67 @@
     },
     {
       "file": "index.html",
-      "line": 22569,
+      "line": 22571,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 22573,
+      "line": 22575,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 23254,
+      "line": 23259,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 23258,
+      "line": 23263,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 23262,
+      "line": 23267,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 23265,
+      "line": 23270,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 23330,
+      "line": 23335,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 23340,
+      "line": 23345,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 23348,
+      "line": 23353,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 23350,
+      "line": 23355,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 23352,
+      "line": 23357,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 23373,
+      "line": 23378,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 23396,
-      "method": "from"
-    },
-    {
-      "file": "index.html",
-      "line": 23397,
-      "method": "from"
-    },
-    {
-      "file": "index.html",
-      "line": 23400,
-      "method": "from"
-    },
-    {
-      "file": "index.html",
-      "line": 23400,
+      "line": 23401,
       "method": "from"
     },
     {
@@ -367,7 +352,12 @@
     },
     {
       "file": "index.html",
-      "line": 23404,
+      "line": 23405,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23405,
       "method": "from"
     },
     {
@@ -377,137 +367,142 @@
     },
     {
       "file": "index.html",
-      "line": 24397,
+      "line": 23409,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 26228,
+      "line": 23412,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 27097,
+      "line": 24402,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 27147,
+      "line": 26233,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 27713,
+      "line": 27102,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 27955,
+      "line": 27152,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 27955,
+      "line": 27718,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 28169,
+      "line": 27960,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 28881,
+      "line": 27960,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 28883,
+      "line": 28174,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 28890,
+      "line": 28886,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 28893,
+      "line": 28888,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 29095,
+      "line": 28895,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 29099,
+      "line": 28898,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 29170,
+      "line": 29100,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 29965,
+      "line": 29104,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 29965,
+      "line": 29175,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 29965,
+      "line": 29970,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 30687,
+      "line": 29970,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 30687,
+      "line": 29970,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 30767,
+      "line": 30692,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 30767,
+      "line": 30692,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 30770,
+      "line": 30772,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 30796,
+      "line": 30772,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 30798,
+      "line": 30775,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 30800,
+      "line": 30801,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 30919,
+      "line": 30803,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30805,
       "method": "from"
     },
     {
@@ -517,122 +512,122 @@
     },
     {
       "file": "index.html",
-      "line": 30925,
+      "line": 30929,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 30927,
+      "line": 30930,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 30928,
+      "line": 30932,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 31428,
+      "line": 30933,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 31430,
+      "line": 31433,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 31431,
+      "line": 31435,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 31473,
+      "line": 31436,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 31482,
+      "line": 31478,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 31482,
+      "line": 31487,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 31787,
+      "line": 31487,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 31788,
+      "line": 31792,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 31900,
+      "line": 31793,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 31900,
+      "line": 31905,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 32158,
+      "line": 31905,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 32204,
+      "line": 32163,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 33069,
+      "line": 32209,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 33071,
+      "line": 33074,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 33304,
+      "line": 33076,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 33333,
+      "line": 33309,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 33704,
+      "line": 33338,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 33710,
+      "line": 33709,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 33869,
+      "line": 33715,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 33879,
+      "line": 33874,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 34598,
+      "line": 33884,
       "method": "from"
     },
     {
@@ -642,12 +637,7 @@
     },
     {
       "file": "index.html",
-      "line": 34622,
-      "method": "from"
-    },
-    {
-      "file": "index.html",
-      "line": 34624,
+      "line": 34608,
       "method": "from"
     },
     {
@@ -657,142 +647,147 @@
     },
     {
       "file": "index.html",
-      "line": 34977,
+      "line": 34629,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 34979,
+      "line": 34632,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 35518,
+      "line": 34982,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 35544,
+      "line": 34984,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 43918,
+      "line": 35523,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 44176,
+      "line": 35549,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 46027,
+      "line": 43923,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 46632,
+      "line": 44181,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 46632,
+      "line": 46032,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 46639,
+      "line": 46637,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 46667,
+      "line": 46637,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 46670,
+      "line": 46644,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 47232,
+      "line": 46672,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 48571,
+      "line": 46675,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 48573,
+      "line": 47237,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 49166,
+      "line": 48576,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 49167,
+      "line": 48578,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 49839,
+      "line": 49171,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 49840,
+      "line": 49172,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 49970,
+      "line": 49844,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 49970,
+      "line": 49845,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 50716,
+      "line": 49975,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 50717,
+      "line": 49975,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 50816,
+      "line": 50721,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 50838,
+      "line": 50722,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 50848,
+      "line": 50821,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 50851,
+      "line": 50843,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 50857,
+      "line": 50853,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50856,
       "method": "from"
     },
     {
@@ -802,162 +797,157 @@
     },
     {
       "file": "index.html",
-      "line": 50900,
+      "line": 50867,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 50907,
+      "line": 50905,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 50922,
+      "line": 50912,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 50930,
+      "line": 50927,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 50962,
+      "line": 50935,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 51176,
+      "line": 50967,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 51177,
+      "line": 51181,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 51178,
+      "line": 51182,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 51561,
+      "line": 51183,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 51592,
+      "line": 51566,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 51653,
+      "line": 51597,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 51654,
+      "line": 51658,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 51670,
+      "line": 51659,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 51684,
+      "line": 51675,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 51695,
+      "line": 51689,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 59110,
+      "line": 51700,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 59123,
+      "line": 59115,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 59446,
+      "line": 59128,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 59530,
+      "line": 59451,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 64931,
+      "line": 59535,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 64932,
+      "line": 64936,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 64933,
+      "line": 64937,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 65085,
+      "line": 64938,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 65086,
+      "line": 65090,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 68499,
+      "line": 65091,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 68682,
+      "line": 68504,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 68694,
+      "line": 68687,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 68695,
+      "line": 68699,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 68695,
+      "line": 68700,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 68696,
+      "line": 68700,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 68698,
-      "method": "from"
-    },
-    {
-      "file": "index.html",
-      "line": 68698,
+      "line": 68701,
       "method": "from"
     },
     {
@@ -967,117 +957,117 @@
     },
     {
       "file": "index.html",
-      "line": 68802,
+      "line": 68703,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 68802,
+      "line": 68708,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 68914,
+      "line": 68807,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 68990,
+      "line": 68807,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 68992,
+      "line": 68919,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69570,
+      "line": 68995,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69589,
+      "line": 68997,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69589,
+      "line": 69575,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69605,
+      "line": 69594,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69606,
+      "line": 69594,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69609,
+      "line": 69610,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69609,
+      "line": 69611,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69609,
+      "line": 69614,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69706,
+      "line": 69614,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69728,
+      "line": 69614,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 70468,
+      "line": 69711,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 70596,
+      "line": 69733,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 70823,
+      "line": 70473,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 70983,
+      "line": 70601,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71313,
+      "line": 70828,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71314,
+      "line": 70988,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71327,
+      "line": 71318,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71329,
+      "line": 71319,
       "method": "from"
     },
     {
@@ -1087,67 +1077,72 @@
     },
     {
       "file": "index.html",
-      "line": 71358,
+      "line": 71334,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71359,
+      "line": 71337,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71656,
+      "line": 71363,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71675,
+      "line": 71364,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71675,
+      "line": 71661,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71677,
+      "line": 71680,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71678,
+      "line": 71680,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71679,
+      "line": 71682,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71679,
+      "line": 71683,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71679,
+      "line": 71684,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71679,
+      "line": 71684,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71802,
+      "line": 71684,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72228,
+      "line": 71684,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71807,
       "method": "from"
     },
     {
@@ -1157,52 +1152,52 @@
     },
     {
       "file": "index.html",
-      "line": 72425,
+      "line": 72238,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72516,
+      "line": 72430,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72518,
+      "line": 72521,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72520,
+      "line": 72523,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72526,
+      "line": 72525,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72620,
+      "line": 72531,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72626,
+      "line": 72625,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72921,
+      "line": 72631,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72930,
+      "line": 72926,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72937,
+      "line": 72935,
       "method": "from"
     },
     {
@@ -1212,47 +1207,42 @@
     },
     {
       "file": "index.html",
-      "line": 72943,
+      "line": 72947,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73078,
+      "line": 72948,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73079,
+      "line": 73083,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73085,
+      "line": 73084,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73097,
+      "line": 73090,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73110,
+      "line": 73102,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73133,
+      "line": 73115,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73137,
-      "method": "from"
-    },
-    {
-      "file": "index.html",
-      "line": 73141,
+      "line": 73138,
       "method": "from"
     },
     {
@@ -1262,27 +1252,22 @@
     },
     {
       "file": "index.html",
-      "line": 73162,
+      "line": 73146,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73164,
+      "line": 73147,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73248,
+      "line": 73167,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73248,
-      "method": "from"
-    },
-    {
-      "file": "index.html",
-      "line": 73253,
+      "line": 73169,
       "method": "from"
     },
     {
@@ -1292,97 +1277,97 @@
     },
     {
       "file": "index.html",
-      "line": 73488,
+      "line": 73253,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73489,
+      "line": 73258,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73489,
+      "line": 73258,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73490,
+      "line": 73493,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73490,
+      "line": 73494,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73522,
+      "line": 73494,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73526,
+      "line": 73495,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73528,
+      "line": 73495,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73543,
+      "line": 73527,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73544,
+      "line": 73531,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73555,
+      "line": 73533,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73556,
+      "line": 73548,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73584,
+      "line": 73549,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73584,
+      "line": 73560,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73606,
+      "line": 73561,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73606,
+      "line": 73589,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73680,
+      "line": 73589,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73681,
+      "line": 73611,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73681,
+      "line": 73611,
       "method": "from"
     },
     {
@@ -1392,22 +1377,27 @@
     },
     {
       "file": "index.html",
-      "line": 73696,
+      "line": 73686,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73740,
+      "line": 73686,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73743,
+      "line": 73690,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73747,
+      "line": 73701,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73745,
       "method": "from"
     },
     {
@@ -1417,117 +1407,107 @@
     },
     {
       "file": "index.html",
-      "line": 73798,
+      "line": 73752,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73798,
+      "line": 73753,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73847,
+      "line": 73803,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73952,
+      "line": 73803,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73953,
+      "line": 73852,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73954,
+      "line": 73957,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73955,
+      "line": 73958,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73991,
+      "line": 73959,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74001,
+      "line": 73960,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74001,
+      "line": 73996,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74007,
+      "line": 74006,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74037,
+      "line": 74006,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74037,
+      "line": 74012,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74038,
+      "line": 74042,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74046,
+      "line": 74042,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74190,
+      "line": 74043,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74197,
+      "line": 74051,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74208,
+      "line": 74195,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74209,
+      "line": 74202,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74246,
+      "line": 74213,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74247,
-      "method": "from"
-    },
-    {
-      "file": "index.html",
-      "line": 74248,
-      "method": "from"
-    },
-    {
-      "file": "index.html",
-      "line": 74250,
+      "line": 74214,
       "method": "from"
     },
     {
@@ -1537,87 +1517,107 @@
     },
     {
       "file": "index.html",
-      "line": 74495,
+      "line": 74252,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74771,
+      "line": 74253,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75064,
+      "line": 74255,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75065,
+      "line": 74256,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75066,
+      "line": 74500,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75068,
+      "line": 74776,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75112,
+      "line": 75069,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75120,
+      "line": 75070,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75130,
+      "line": 75071,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75309,
+      "line": 75073,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75317,
+      "line": 75117,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75327,
+      "line": 75125,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75346,
+      "line": 75135,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75532,
+      "line": 75314,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75533,
+      "line": 75322,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75660,
+      "line": 75332,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75661,
+      "line": 75351,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75539,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75540,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75667,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75668,
       "method": "from"
     }
   ],
@@ -2169,7 +2169,7 @@
     },
     {
       "file": "index.html",
-      "line": 22525,
+      "line": 22527,
       "name": "clube_livro_atual",
       "operation": "upsert",
       "chain": [
@@ -2180,7 +2180,7 @@
     },
     {
       "file": "index.html",
-      "line": 22525,
+      "line": 22527,
       "name": "clube_livro_atual",
       "operation": "update",
       "chain": [
@@ -2192,7 +2192,7 @@
     },
     {
       "file": "index.html",
-      "line": 22547,
+      "line": 22549,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -2203,7 +2203,7 @@
     },
     {
       "file": "index.html",
-      "line": 22547,
+      "line": 22549,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -2213,7 +2213,7 @@
     },
     {
       "file": "index.html",
-      "line": 22711,
+      "line": 22713,
       "name": "clube_mural_reacoes",
       "operation": "delete",
       "chain": [
@@ -2224,22 +2224,12 @@
     },
     {
       "file": "index.html",
-      "line": 22711,
+      "line": 22713,
       "name": "clube_mural_reacoes",
       "operation": "delete",
       "chain": [
         "delete",
         "eq",
-        "eq"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 22766,
-      "name": "clube_mural",
-      "operation": "update",
-      "chain": [
-        "update",
         "eq"
       ]
     },
@@ -2265,12 +2255,11 @@
     },
     {
       "file": "index.html",
-      "line": 22786,
-      "name": "clube_mural_reacoes",
-      "operation": "delete",
+      "line": 22772,
+      "name": "clube_mural",
+      "operation": "update",
       "chain": [
-        "delete",
-        "eq",
+        "update",
         "eq"
       ]
     },
@@ -2287,7 +2276,18 @@
     },
     {
       "file": "index.html",
-      "line": 22830,
+      "line": 22790,
+      "name": "clube_mural_reacoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22835,
       "name": "clube_albuns",
       "operation": "update",
       "chain": [
@@ -2297,7 +2297,7 @@
     },
     {
       "file": "index.html",
-      "line": 22972,
+      "line": 22977,
       "name": "clube_fotos",
       "operation": "update",
       "chain": [
@@ -2307,7 +2307,7 @@
     },
     {
       "file": "index.html",
-      "line": 22981,
+      "line": 22986,
       "name": "clube_albuns",
       "operation": "update",
       "chain": [
@@ -2317,7 +2317,7 @@
     },
     {
       "file": "index.html",
-      "line": 22983,
+      "line": 22988,
       "name": "clube_albuns",
       "operation": "update",
       "chain": [
@@ -2327,7 +2327,7 @@
     },
     {
       "file": "index.html",
-      "line": 23060,
+      "line": 23065,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -2338,7 +2338,7 @@
     },
     {
       "file": "index.html",
-      "line": 23309,
+      "line": 23314,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -2349,7 +2349,7 @@
     },
     {
       "file": "index.html",
-      "line": 23311,
+      "line": 23316,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -2359,7 +2359,7 @@
     },
     {
       "file": "index.html",
-      "line": 23861,
+      "line": 23866,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -2370,7 +2370,7 @@
     },
     {
       "file": "index.html",
-      "line": 23862,
+      "line": 23867,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -2382,7 +2382,7 @@
     },
     {
       "file": "index.html",
-      "line": 23863,
+      "line": 23868,
       "name": "metas_usuarios",
       "operation": "select",
       "chain": [
@@ -2393,7 +2393,7 @@
     },
     {
       "file": "index.html",
-      "line": 23864,
+      "line": 23869,
       "name": "usuario_medalhas",
       "operation": "select",
       "chain": [
@@ -2404,7 +2404,7 @@
     },
     {
       "file": "index.html",
-      "line": 23865,
+      "line": 23870,
       "name": "usuario_molduras",
       "operation": "select",
       "chain": [
@@ -2415,7 +2415,7 @@
     },
     {
       "file": "index.html",
-      "line": 23866,
+      "line": 23871,
       "name": "usuario_desafios",
       "operation": "select",
       "chain": [
@@ -2426,7 +2426,7 @@
     },
     {
       "file": "index.html",
-      "line": 23899,
+      "line": 23904,
       "name": "usuario_medalhas",
       "operation": "upsert",
       "chain": [
@@ -2435,7 +2435,7 @@
     },
     {
       "file": "index.html",
-      "line": 23901,
+      "line": 23906,
       "name": "usuario_molduras",
       "operation": "upsert",
       "chain": [
@@ -2444,7 +2444,7 @@
     },
     {
       "file": "index.html",
-      "line": 23967,
+      "line": 23972,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -2455,7 +2455,7 @@
     },
     {
       "file": "index.html",
-      "line": 23971,
+      "line": 23976,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -2464,7 +2464,7 @@
     },
     {
       "file": "index.html",
-      "line": 23975,
+      "line": 23980,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -2474,18 +2474,7 @@
     },
     {
       "file": "index.html",
-      "line": 23976,
-      "name": "livros_pessoais",
-      "operation": "update",
-      "chain": [
-        "update",
-        "eq",
-        "eq"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 23977,
+      "line": 23981,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -2496,7 +2485,7 @@
     },
     {
       "file": "index.html",
-      "line": 23978,
+      "line": 23982,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -2507,7 +2496,18 @@
     },
     {
       "file": "index.html",
-      "line": 23979,
+      "line": 23983,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23984,
       "name": "leituras",
       "operation": "delete",
       "chain": [
@@ -2518,7 +2518,7 @@
     },
     {
       "file": "index.html",
-      "line": 24049,
+      "line": 24054,
       "name": "usuarios",
       "operation": "upsert",
       "chain": [
@@ -2529,7 +2529,7 @@
     },
     {
       "file": "index.html",
-      "line": 24051,
+      "line": 24056,
       "name": "usuario_molduras",
       "operation": "upsert",
       "chain": [
@@ -2538,7 +2538,7 @@
     },
     {
       "file": "index.html",
-      "line": 24145,
+      "line": 24150,
       "name": "usuarios",
       "operation": "upsert",
       "chain": [
@@ -2549,7 +2549,7 @@
     },
     {
       "file": "index.html",
-      "line": 24222,
+      "line": 24227,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -2559,7 +2559,7 @@
     },
     {
       "file": "index.html",
-      "line": 24231,
+      "line": 24236,
       "name": "chat_mensagens",
       "operation": "select",
       "chain": [
@@ -2571,7 +2571,7 @@
     },
     {
       "file": "index.html",
-      "line": 24231,
+      "line": 24236,
       "name": "chat_reacoes",
       "operation": "select",
       "chain": [
@@ -2581,7 +2581,7 @@
     },
     {
       "file": "index.html",
-      "line": 24233,
+      "line": 24238,
       "name": "chat_mensagens",
       "operation": "insert",
       "chain": [
@@ -2592,7 +2592,7 @@
     },
     {
       "file": "index.html",
-      "line": 24236,
+      "line": 24241,
       "name": "chat_reacoes",
       "operation": "delete",
       "chain": [
@@ -2603,7 +2603,7 @@
     },
     {
       "file": "index.html",
-      "line": 24236,
+      "line": 24241,
       "name": "chat_reacoes",
       "operation": "upsert",
       "chain": [
@@ -2612,7 +2612,7 @@
     },
     {
       "file": "index.html",
-      "line": 24239,
+      "line": 24244,
       "name": "chat_mensagens",
       "operation": "update",
       "chain": [
@@ -2622,7 +2622,7 @@
     },
     {
       "file": "index.html",
-      "line": 24240,
+      "line": 24245,
       "name": "chat_reacoes",
       "operation": "delete",
       "chain": [
@@ -2632,7 +2632,7 @@
     },
     {
       "file": "index.html",
-      "line": 24240,
+      "line": 24245,
       "name": "chat_mensagens",
       "operation": "delete",
       "chain": [
@@ -2642,7 +2642,7 @@
     },
     {
       "file": "index.html",
-      "line": 24245,
+      "line": 24250,
       "name": "chat_mensagens",
       "operation": "update",
       "chain": [
@@ -2652,7 +2652,7 @@
     },
     {
       "file": "index.html",
-      "line": 24245,
+      "line": 24250,
       "name": "chat_mensagens",
       "operation": "insert",
       "chain": [
@@ -2661,7 +2661,7 @@
     },
     {
       "file": "index.html",
-      "line": 24246,
+      "line": 24251,
       "name": "chat_mensagens",
       "operation": "delete",
       "chain": [
@@ -2671,7 +2671,7 @@
     },
     {
       "file": "index.html",
-      "line": 24247,
+      "line": 24252,
       "name": "chat_mensagens",
       "operation": "delete",
       "chain": [
@@ -2681,7 +2681,7 @@
     },
     {
       "file": "index.html",
-      "line": 24321,
+      "line": 24326,
       "name": "app_notificacoes",
       "operation": "select",
       "chain": [
@@ -2692,7 +2692,7 @@
     },
     {
       "file": "index.html",
-      "line": 24327,
+      "line": 24332,
       "name": "app_notificacoes",
       "operation": "insert",
       "chain": [
@@ -2701,7 +2701,7 @@
     },
     {
       "file": "index.html",
-      "line": 24332,
+      "line": 24337,
       "name": "app_notificacoes",
       "operation": "select",
       "chain": [
@@ -2712,7 +2712,7 @@
     },
     {
       "file": "index.html",
-      "line": 24332,
+      "line": 24337,
       "name": "app_notificacoes",
       "operation": "update",
       "chain": [
@@ -2722,7 +2722,7 @@
     },
     {
       "file": "index.html",
-      "line": 24345,
+      "line": 24350,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -2733,7 +2733,7 @@
     },
     {
       "file": "index.html",
-      "line": 24345,
+      "line": 24350,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -2744,7 +2744,7 @@
     },
     {
       "file": "index.html",
-      "line": 24346,
+      "line": 24351,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -2753,7 +2753,7 @@
     },
     {
       "file": "index.html",
-      "line": 24398,
+      "line": 24403,
       "name": "admin_logs",
       "operation": "insert",
       "chain": [
@@ -2762,7 +2762,7 @@
     },
     {
       "file": "index.html",
-      "line": 24399,
+      "line": 24404,
       "name": "app_notificacoes",
       "operation": "insert",
       "chain": [
@@ -2771,7 +2771,7 @@
     },
     {
       "file": "index.html",
-      "line": 24433,
+      "line": 24438,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -2781,7 +2781,7 @@
     },
     {
       "file": "index.html",
-      "line": 24433,
+      "line": 24438,
       "name": "metas_usuarios",
       "operation": "upsert",
       "chain": [
@@ -2790,7 +2790,7 @@
     },
     {
       "file": "index.html",
-      "line": 24434,
+      "line": 24439,
       "name": "metas_usuarios",
       "operation": "upsert",
       "chain": [
@@ -2799,7 +2799,7 @@
     },
     {
       "file": "index.html",
-      "line": 24434,
+      "line": 24439,
       "name": "metas_diarias",
       "operation": "upsert",
       "chain": [
@@ -2808,7 +2808,7 @@
     },
     {
       "file": "index.html",
-      "line": 24437,
+      "line": 24442,
       "name": "desafios",
       "operation": "update",
       "chain": [
@@ -2818,7 +2818,7 @@
     },
     {
       "file": "index.html",
-      "line": 24437,
+      "line": 24442,
       "name": "desafios",
       "operation": "insert",
       "chain": [
@@ -2827,7 +2827,7 @@
     },
     {
       "file": "index.html",
-      "line": 24439,
+      "line": 24444,
       "name": "desafios",
       "operation": "update",
       "chain": [
@@ -2837,7 +2837,7 @@
     },
     {
       "file": "index.html",
-      "line": 24443,
+      "line": 24448,
       "name": "solicitacoes_validacao",
       "operation": "update",
       "chain": [
@@ -2847,7 +2847,7 @@
     },
     {
       "file": "index.html",
-      "line": 24444,
+      "line": 24449,
       "name": "metas_diarias",
       "operation": "upsert",
       "chain": [
@@ -2856,31 +2856,11 @@
     },
     {
       "file": "index.html",
-      "line": 24445,
+      "line": 24450,
       "name": "usuario_desafios",
       "operation": "upsert",
       "chain": [
         "upsert"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 24446,
-      "name": "usuarios",
-      "operation": "update",
-      "chain": [
-        "update",
-        "eq"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 24449,
-      "name": "usuarios",
-      "operation": "update",
-      "chain": [
-        "update",
-        "eq"
       ]
     },
     {
@@ -2895,7 +2875,27 @@
     },
     {
       "file": "index.html",
-      "line": 24452,
+      "line": 24454,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24456,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24457,
       "name": "usuario_medalhas",
       "operation": "upsert",
       "chain": [
@@ -2904,7 +2904,7 @@
     },
     {
       "file": "index.html",
-      "line": 24453,
+      "line": 24458,
       "name": "usuario_medalhas",
       "operation": "update",
       "chain": [
@@ -2915,7 +2915,7 @@
     },
     {
       "file": "index.html",
-      "line": 24455,
+      "line": 24460,
       "name": "usuario_molduras",
       "operation": "upsert",
       "chain": [
@@ -2924,7 +2924,7 @@
     },
     {
       "file": "index.html",
-      "line": 24455,
+      "line": 24460,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -2934,7 +2934,7 @@
     },
     {
       "file": "index.html",
-      "line": 24457,
+      "line": 24462,
       "name": "ranking_temporadas",
       "operation": "insert",
       "chain": [
@@ -2943,7 +2943,7 @@
     },
     {
       "file": "index.html",
-      "line": 24457,
+      "line": 24462,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -2953,7 +2953,7 @@
     },
     {
       "file": "index.html",
-      "line": 24963,
+      "line": 24968,
       "name": "solicitacoes_validacao",
       "operation": "delete",
       "chain": [
@@ -2963,7 +2963,7 @@
     },
     {
       "file": "index.html",
-      "line": 25562,
+      "line": 25567,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -2973,7 +2973,7 @@
     },
     {
       "file": "index.html",
-      "line": 25713,
+      "line": 25718,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -2985,7 +2985,7 @@
     },
     {
       "file": "index.html",
-      "line": 25715,
+      "line": 25720,
       "name": "usuarios",
       "operation": "upsert",
       "chain": [
@@ -2996,7 +2996,7 @@
     },
     {
       "file": "index.html",
-      "line": 25717,
+      "line": 25722,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -3006,7 +3006,7 @@
     },
     {
       "file": "index.html",
-      "line": 25798,
+      "line": 25803,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -3017,7 +3017,7 @@
     },
     {
       "file": "index.html",
-      "line": 25813,
+      "line": 25818,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -3026,7 +3026,7 @@
     },
     {
       "file": "index.html",
-      "line": 25813,
+      "line": 25818,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -3036,7 +3036,7 @@
     },
     {
       "file": "index.html",
-      "line": 25813,
+      "line": 25818,
       "name": "metas_usuarios",
       "operation": "select",
       "chain": [
@@ -3045,7 +3045,7 @@
     },
     {
       "file": "index.html",
-      "line": 25813,
+      "line": 25818,
       "name": "usuario_medalhas",
       "operation": "select",
       "chain": [
@@ -3054,7 +3054,7 @@
     },
     {
       "file": "index.html",
-      "line": 25813,
+      "line": 25818,
       "name": "usuario_desafios",
       "operation": "select",
       "chain": [
@@ -3063,7 +3063,7 @@
     },
     {
       "file": "index.html",
-      "line": 25822,
+      "line": 25827,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -3072,7 +3072,7 @@
     },
     {
       "file": "index.html",
-      "line": 25941,
+      "line": 25946,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -3081,7 +3081,7 @@
     },
     {
       "file": "index.html",
-      "line": 25941,
+      "line": 25946,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -3091,7 +3091,7 @@
     },
     {
       "file": "index.html",
-      "line": 25941,
+      "line": 25946,
       "name": "metas_usuarios",
       "operation": "select",
       "chain": [
@@ -3100,7 +3100,7 @@
     },
     {
       "file": "index.html",
-      "line": 25941,
+      "line": 25946,
       "name": "usuario_medalhas",
       "operation": "select",
       "chain": [
@@ -3109,7 +3109,7 @@
     },
     {
       "file": "index.html",
-      "line": 25941,
+      "line": 25946,
       "name": "usuario_desafios",
       "operation": "select",
       "chain": [
@@ -3118,7 +3118,7 @@
     },
     {
       "file": "index.html",
-      "line": 25954,
+      "line": 25959,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -3128,7 +3128,7 @@
     },
     {
       "file": "index.html",
-      "line": 25954,
+      "line": 25959,
       "name": "metas_usuarios",
       "operation": "select",
       "chain": [
@@ -3137,7 +3137,7 @@
     },
     {
       "file": "index.html",
-      "line": 25963,
+      "line": 25968,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -3147,7 +3147,7 @@
     },
     {
       "file": "index.html",
-      "line": 25963,
+      "line": 25968,
       "name": "metas_usuarios",
       "operation": "upsert",
       "chain": [
@@ -3156,7 +3156,7 @@
     },
     {
       "file": "index.html",
-      "line": 25978,
+      "line": 25983,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -3165,7 +3165,7 @@
     },
     {
       "file": "index.html",
-      "line": 26037,
+      "line": 26042,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -3177,7 +3177,7 @@
     },
     {
       "file": "index.html",
-      "line": 26040,
+      "line": 26045,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -3186,7 +3186,7 @@
     },
     {
       "file": "index.html",
-      "line": 26047,
+      "line": 26052,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -3197,7 +3197,7 @@
     },
     {
       "file": "index.html",
-      "line": 26048,
+      "line": 26053,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -3207,7 +3207,7 @@
     },
     {
       "file": "index.html",
-      "line": 26065,
+      "line": 26070,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -3219,7 +3219,7 @@
     },
     {
       "file": "index.html",
-      "line": 26072,
+      "line": 26077,
       "name": "metas_diarias",
       "operation": "update",
       "chain": [
@@ -3230,7 +3230,7 @@
     },
     {
       "file": "index.html",
-      "line": 26079,
+      "line": 26084,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -3242,7 +3242,7 @@
     },
     {
       "file": "index.html",
-      "line": 26106,
+      "line": 26111,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -3253,7 +3253,7 @@
     },
     {
       "file": "index.html",
-      "line": 26106,
+      "line": 26111,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -3263,7 +3263,7 @@
     },
     {
       "file": "index.html",
-      "line": 26113,
+      "line": 26118,
       "name": "metas_usuarios",
       "operation": "select",
       "chain": [
@@ -3273,7 +3273,7 @@
     },
     {
       "file": "index.html",
-      "line": 26129,
+      "line": 26134,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -3283,7 +3283,7 @@
     },
     {
       "file": "index.html",
-      "line": 26129,
+      "line": 26134,
       "name": "metas_usuarios",
       "operation": "upsert",
       "chain": [
@@ -3292,7 +3292,7 @@
     },
     {
       "file": "index.html",
-      "line": 26132,
+      "line": 26137,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -3302,7 +3302,7 @@
     },
     {
       "file": "index.html",
-      "line": 26133,
+      "line": 26138,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -3312,7 +3312,7 @@
     },
     {
       "file": "index.html",
-      "line": 26254,
+      "line": 26259,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -3323,7 +3323,7 @@
     },
     {
       "file": "index.html",
-      "line": 26256,
+      "line": 26261,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -3332,7 +3332,7 @@
     },
     {
       "file": "index.html",
-      "line": 26256,
+      "line": 26261,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -3341,7 +3341,7 @@
     },
     {
       "file": "index.html",
-      "line": 26263,
+      "line": 26268,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -3351,7 +3351,7 @@
     },
     {
       "file": "index.html",
-      "line": 26348,
+      "line": 26353,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -3362,7 +3362,7 @@
     },
     {
       "file": "index.html",
-      "line": 26350,
+      "line": 26355,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -3371,7 +3371,7 @@
     },
     {
       "file": "index.html",
-      "line": 26549,
+      "line": 26554,
       "name": "livros_pessoais",
       "operation": "insert",
       "chain": [
@@ -3382,7 +3382,7 @@
     },
     {
       "file": "index.html",
-      "line": 26659,
+      "line": 26664,
       "name": "clube_biblioteca",
       "operation": "insert",
       "chain": [
@@ -3393,7 +3393,7 @@
     },
     {
       "file": "index.html",
-      "line": 26668,
+      "line": 26673,
       "name": "clube_albuns",
       "operation": "select",
       "chain": [
@@ -3404,7 +3404,7 @@
     },
     {
       "file": "index.html",
-      "line": 26674,
+      "line": 26679,
       "name": "clube_fotos",
       "operation": "insert",
       "chain": [
@@ -3413,7 +3413,7 @@
     },
     {
       "file": "index.html",
-      "line": 26685,
+      "line": 26690,
       "name": "clube_albuns",
       "operation": "select",
       "chain": [
@@ -3424,7 +3424,7 @@
     },
     {
       "file": "index.html",
-      "line": 26695,
+      "line": 26700,
       "name": "clube_albuns",
       "operation": "update",
       "chain": [
@@ -3434,7 +3434,7 @@
     },
     {
       "file": "index.html",
-      "line": 26695,
+      "line": 26700,
       "name": "clube_albuns",
       "operation": "insert",
       "chain": [
@@ -3443,7 +3443,7 @@
     },
     {
       "file": "index.html",
-      "line": 26815,
+      "line": 26820,
       "name": "livros_pessoais",
       "operation": "upsert",
       "chain": [
@@ -3454,7 +3454,7 @@
     },
     {
       "file": "index.html",
-      "line": 26822,
+      "line": 26827,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -3466,32 +3466,7 @@
     },
     {
       "file": "index.html",
-      "line": 26823,
-      "name": "livros_pessoais",
-      "operation": "select",
-      "chain": [
-        "select",
-        "eq",
-        "eq",
-        "order",
-        "limit"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 26824,
-      "name": "livros_pessoais",
-      "operation": "select",
-      "chain": [
-        "select",
-        "eq",
-        "order",
-        "limit"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 26834,
+      "line": 26828,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -3504,7 +3479,32 @@
     },
     {
       "file": "index.html",
-      "line": 26849,
+      "line": 26829,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26839,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26854,
       "name": "leituras",
       "operation": "upsert",
       "chain": [
@@ -3513,7 +3513,7 @@
     },
     {
       "file": "index.html",
-      "line": 26910,
+      "line": 26915,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -3525,7 +3525,7 @@
     },
     {
       "file": "index.html",
-      "line": 26911,
+      "line": 26916,
       "name": "clube_biblioteca",
       "operation": "select",
       "chain": [
@@ -3537,7 +3537,7 @@
     },
     {
       "file": "index.html",
-      "line": 27038,
+      "line": 27043,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -3549,7 +3549,7 @@
     },
     {
       "file": "index.html",
-      "line": 27100,
+      "line": 27105,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -3561,7 +3561,7 @@
     },
     {
       "file": "index.html",
-      "line": 27101,
+      "line": 27106,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -3572,7 +3572,7 @@
     },
     {
       "file": "index.html",
-      "line": 27102,
+      "line": 27107,
       "name": "usuarios",
       "operation": "upsert",
       "chain": [
@@ -3583,7 +3583,7 @@
     },
     {
       "file": "index.html",
-      "line": 27130,
+      "line": 27135,
       "name": "usuario_medalhas",
       "operation": "select",
       "chain": [
@@ -3594,7 +3594,7 @@
     },
     {
       "file": "index.html",
-      "line": 27131,
+      "line": 27136,
       "name": "usuario_molduras",
       "operation": "select",
       "chain": [
@@ -3605,7 +3605,7 @@
     },
     {
       "file": "index.html",
-      "line": 27132,
+      "line": 27137,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -3616,7 +3616,7 @@
     },
     {
       "file": "index.html",
-      "line": 27154,
+      "line": 27159,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -3627,7 +3627,7 @@
     },
     {
       "file": "index.html",
-      "line": 27154,
+      "line": 27159,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -3638,7 +3638,7 @@
     },
     {
       "file": "index.html",
-      "line": 27155,
+      "line": 27160,
       "name": "clube_biblioteca",
       "operation": "select",
       "chain": [
@@ -3650,7 +3650,7 @@
     },
     {
       "file": "index.html",
-      "line": 27432,
+      "line": 27437,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -3662,7 +3662,7 @@
     },
     {
       "file": "index.html",
-      "line": 27433,
+      "line": 27438,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -3674,7 +3674,7 @@
     },
     {
       "file": "index.html",
-      "line": 27434,
+      "line": 27439,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -3686,7 +3686,7 @@
     },
     {
       "file": "index.html",
-      "line": 27577,
+      "line": 27582,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -3697,7 +3697,7 @@
     },
     {
       "file": "index.html",
-      "line": 27578,
+      "line": 27583,
       "name": "clube_biblioteca",
       "operation": "select",
       "chain": [
@@ -3708,7 +3708,7 @@
     },
     {
       "file": "index.html",
-      "line": 27579,
+      "line": 27584,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -3719,7 +3719,7 @@
     },
     {
       "file": "index.html",
-      "line": 27585,
+      "line": 27590,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -3730,7 +3730,7 @@
     },
     {
       "file": "index.html",
-      "line": 27592,
+      "line": 27597,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -3742,7 +3742,7 @@
     },
     {
       "file": "index.html",
-      "line": 27592,
+      "line": 27597,
       "name": "livros_pessoais",
       "operation": "insert",
       "chain": [
@@ -3753,7 +3753,7 @@
     },
     {
       "file": "index.html",
-      "line": 27717,
+      "line": 27722,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -3766,7 +3766,7 @@
     },
     {
       "file": "index.html",
-      "line": 27844,
+      "line": 27849,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -3778,7 +3778,7 @@
     },
     {
       "file": "index.html",
-      "line": 27844,
+      "line": 27849,
       "name": "livros_pessoais",
       "operation": "insert",
       "chain": [
@@ -3789,7 +3789,7 @@
     },
     {
       "file": "index.html",
-      "line": 28176,
+      "line": 28181,
       "name": "admin_logs",
       "operation": "insert",
       "chain": [
@@ -3800,7 +3800,7 @@
     },
     {
       "file": "index.html",
-      "line": 28177,
+      "line": 28182,
       "name": "app_notificacoes",
       "operation": "insert",
       "chain": [
@@ -3809,7 +3809,7 @@
     },
     {
       "file": "index.html",
-      "line": 28220,
+      "line": 28225,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -3818,7 +3818,7 @@
     },
     {
       "file": "index.html",
-      "line": 28240,
+      "line": 28245,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -3828,7 +3828,7 @@
     },
     {
       "file": "index.html",
-      "line": 28240,
+      "line": 28245,
       "name": "metas_usuarios",
       "operation": "upsert",
       "chain": [
@@ -3837,7 +3837,7 @@
     },
     {
       "file": "index.html",
-      "line": 28241,
+      "line": 28246,
       "name": "metas_usuarios",
       "operation": "upsert",
       "chain": [
@@ -3846,7 +3846,7 @@
     },
     {
       "file": "index.html",
-      "line": 28241,
+      "line": 28246,
       "name": "metas_diarias",
       "operation": "upsert",
       "chain": [
@@ -3855,7 +3855,7 @@
     },
     {
       "file": "index.html",
-      "line": 28243,
+      "line": 28248,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -3865,7 +3865,7 @@
     },
     {
       "file": "index.html",
-      "line": 28249,
+      "line": 28254,
       "name": "desafios",
       "operation": "update",
       "chain": [
@@ -3875,7 +3875,7 @@
     },
     {
       "file": "index.html",
-      "line": 28249,
+      "line": 28254,
       "name": "desafios",
       "operation": "insert",
       "chain": [
@@ -3884,7 +3884,7 @@
     },
     {
       "file": "index.html",
-      "line": 28250,
+      "line": 28255,
       "name": "desafios",
       "operation": "update",
       "chain": [
@@ -3894,7 +3894,7 @@
     },
     {
       "file": "index.html",
-      "line": 28255,
+      "line": 28260,
       "name": "solicitacoes_validacao",
       "operation": "update",
       "chain": [
@@ -3904,7 +3904,7 @@
     },
     {
       "file": "index.html",
-      "line": 28256,
+      "line": 28261,
       "name": "usuario_desafios",
       "operation": "upsert",
       "chain": [
@@ -3913,7 +3913,7 @@
     },
     {
       "file": "index.html",
-      "line": 28256,
+      "line": 28261,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -3923,7 +3923,7 @@
     },
     {
       "file": "index.html",
-      "line": 28257,
+      "line": 28262,
       "name": "solicitacoes_validacao",
       "operation": "delete",
       "chain": [
@@ -3933,7 +3933,7 @@
     },
     {
       "file": "index.html",
-      "line": 28263,
+      "line": 28268,
       "name": "usuario_medalhas",
       "operation": "upsert",
       "chain": [
@@ -3942,7 +3942,7 @@
     },
     {
       "file": "index.html",
-      "line": 28264,
+      "line": 28269,
       "name": "usuario_medalhas",
       "operation": "update",
       "chain": [
@@ -3953,7 +3953,7 @@
     },
     {
       "file": "index.html",
-      "line": 28265,
+      "line": 28270,
       "name": "usuario_molduras",
       "operation": "upsert",
       "chain": [
@@ -3962,7 +3962,7 @@
     },
     {
       "file": "index.html",
-      "line": 28265,
+      "line": 28270,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -3972,7 +3972,7 @@
     },
     {
       "file": "index.html",
-      "line": 28266,
+      "line": 28271,
       "name": "usuario_molduras",
       "operation": "update",
       "chain": [
@@ -3983,7 +3983,7 @@
     },
     {
       "file": "index.html",
-      "line": 28271,
+      "line": 28276,
       "name": "clube_livro_atual",
       "operation": "upsert",
       "chain": [
@@ -3992,7 +3992,7 @@
     },
     {
       "file": "index.html",
-      "line": 28273,
+      "line": 28278,
       "name": "clube_mural",
       "operation": "insert",
       "chain": [
@@ -4001,7 +4001,7 @@
     },
     {
       "file": "index.html",
-      "line": 28275,
+      "line": 28280,
       "name": "clube_albuns",
       "operation": "insert",
       "chain": [
@@ -4010,7 +4010,7 @@
     },
     {
       "file": "index.html",
-      "line": 28276,
+      "line": 28281,
       "name": "clube_biblioteca",
       "operation": "update",
       "chain": [
@@ -4020,7 +4020,7 @@
     },
     {
       "file": "index.html",
-      "line": 28280,
+      "line": 28285,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -4030,7 +4030,7 @@
     },
     {
       "file": "index.html",
-      "line": 28280,
+      "line": 28285,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -4040,7 +4040,7 @@
     },
     {
       "file": "index.html",
-      "line": 28281,
+      "line": 28286,
       "name": "ranking_temporadas",
       "operation": "insert",
       "chain": [
@@ -4049,38 +4049,8 @@
     },
     {
       "file": "index.html",
-      "line": 28283,
+      "line": 28288,
       "name": "usuarios",
-      "operation": "update",
-      "chain": [
-        "update",
-        "eq"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 28809,
-      "name": "app_configuracoes",
-      "operation": "select",
-      "chain": [
-        "select",
-        "eq",
-        "maybeSingle"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 28810,
-      "name": "app_configuracoes",
-      "operation": "upsert",
-      "chain": [
-        "upsert"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 28810,
-      "name": "app_configuracoes",
       "operation": "update",
       "chain": [
         "update",
@@ -4090,16 +4060,46 @@
     {
       "file": "index.html",
       "line": 28814,
-      "name": "clube_mural_reacoes",
+      "name": "app_configuracoes",
       "operation": "select",
       "chain": [
         "select",
-        "limit"
+        "eq",
+        "maybeSingle"
       ]
     },
     {
       "file": "index.html",
       "line": 28815,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28815,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28819,
+      "name": "clube_mural_reacoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28820,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -4109,7 +4109,7 @@
     },
     {
       "file": "index.html",
-      "line": 28831,
+      "line": 28836,
       "name": "clube_mural_reacoes",
       "operation": "insert",
       "chain": [
@@ -4118,7 +4118,7 @@
     },
     {
       "file": "index.html",
-      "line": 28831,
+      "line": 28836,
       "name": "clube_mural_reacoes",
       "operation": "insert",
       "chain": [
@@ -4127,7 +4127,7 @@
     },
     {
       "file": "index.html",
-      "line": 28831,
+      "line": 28836,
       "name": "clube_mural_reacoes",
       "operation": "delete",
       "chain": [
@@ -4138,7 +4138,7 @@
     },
     {
       "file": "index.html",
-      "line": 28831,
+      "line": 28836,
       "name": "clube_mural_reacoes",
       "operation": "delete",
       "chain": [
@@ -4149,7 +4149,7 @@
     },
     {
       "file": "index.html",
-      "line": 29177,
+      "line": 29182,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -4160,7 +4160,7 @@
     },
     {
       "file": "index.html",
-      "line": 29587,
+      "line": 29592,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -4171,7 +4171,7 @@
     },
     {
       "file": "index.html",
-      "line": 29588,
+      "line": 29593,
       "name": "clube_biblioteca",
       "operation": "select",
       "chain": [
@@ -4182,7 +4182,7 @@
     },
     {
       "file": "index.html",
-      "line": 29589,
+      "line": 29594,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -4193,7 +4193,7 @@
     },
     {
       "file": "index.html",
-      "line": 29598,
+      "line": 29603,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -4204,7 +4204,7 @@
     },
     {
       "file": "index.html",
-      "line": 29616,
+      "line": 29621,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -4216,7 +4216,7 @@
     },
     {
       "file": "index.html",
-      "line": 29616,
+      "line": 29621,
       "name": "livros_pessoais",
       "operation": "insert",
       "chain": [
@@ -4227,7 +4227,7 @@
     },
     {
       "file": "index.html",
-      "line": 29651,
+      "line": 29656,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -4238,7 +4238,7 @@
     },
     {
       "file": "index.html",
-      "line": 29796,
+      "line": 29801,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -4249,7 +4249,7 @@
     },
     {
       "file": "index.html",
-      "line": 29797,
+      "line": 29802,
       "name": "clube_biblioteca",
       "operation": "select",
       "chain": [
@@ -4260,7 +4260,7 @@
     },
     {
       "file": "index.html",
-      "line": 29798,
+      "line": 29803,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -4271,7 +4271,7 @@
     },
     {
       "file": "index.html",
-      "line": 29803,
+      "line": 29808,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -4283,7 +4283,7 @@
     },
     {
       "file": "index.html",
-      "line": 29803,
+      "line": 29808,
       "name": "livros_pessoais",
       "operation": "insert",
       "chain": [
@@ -4294,7 +4294,7 @@
     },
     {
       "file": "index.html",
-      "line": 29804,
+      "line": 29809,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -4305,7 +4305,7 @@
     },
     {
       "file": "index.html",
-      "line": 29816,
+      "line": 29821,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -4316,7 +4316,7 @@
     },
     {
       "file": "index.html",
-      "line": 29901,
+      "line": 29906,
       "name": "app_notificacoes",
       "operation": "upsert",
       "chain": [
@@ -4325,7 +4325,7 @@
     },
     {
       "file": "index.html",
-      "line": 29901,
+      "line": 29906,
       "name": "app_notificacoes",
       "operation": "insert",
       "chain": [
@@ -4334,7 +4334,7 @@
     },
     {
       "file": "index.html",
-      "line": 29903,
+      "line": 29908,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -4345,7 +4345,7 @@
     },
     {
       "file": "index.html",
-      "line": 29927,
+      "line": 29932,
       "name": "app_notificacoes",
       "operation": "select",
       "chain": [
@@ -4356,7 +4356,7 @@
     },
     {
       "file": "index.html",
-      "line": 29930,
+      "line": 29935,
       "name": "chat_mensagens",
       "operation": "select",
       "chain": [
@@ -4367,7 +4367,7 @@
     },
     {
       "file": "index.html",
-      "line": 29958,
+      "line": 29963,
       "name": "leituras",
       "operation": "insert",
       "chain": [
@@ -4376,7 +4376,7 @@
     },
     {
       "file": "index.html",
-      "line": 29958,
+      "line": 29963,
       "name": "leituras",
       "operation": "insert",
       "chain": [
@@ -4385,7 +4385,7 @@
     },
     {
       "file": "index.html",
-      "line": 30096,
+      "line": 30101,
       "name": "livros_pessoais",
       "operation": "upsert",
       "chain": [
@@ -4394,7 +4394,7 @@
     },
     {
       "file": "index.html",
-      "line": 30101,
+      "line": 30106,
       "name": "leituras",
       "operation": "upsert",
       "chain": [
@@ -4403,7 +4403,7 @@
     },
     {
       "file": "index.html",
-      "line": 30101,
+      "line": 30106,
       "name": "leituras",
       "operation": "select",
       "chain": [
@@ -4415,7 +4415,7 @@
     },
     {
       "file": "index.html",
-      "line": 30101,
+      "line": 30106,
       "name": "leituras",
       "operation": "update",
       "chain": [
@@ -4425,7 +4425,7 @@
     },
     {
       "file": "index.html",
-      "line": 30101,
+      "line": 30106,
       "name": "leituras",
       "operation": "insert",
       "chain": [
@@ -4434,7 +4434,7 @@
     },
     {
       "file": "index.html",
-      "line": 30115,
+      "line": 30120,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -4445,7 +4445,7 @@
     },
     {
       "file": "index.html",
-      "line": 30120,
+      "line": 30125,
       "name": "leituras",
       "operation": "select",
       "chain": [
@@ -4456,7 +4456,7 @@
     },
     {
       "file": "index.html",
-      "line": 30168,
+      "line": 30173,
       "name": "leituras",
       "operation": "select",
       "chain": [
@@ -4467,7 +4467,7 @@
     },
     {
       "file": "index.html",
-      "line": 30436,
+      "line": 30441,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -4480,7 +4480,7 @@
     },
     {
       "file": "index.html",
-      "line": 30467,
+      "line": 30472,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -4492,7 +4492,7 @@
     },
     {
       "file": "index.html",
-      "line": 30468,
+      "line": 30473,
       "name": "app_configuracoes",
       "operation": "insert",
       "chain": [
@@ -4501,7 +4501,7 @@
     },
     {
       "file": "index.html",
-      "line": 30475,
+      "line": 30480,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -4511,7 +4511,7 @@
     },
     {
       "file": "index.html",
-      "line": 30499,
+      "line": 30504,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -4520,7 +4520,7 @@
     },
     {
       "file": "index.html",
-      "line": 30547,
+      "line": 30552,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -4530,7 +4530,7 @@
     },
     {
       "file": "index.html",
-      "line": 30572,
+      "line": 30577,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -4539,7 +4539,7 @@
     },
     {
       "file": "index.html",
-      "line": 30573,
+      "line": 30578,
       "name": "app_configuracoes",
       "operation": "update",
       "chain": [
@@ -4549,7 +4549,7 @@
     },
     {
       "file": "index.html",
-      "line": 30574,
+      "line": 30579,
       "name": "app_configuracoes",
       "operation": "update",
       "chain": [
@@ -4559,7 +4559,7 @@
     },
     {
       "file": "index.html",
-      "line": 30575,
+      "line": 30580,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -4570,7 +4570,7 @@
     },
     {
       "file": "index.html",
-      "line": 30607,
+      "line": 30612,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -4582,7 +4582,7 @@
     },
     {
       "file": "index.html",
-      "line": 30608,
+      "line": 30613,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -4594,7 +4594,7 @@
     },
     {
       "file": "index.html",
-      "line": 30623,
+      "line": 30628,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -4606,7 +4606,7 @@
     },
     {
       "file": "index.html",
-      "line": 30624,
+      "line": 30629,
       "name": "app_configuracoes",
       "operation": "insert",
       "chain": [
@@ -4615,7 +4615,7 @@
     },
     {
       "file": "index.html",
-      "line": 30625,
+      "line": 30630,
       "name": "app_configuracoes",
       "operation": "update",
       "chain": [
@@ -4626,7 +4626,7 @@
     },
     {
       "file": "index.html",
-      "line": 30632,
+      "line": 30637,
       "name": "app_configuracoes",
       "operation": "delete",
       "chain": [
@@ -4637,7 +4637,7 @@
     },
     {
       "file": "index.html",
-      "line": 30633,
+      "line": 30638,
       "name": "app_configuracoes",
       "operation": "delete",
       "chain": [
@@ -4648,7 +4648,7 @@
     },
     {
       "file": "index.html",
-      "line": 30645,
+      "line": 30650,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -4658,7 +4658,7 @@
     },
     {
       "file": "index.html",
-      "line": 32136,
+      "line": 32141,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -4669,7 +4669,7 @@
     },
     {
       "file": "index.html",
-      "line": 32148,
+      "line": 32153,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -4679,7 +4679,7 @@
     },
     {
       "file": "index.html",
-      "line": 32167,
+      "line": 32172,
       "name": "usuario_medalhas",
       "operation": "insert",
       "chain": [
@@ -4688,7 +4688,7 @@
     },
     {
       "file": "index.html",
-      "line": 32170,
+      "line": 32175,
       "name": "usuario_medalhas",
       "operation": "delete",
       "chain": [
@@ -4699,7 +4699,7 @@
     },
     {
       "file": "index.html",
-      "line": 32205,
+      "line": 32210,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -4709,7 +4709,7 @@
     },
     {
       "file": "index.html",
-      "line": 32221,
+      "line": 32226,
       "name": "usuario_molduras",
       "operation": "delete",
       "chain": [
@@ -4720,7 +4720,7 @@
     },
     {
       "file": "index.html",
-      "line": 32338,
+      "line": 32343,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -4731,7 +4731,7 @@
     },
     {
       "file": "index.html",
-      "line": 32353,
+      "line": 32358,
       "name": "usuario_medalhas",
       "operation": "select",
       "chain": [
@@ -4741,7 +4741,7 @@
     },
     {
       "file": "index.html",
-      "line": 32357,
+      "line": 32362,
       "name": "usuario_molduras",
       "operation": "select",
       "chain": [
@@ -4751,7 +4751,7 @@
     },
     {
       "file": "index.html",
-      "line": 32489,
+      "line": 32494,
       "name": "usuario_molduras",
       "operation": "delete",
       "chain": [
@@ -4762,7 +4762,7 @@
     },
     {
       "file": "index.html",
-      "line": 32490,
+      "line": 32495,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -4773,7 +4773,7 @@
     },
     {
       "file": "index.html",
-      "line": 32490,
+      "line": 32495,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -4783,7 +4783,7 @@
     },
     {
       "file": "index.html",
-      "line": 32490,
+      "line": 32495,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -4793,7 +4793,7 @@
     },
     {
       "file": "index.html",
-      "line": 32578,
+      "line": 32583,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -4803,7 +4803,7 @@
     },
     {
       "file": "index.html",
-      "line": 32621,
+      "line": 32626,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -4814,7 +4814,7 @@
     },
     {
       "file": "index.html",
-      "line": 32622,
+      "line": 32627,
       "name": "clube_livros_finalizados",
       "operation": "select",
       "chain": [
@@ -4825,7 +4825,7 @@
     },
     {
       "file": "index.html",
-      "line": 32677,
+      "line": 32682,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -4837,19 +4837,7 @@
     },
     {
       "file": "index.html",
-      "line": 32679,
-      "name": "app_configuracoes",
-      "operation": "select",
-      "chain": [
-        "select",
-        "eq",
-        "like",
-        "limit"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 32680,
+      "line": 32684,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -4861,7 +4849,19 @@
     },
     {
       "file": "index.html",
-      "line": 32681,
+      "line": 32685,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "like",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32686,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -4873,7 +4873,7 @@
     },
     {
       "file": "index.html",
-      "line": 32691,
+      "line": 32696,
       "name": "app_configuracoes",
       "operation": "insert",
       "chain": [
@@ -4882,7 +4882,7 @@
     },
     {
       "file": "index.html",
-      "line": 32708,
+      "line": 32713,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -4893,7 +4893,7 @@
     },
     {
       "file": "index.html",
-      "line": 32715,
+      "line": 32720,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -4903,7 +4903,7 @@
     },
     {
       "file": "index.html",
-      "line": 34900,
+      "line": 34905,
       "name": "app_notificacoes",
       "operation": "select",
       "chain": [
@@ -4914,7 +4914,7 @@
     },
     {
       "file": "index.html",
-      "line": 34904,
+      "line": 34909,
       "name": "app_notificacoes",
       "operation": "update",
       "chain": [
@@ -4924,7 +4924,7 @@
     },
     {
       "file": "index.html",
-      "line": 42767,
+      "line": 42772,
       "name": "livros_pessoais",
       "operation": "upsert",
       "chain": [
@@ -4933,7 +4933,7 @@
     },
     {
       "file": "index.html",
-      "line": 42772,
+      "line": 42777,
       "name": "leituras",
       "operation": "upsert",
       "chain": [
@@ -4942,7 +4942,7 @@
     },
     {
       "file": "index.html",
-      "line": 42772,
+      "line": 42777,
       "name": "leituras",
       "operation": "select",
       "chain": [
@@ -4954,7 +4954,7 @@
     },
     {
       "file": "index.html",
-      "line": 42772,
+      "line": 42777,
       "name": "leituras",
       "operation": "update",
       "chain": [
@@ -4964,7 +4964,7 @@
     },
     {
       "file": "index.html",
-      "line": 42772,
+      "line": 42777,
       "name": "leituras",
       "operation": "insert",
       "chain": [
@@ -4973,7 +4973,7 @@
     },
     {
       "file": "index.html",
-      "line": 42796,
+      "line": 42801,
       "name": "usuario_medalhas",
       "operation": "upsert",
       "chain": [
@@ -4982,7 +4982,7 @@
     },
     {
       "file": "index.html",
-      "line": 42867,
+      "line": 42872,
       "name": "metas_usuarios",
       "operation": "select",
       "chain": [
@@ -4993,7 +4993,7 @@
     },
     {
       "file": "index.html",
-      "line": 42869,
+      "line": 42874,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -5005,7 +5005,7 @@
     },
     {
       "file": "index.html",
-      "line": 42876,
+      "line": 42881,
       "name": "metas_diarias",
       "operation": "upsert",
       "chain": [
@@ -5014,7 +5014,7 @@
     },
     {
       "file": "index.html",
-      "line": 42877,
+      "line": 42882,
       "name": "metas_usuarios",
       "operation": "upsert",
       "chain": [
@@ -5023,7 +5023,7 @@
     },
     {
       "file": "index.html",
-      "line": 43203,
+      "line": 43208,
       "name": "usuario_medalhas",
       "operation": "upsert",
       "chain": [
@@ -5032,51 +5032,51 @@
     },
     {
       "file": "index.html",
-      "line": 43954,
-      "name": "livros_pessoais",
-      "operation": "select",
-      "chain": [
-        "select",
-        "eq",
-        "eq",
-        "limit"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 43956,
-      "name": "livros_pessoais",
-      "operation": "update",
-      "chain": [
-        "update",
-        "eq"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 43958,
-      "name": "livros_pessoais",
-      "operation": "select",
-      "chain": [
-        "select",
-        "eq",
-        "eq",
-        "limit"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 43958,
-      "name": "livros_pessoais",
-      "operation": "update",
-      "chain": [
-        "update",
-        "eq"
-      ]
-    },
-    {
-      "file": "index.html",
       "line": 43959,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43961,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43963,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43963,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43964,
       "name": "livros_pessoais",
       "operation": "upsert",
       "chain": [
@@ -5085,7 +5085,7 @@
     },
     {
       "file": "index.html",
-      "line": 43959,
+      "line": 43964,
       "name": "livros_pessoais",
       "operation": "insert",
       "chain": [
@@ -5094,7 +5094,7 @@
     },
     {
       "file": "index.html",
-      "line": 43961,
+      "line": 43966,
       "name": "leituras",
       "operation": "upsert",
       "chain": [
@@ -5103,7 +5103,7 @@
     },
     {
       "file": "index.html",
-      "line": 43961,
+      "line": 43966,
       "name": "leituras",
       "operation": "select",
       "chain": [
@@ -5115,7 +5115,7 @@
     },
     {
       "file": "index.html",
-      "line": 43961,
+      "line": 43966,
       "name": "leituras",
       "operation": "update",
       "chain": [
@@ -5125,27 +5125,27 @@
     },
     {
       "file": "index.html",
-      "line": 43961,
+      "line": 43966,
       "name": "leituras",
       "operation": "insert",
       "chain": [
         "insert"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 44194,
-      "name": "metas_usuarios",
-      "operation": "select",
-      "chain": [
-        "select",
-        "eq",
-        "limit"
       ]
     },
     {
       "file": "index.html",
       "line": 44199,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 44204,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -5157,16 +5157,7 @@
     },
     {
       "file": "index.html",
-      "line": 44240,
-      "name": "metas_diarias",
-      "operation": "upsert",
-      "chain": [
-        "upsert"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 44247,
+      "line": 44245,
       "name": "metas_diarias",
       "operation": "upsert",
       "chain": [
@@ -5177,6 +5168,15 @@
       "file": "index.html",
       "line": 44252,
       "name": "metas_diarias",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 44257,
+      "name": "metas_diarias",
       "operation": "update",
       "chain": [
         "update",
@@ -5186,26 +5186,26 @@
     },
     {
       "file": "index.html",
-      "line": 44266,
+      "line": 44271,
       "name": "metas_diarias",
       "operation": "insert",
       "chain": [
         "insert"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 44294,
-      "name": "metas_usuarios",
-      "operation": "upsert",
-      "chain": [
-        "upsert"
       ]
     },
     {
       "file": "index.html",
       "line": 44299,
       "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 44304,
+      "name": "metas_usuarios",
       "operation": "update",
       "chain": [
         "update",
@@ -5214,7 +5214,7 @@
     },
     {
       "file": "index.html",
-      "line": 44304,
+      "line": 44309,
       "name": "metas_usuarios",
       "operation": "insert",
       "chain": [
@@ -5223,30 +5223,7 @@
     },
     {
       "file": "index.html",
-      "line": 45756,
-      "name": "metas_usuarios",
-      "operation": "select",
-      "chain": [
-        "select",
-        "eq",
-        "limit"
-      ]
-    },
-    {
-      "file": "index.html",
       "line": 45761,
-      "name": "metas_diarias",
-      "operation": "select",
-      "chain": [
-        "select",
-        "eq",
-        "gte",
-        "order"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 45919,
       "name": "metas_usuarios",
       "operation": "select",
       "chain": [
@@ -5257,7 +5234,7 @@
     },
     {
       "file": "index.html",
-      "line": 45925,
+      "line": 45766,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -5269,7 +5246,30 @@
     },
     {
       "file": "index.html",
-      "line": 45947,
+      "line": 45924,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 45930,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "gte",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 45952,
       "name": "metas_usuarios",
       "operation": "update",
       "chain": [
@@ -5279,7 +5279,7 @@
     },
     {
       "file": "index.html",
-      "line": 45953,
+      "line": 45958,
       "name": "metas_usuarios",
       "operation": "upsert",
       "chain": [
@@ -5288,7 +5288,7 @@
     },
     {
       "file": "index.html",
-      "line": 45977,
+      "line": 45982,
       "name": "metas_diarias",
       "operation": "update",
       "chain": [
@@ -5299,7 +5299,7 @@
     },
     {
       "file": "index.html",
-      "line": 47364,
+      "line": 47369,
       "name": "desafios",
       "operation": "select",
       "chain": [
@@ -5309,7 +5309,7 @@
     },
     {
       "file": "index.html",
-      "line": 47365,
+      "line": 47370,
       "name": "usuario_desafios",
       "operation": "select",
       "chain": [
@@ -5319,7 +5319,7 @@
     },
     {
       "file": "index.html",
-      "line": 47366,
+      "line": 47371,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -5330,7 +5330,7 @@
     },
     {
       "file": "index.html",
-      "line": 47606,
+      "line": 47611,
       "name": "usuario_desafios",
       "operation": "select",
       "chain": [
@@ -5341,7 +5341,7 @@
     },
     {
       "file": "index.html",
-      "line": 47612,
+      "line": 47617,
       "name": "desafios",
       "operation": "select",
       "chain": [
@@ -5351,7 +5351,7 @@
     },
     {
       "file": "index.html",
-      "line": 48786,
+      "line": 48791,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -5361,7 +5361,7 @@
     },
     {
       "file": "index.html",
-      "line": 49228,
+      "line": 49233,
       "name": "desafios",
       "operation": "select",
       "chain": [
@@ -5371,7 +5371,7 @@
     },
     {
       "file": "index.html",
-      "line": 49229,
+      "line": 49234,
       "name": "usuario_desafios",
       "operation": "select",
       "chain": [
@@ -5381,7 +5381,7 @@
     },
     {
       "file": "index.html",
-      "line": 49230,
+      "line": 49235,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -5391,7 +5391,7 @@
     },
     {
       "file": "index.html",
-      "line": 54524,
+      "line": 54529,
       "name": "livros_pessoais",
       "operation": "upsert",
       "chain": [
@@ -5402,7 +5402,7 @@
     },
     {
       "file": "index.html",
-      "line": 54751,
+      "line": 54756,
       "name": "clube_fotos",
       "operation": "upsert",
       "chain": [
@@ -5411,7 +5411,7 @@
     },
     {
       "file": "index.html",
-      "line": 54766,
+      "line": 54771,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -5424,7 +5424,7 @@
     },
     {
       "file": "index.html",
-      "line": 54767,
+      "line": 54772,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -5437,7 +5437,7 @@
     },
     {
       "file": "index.html",
-      "line": 54782,
+      "line": 54787,
       "name": "clube_fotos",
       "operation": "select",
       "chain": [
@@ -5446,15 +5446,6 @@
         "eq",
         "eq",
         "limit"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 56140,
-      "name": "metas_diarias",
-      "operation": "upsert",
-      "chain": [
-        "upsert"
       ]
     },
     {
@@ -5468,7 +5459,16 @@
     },
     {
       "file": "index.html",
-      "line": 56170,
+      "line": 56150,
+      "name": "metas_diarias",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 56175,
       "name": "metas_usuarios",
       "operation": "upsert",
       "chain": [
@@ -5477,7 +5477,7 @@
     },
     {
       "file": "index.html",
-      "line": 56206,
+      "line": 56211,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -5489,7 +5489,7 @@
     },
     {
       "file": "index.html",
-      "line": 56208,
+      "line": 56213,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -5499,7 +5499,7 @@
     },
     {
       "file": "index.html",
-      "line": 56212,
+      "line": 56217,
       "name": "livros_pessoais",
       "operation": "upsert",
       "chain": [
@@ -5508,7 +5508,7 @@
     },
     {
       "file": "index.html",
-      "line": 56225,
+      "line": 56230,
       "name": "leituras",
       "operation": "upsert",
       "chain": [
@@ -5517,7 +5517,7 @@
     },
     {
       "file": "index.html",
-      "line": 56244,
+      "line": 56249,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -5528,7 +5528,7 @@
     },
     {
       "file": "index.html",
-      "line": 56245,
+      "line": 56250,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -5541,7 +5541,7 @@
     },
     {
       "file": "index.html",
-      "line": 56246,
+      "line": 56251,
       "name": "leituras",
       "operation": "select",
       "chain": [
@@ -5553,7 +5553,7 @@
     },
     {
       "file": "index.html",
-      "line": 56247,
+      "line": 56252,
       "name": "metas_usuarios",
       "operation": "select",
       "chain": [
@@ -5564,7 +5564,7 @@
     },
     {
       "file": "index.html",
-      "line": 56248,
+      "line": 56253,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -5577,7 +5577,7 @@
     },
     {
       "file": "index.html",
-      "line": 57779,
+      "line": 57784,
       "name": "app_notificacoes",
       "operation": "select",
       "chain": [
@@ -5588,7 +5588,7 @@
     },
     {
       "file": "index.html",
-      "line": 57787,
+      "line": 57792,
       "name": "app_notificacoes",
       "operation": "select",
       "chain": [
@@ -5598,7 +5598,7 @@
     },
     {
       "file": "index.html",
-      "line": 57829,
+      "line": 57834,
       "name": "app_notificacoes",
       "operation": "select",
       "chain": [
@@ -5609,7 +5609,7 @@
     },
     {
       "file": "index.html",
-      "line": 57841,
+      "line": 57846,
       "name": "app_notificacoes",
       "operation": "update",
       "chain": [
@@ -5619,7 +5619,7 @@
     },
     {
       "file": "index.html",
-      "line": 58824,
+      "line": 58829,
       "name": "app_notificacoes",
       "operation": "insert",
       "chain": [
@@ -5628,7 +5628,7 @@
     },
     {
       "file": "index.html",
-      "line": 59751,
+      "line": 59756,
       "name": "push_subscriptions",
       "operation": "select",
       "chain": [
@@ -5640,7 +5640,7 @@
     },
     {
       "file": "index.html",
-      "line": 59993,
+      "line": 59998,
       "name": "app_notificacoes",
       "operation": "insert",
       "chain": [
@@ -5649,7 +5649,7 @@
     },
     {
       "file": "index.html",
-      "line": 64629,
+      "line": 64634,
       "name": "usuario_medalhas",
       "operation": "select",
       "chain": [
@@ -5661,7 +5661,7 @@
     },
     {
       "file": "index.html",
-      "line": 64642,
+      "line": 64647,
       "name": "usuario_medalhas",
       "operation": "upsert",
       "chain": [
@@ -5670,7 +5670,7 @@
     },
     {
       "file": "index.html",
-      "line": 64649,
+      "line": 64654,
       "name": "usuario_medalhas",
       "operation": "update",
       "chain": [
@@ -5681,7 +5681,7 @@
     },
     {
       "file": "index.html",
-      "line": 64707,
+      "line": 64712,
       "name": "usuario_medalhas",
       "operation": "update",
       "chain": [
@@ -5693,7 +5693,7 @@
     },
     {
       "file": "index.html",
-      "line": 64718,
+      "line": 64723,
       "name": "usuario_medalhas",
       "operation": "select",
       "chain": [
@@ -5703,7 +5703,7 @@
     },
     {
       "file": "index.html",
-      "line": 64728,
+      "line": 64733,
       "name": "usuario_medalhas",
       "operation": "update",
       "chain": [
@@ -5712,7 +5712,7 @@
     },
     {
       "file": "index.html",
-      "line": 64747,
+      "line": 64752,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -5722,7 +5722,7 @@
     },
     {
       "file": "index.html",
-      "line": 64758,
+      "line": 64763,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -5733,7 +5733,7 @@
     },
     {
       "file": "index.html",
-      "line": 64966,
+      "line": 64971,
       "name": "app_notificacoes",
       "operation": "upsert",
       "chain": [
@@ -5742,7 +5742,7 @@
     },
     {
       "file": "index.html",
-      "line": 64966,
+      "line": 64971,
       "name": "app_notificacoes",
       "operation": "insert",
       "chain": [
@@ -5751,7 +5751,7 @@
     },
     {
       "file": "index.html",
-      "line": 64982,
+      "line": 64987,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -5763,7 +5763,7 @@
     },
     {
       "file": "index.html",
-      "line": 64982,
+      "line": 64987,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -5774,7 +5774,7 @@
     },
     {
       "file": "index.html",
-      "line": 64982,
+      "line": 64987,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -5784,7 +5784,7 @@
     },
     {
       "file": "index.html",
-      "line": 64999,
+      "line": 65004,
       "name": "chat_reacoes",
       "operation": "select",
       "chain": [
@@ -5795,7 +5795,7 @@
     },
     {
       "file": "index.html",
-      "line": 66380,
+      "line": 66385,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -5805,7 +5805,7 @@
     },
     {
       "file": "index.html",
-      "line": 66380,
+      "line": 66385,
       "name": "chat_mensagens",
       "operation": "select",
       "chain": [
@@ -5814,7 +5814,7 @@
     },
     {
       "file": "index.html",
-      "line": 66380,
+      "line": 66385,
       "name": "chat_mensagens",
       "operation": "select",
       "chain": [
@@ -5825,7 +5825,7 @@
     },
     {
       "file": "index.html",
-      "line": 66380,
+      "line": 66385,
       "name": "chat_mensagens",
       "operation": "select",
       "chain": [
@@ -5835,7 +5835,7 @@
     },
     {
       "file": "index.html",
-      "line": 66380,
+      "line": 66385,
       "name": "chat_mensagens",
       "operation": "select",
       "chain": [
@@ -5847,7 +5847,7 @@
     },
     {
       "file": "index.html",
-      "line": 66380,
+      "line": 66385,
       "name": "chat_reacoes",
       "operation": "select",
       "chain": [
@@ -5857,7 +5857,7 @@
     },
     {
       "file": "index.html",
-      "line": 66390,
+      "line": 66395,
       "name": "chat_mensagens",
       "operation": "insert",
       "chain": [
@@ -5868,7 +5868,7 @@
     },
     {
       "file": "index.html",
-      "line": 66390,
+      "line": 66395,
       "name": "chat_mensagens",
       "operation": "insert",
       "chain": [
@@ -5879,7 +5879,7 @@
     },
     {
       "file": "index.html",
-      "line": 66391,
+      "line": 66396,
       "name": "app_notificacoes",
       "operation": "upsert",
       "chain": [
@@ -5888,7 +5888,7 @@
     },
     {
       "file": "index.html",
-      "line": 66391,
+      "line": 66396,
       "name": "app_notificacoes",
       "operation": "insert",
       "chain": [
@@ -5897,7 +5897,7 @@
     },
     {
       "file": "index.html",
-      "line": 66398,
+      "line": 66403,
       "name": "chat_reacoes",
       "operation": "delete",
       "chain": [
@@ -5908,7 +5908,7 @@
     },
     {
       "file": "index.html",
-      "line": 66398,
+      "line": 66403,
       "name": "chat_reacoes",
       "operation": "upsert",
       "chain": [
@@ -5917,7 +5917,7 @@
     },
     {
       "file": "index.html",
-      "line": 66402,
+      "line": 66407,
       "name": "chat_mensagens",
       "operation": "update",
       "chain": [
@@ -5927,7 +5927,7 @@
     },
     {
       "file": "index.html",
-      "line": 66403,
+      "line": 66408,
       "name": "chat_reacoes",
       "operation": "delete",
       "chain": [
@@ -5937,7 +5937,7 @@
     },
     {
       "file": "index.html",
-      "line": 66403,
+      "line": 66408,
       "name": "chat_mensagens",
       "operation": "delete",
       "chain": [
@@ -5947,7 +5947,7 @@
     },
     {
       "file": "index.html",
-      "line": 66403,
+      "line": 66408,
       "name": "chat_mensagens",
       "operation": "update",
       "chain": [
@@ -5957,7 +5957,7 @@
     },
     {
       "file": "index.html",
-      "line": 66484,
+      "line": 66489,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -5968,7 +5968,7 @@
     },
     {
       "file": "index.html",
-      "line": 66485,
+      "line": 66490,
       "name": "clube_livro_participantes",
       "operation": "select",
       "chain": [
@@ -5979,7 +5979,7 @@
     },
     {
       "file": "index.html",
-      "line": 66485,
+      "line": 66490,
       "name": "clube_livro_participantes",
       "operation": "select",
       "chain": [
@@ -5989,7 +5989,7 @@
     },
     {
       "file": "index.html",
-      "line": 66486,
+      "line": 66491,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6001,7 +6001,7 @@
     },
     {
       "file": "index.html",
-      "line": 66487,
+      "line": 66492,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -6010,7 +6010,7 @@
     },
     {
       "file": "index.html",
-      "line": 66491,
+      "line": 66496,
       "name": "clube_livros_finalizados",
       "operation": "select",
       "chain": [
@@ -6021,7 +6021,7 @@
     },
     {
       "file": "index.html",
-      "line": 66535,
+      "line": 66540,
       "name": "clube_livro_participantes",
       "operation": "select",
       "chain": [
@@ -6034,7 +6034,7 @@
     },
     {
       "file": "index.html",
-      "line": 66545,
+      "line": 66550,
       "name": "clube_livro_participantes",
       "operation": "insert",
       "chain": [
@@ -6043,7 +6043,7 @@
     },
     {
       "file": "index.html",
-      "line": 66551,
+      "line": 66556,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6055,33 +6055,13 @@
     },
     {
       "file": "index.html",
-      "line": 66557,
+      "line": 66562,
       "name": "usuarios",
       "operation": "select",
       "chain": [
         "select",
         "eq",
         "limit"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 66560,
-      "name": "app_configuracoes",
-      "operation": "update",
-      "chain": [
-        "update",
-        "eq",
-        "eq"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 66561,
-      "name": "app_configuracoes",
-      "operation": "insert",
-      "chain": [
-        "insert"
       ]
     },
     {
@@ -6098,6 +6078,26 @@
     {
       "file": "index.html",
       "line": 66566,
+      "name": "app_configuracoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66570,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66571,
       "name": "clube_livros_finalizados",
       "operation": "insert",
       "chain": [
@@ -6106,7 +6106,7 @@
     },
     {
       "file": "index.html",
-      "line": 66574,
+      "line": 66579,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -6117,7 +6117,7 @@
     },
     {
       "file": "index.html",
-      "line": 66577,
+      "line": 66582,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -6127,7 +6127,7 @@
     },
     {
       "file": "index.html",
-      "line": 66581,
+      "line": 66586,
       "name": "clube_livro_participantes",
       "operation": "update",
       "chain": [
@@ -6137,18 +6137,8 @@
     },
     {
       "file": "index.html",
-      "line": 66589,
+      "line": 66594,
       "name": "clube_livro_participantes",
-      "operation": "update",
-      "chain": [
-        "update",
-        "eq"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 66590,
-      "name": "clube_livro_atual",
       "operation": "update",
       "chain": [
         "update",
@@ -6158,6 +6148,16 @@
     {
       "file": "index.html",
       "line": 66595,
+      "name": "clube_livro_atual",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66600,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -6168,7 +6168,7 @@
     },
     {
       "file": "index.html",
-      "line": 66595,
+      "line": 66600,
       "name": "clube_livro_participantes",
       "operation": "update",
       "chain": [
@@ -6178,7 +6178,7 @@
     },
     {
       "file": "index.html",
-      "line": 66742,
+      "line": 66747,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6190,7 +6190,7 @@
     },
     {
       "file": "index.html",
-      "line": 66746,
+      "line": 66751,
       "name": "app_configuracoes",
       "operation": "update",
       "chain": [
@@ -6201,7 +6201,7 @@
     },
     {
       "file": "index.html",
-      "line": 66746,
+      "line": 66751,
       "name": "app_configuracoes",
       "operation": "update",
       "chain": [
@@ -6212,7 +6212,7 @@
     },
     {
       "file": "index.html",
-      "line": 66747,
+      "line": 66752,
       "name": "app_configuracoes",
       "operation": "insert",
       "chain": [
@@ -6221,7 +6221,7 @@
     },
     {
       "file": "index.html",
-      "line": 66748,
+      "line": 66753,
       "name": "app_configuracoes",
       "operation": "update",
       "chain": [
@@ -6232,7 +6232,7 @@
     },
     {
       "file": "index.html",
-      "line": 66757,
+      "line": 66762,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -6242,7 +6242,7 @@
     },
     {
       "file": "index.html",
-      "line": 66758,
+      "line": 66763,
       "name": "clube_albuns",
       "operation": "select",
       "chain": [
@@ -6254,7 +6254,7 @@
     },
     {
       "file": "index.html",
-      "line": 66759,
+      "line": 66764,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -6265,7 +6265,7 @@
     },
     {
       "file": "index.html",
-      "line": 66774,
+      "line": 66779,
       "name": "clube_livro_participantes",
       "operation": "upsert",
       "chain": [
@@ -6274,7 +6274,7 @@
     },
     {
       "file": "index.html",
-      "line": 66775,
+      "line": 66780,
       "name": "clube_livro_participantes",
       "operation": "update",
       "chain": [
@@ -6285,7 +6285,7 @@
     },
     {
       "file": "index.html",
-      "line": 66778,
+      "line": 66783,
       "name": "clube_livro_participantes",
       "operation": "select",
       "chain": [
@@ -6297,7 +6297,7 @@
     },
     {
       "file": "index.html",
-      "line": 66899,
+      "line": 66904,
       "name": "clube_livro_atual",
       "operation": "upsert",
       "chain": [
@@ -6306,7 +6306,7 @@
     },
     {
       "file": "index.html",
-      "line": 66899,
+      "line": 66904,
       "name": "clube_livro_atual",
       "operation": "update",
       "chain": [
@@ -6316,7 +6316,7 @@
     },
     {
       "file": "index.html",
-      "line": 66905,
+      "line": 66910,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -6328,7 +6328,7 @@
     },
     {
       "file": "index.html",
-      "line": 66905,
+      "line": 66910,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -6339,7 +6339,7 @@
     },
     {
       "file": "index.html",
-      "line": 66926,
+      "line": 66931,
       "name": "clube_livro_participantes",
       "operation": "upsert",
       "chain": [
@@ -6348,17 +6348,7 @@
     },
     {
       "file": "index.html",
-      "line": 66926,
-      "name": "clube_livro_participantes",
-      "operation": "update",
-      "chain": [
-        "update",
-        "eq"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 66934,
+      "line": 66931,
       "name": "clube_livro_participantes",
       "operation": "update",
       "chain": [
@@ -6370,6 +6360,16 @@
       "file": "index.html",
       "line": 66939,
       "name": "clube_livro_participantes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66944,
+      "name": "clube_livro_participantes",
       "operation": "delete",
       "chain": [
         "delete",
@@ -6378,7 +6378,7 @@
     },
     {
       "file": "index.html",
-      "line": 66956,
+      "line": 66961,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6390,7 +6390,7 @@
     },
     {
       "file": "index.html",
-      "line": 66957,
+      "line": 66962,
       "name": "app_configuracoes",
       "operation": "update",
       "chain": [
@@ -6401,7 +6401,7 @@
     },
     {
       "file": "index.html",
-      "line": 66957,
+      "line": 66962,
       "name": "app_configuracoes",
       "operation": "insert",
       "chain": [
@@ -6410,7 +6410,7 @@
     },
     {
       "file": "index.html",
-      "line": 66958,
+      "line": 66963,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -6421,7 +6421,7 @@
     },
     {
       "file": "index.html",
-      "line": 66958,
+      "line": 66963,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -6431,7 +6431,7 @@
     },
     {
       "file": "index.html",
-      "line": 66959,
+      "line": 66964,
       "name": "clube_livros_finalizados",
       "operation": "insert",
       "chain": [
@@ -6440,7 +6440,7 @@
     },
     {
       "file": "index.html",
-      "line": 67011,
+      "line": 67016,
       "name": "clube_livro_atual",
       "operation": "update",
       "chain": [
@@ -6450,7 +6450,7 @@
     },
     {
       "file": "index.html",
-      "line": 68058,
+      "line": 68063,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6462,7 +6462,7 @@
     },
     {
       "file": "index.html",
-      "line": 68059,
+      "line": 68064,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -6472,7 +6472,7 @@
     },
     {
       "file": "index.html",
-      "line": 68597,
+      "line": 68602,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -6482,7 +6482,7 @@
     },
     {
       "file": "index.html",
-      "line": 68598,
+      "line": 68603,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -6492,7 +6492,7 @@
     },
     {
       "file": "index.html",
-      "line": 68599,
+      "line": 68604,
       "name": "metas_usuarios",
       "operation": "upsert",
       "chain": [
@@ -6501,7 +6501,7 @@
     },
     {
       "file": "index.html",
-      "line": 68599,
+      "line": 68604,
       "name": "metas_diarias",
       "operation": "upsert",
       "chain": [
@@ -6510,7 +6510,7 @@
     },
     {
       "file": "index.html",
-      "line": 68600,
+      "line": 68605,
       "name": "admin_logs",
       "operation": "insert",
       "chain": [
@@ -6519,7 +6519,7 @@
     },
     {
       "file": "index.html",
-      "line": 68601,
+      "line": 68606,
       "name": "app_notificacoes",
       "operation": "insert",
       "chain": [
@@ -6528,7 +6528,7 @@
     },
     {
       "file": "index.html",
-      "line": 68803,
+      "line": 68808,
       "name": "admin_logs",
       "operation": "insert",
       "chain": [
@@ -6537,7 +6537,7 @@
     },
     {
       "file": "index.html",
-      "line": 68833,
+      "line": 68838,
       "name": "admin_logs",
       "operation": "insert",
       "chain": [
@@ -6546,7 +6546,7 @@
     },
     {
       "file": "index.html",
-      "line": 68989,
+      "line": 68994,
       "name": "admin_logs",
       "operation": "insert",
       "chain": [
@@ -6555,7 +6555,7 @@
     },
     {
       "file": "index.html",
-      "line": 69063,
+      "line": 69068,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -6568,7 +6568,7 @@
     },
     {
       "file": "index.html",
-      "line": 69063,
+      "line": 69068,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -6580,7 +6580,7 @@
     },
     {
       "file": "index.html",
-      "line": 69063,
+      "line": 69068,
       "name": "clube_livros_finalizados",
       "operation": "select",
       "chain": [
@@ -6591,7 +6591,7 @@
     },
     {
       "file": "index.html",
-      "line": 69065,
+      "line": 69070,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6603,7 +6603,7 @@
     },
     {
       "file": "index.html",
-      "line": 69067,
+      "line": 69072,
       "name": "app_configuracoes",
       "operation": "insert",
       "chain": [
@@ -6612,7 +6612,7 @@
     },
     {
       "file": "index.html",
-      "line": 69069,
+      "line": 69074,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -6623,7 +6623,7 @@
     },
     {
       "file": "index.html",
-      "line": 69069,
+      "line": 69074,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -6633,7 +6633,7 @@
     },
     {
       "file": "index.html",
-      "line": 69070,
+      "line": 69075,
       "name": "app_configuracoes",
       "operation": "delete",
       "chain": [
@@ -6644,7 +6644,7 @@
     },
     {
       "file": "index.html",
-      "line": 69072,
+      "line": 69077,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6656,7 +6656,7 @@
     },
     {
       "file": "index.html",
-      "line": 69073,
+      "line": 69078,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6669,7 +6669,7 @@
     },
     {
       "file": "index.html",
-      "line": 69086,
+      "line": 69091,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -6678,7 +6678,7 @@
     },
     {
       "file": "index.html",
-      "line": 69086,
+      "line": 69091,
       "name": "app_configuracoes",
       "operation": "update",
       "chain": [
@@ -6688,7 +6688,7 @@
     },
     {
       "file": "index.html",
-      "line": 69096,
+      "line": 69101,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -6699,7 +6699,7 @@
     },
     {
       "file": "index.html",
-      "line": 69096,
+      "line": 69101,
       "name": "solicitacoes_validacao",
       "operation": "update",
       "chain": [
@@ -6709,7 +6709,7 @@
     },
     {
       "file": "index.html",
-      "line": 69099,
+      "line": 69104,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -6720,7 +6720,7 @@
     },
     {
       "file": "index.html",
-      "line": 69099,
+      "line": 69104,
       "name": "solicitacoes_validacao",
       "operation": "update",
       "chain": [
@@ -6730,7 +6730,7 @@
     },
     {
       "file": "index.html",
-      "line": 69103,
+      "line": 69108,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -6741,7 +6741,7 @@
     },
     {
       "file": "index.html",
-      "line": 69103,
+      "line": 69108,
       "name": "solicitacoes_validacao",
       "operation": "update",
       "chain": [
@@ -6751,7 +6751,7 @@
     },
     {
       "file": "index.html",
-      "line": 69212,
+      "line": 69217,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6765,7 +6765,7 @@
     },
     {
       "file": "index.html",
-      "line": 69222,
+      "line": 69227,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -6779,7 +6779,7 @@
     },
     {
       "file": "index.html",
-      "line": 69223,
+      "line": 69228,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -6791,7 +6791,7 @@
     },
     {
       "file": "index.html",
-      "line": 69224,
+      "line": 69229,
       "name": "clube_livros_finalizados",
       "operation": "select",
       "chain": [
@@ -6802,7 +6802,7 @@
     },
     {
       "file": "index.html",
-      "line": 69225,
+      "line": 69230,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -6815,7 +6815,7 @@
     },
     {
       "file": "index.html",
-      "line": 69738,
+      "line": 69743,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -6825,7 +6825,7 @@
     },
     {
       "file": "index.html",
-      "line": 70993,
+      "line": 70998,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6835,7 +6835,7 @@
     },
     {
       "file": "index.html",
-      "line": 70993,
+      "line": 70998,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -6844,7 +6844,7 @@
     },
     {
       "file": "index.html",
-      "line": 71315,
+      "line": 71320,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -6855,7 +6855,7 @@
     },
     {
       "file": "index.html",
-      "line": 71730,
+      "line": 71735,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -6866,7 +6866,7 @@
     },
     {
       "file": "index.html",
-      "line": 71731,
+      "line": 71736,
       "name": "leituras",
       "operation": "select",
       "chain": [
@@ -6877,7 +6877,7 @@
     },
     {
       "file": "index.html",
-      "line": 71732,
+      "line": 71737,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -6888,7 +6888,7 @@
     },
     {
       "file": "index.html",
-      "line": 71733,
+      "line": 71738,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -6899,7 +6899,7 @@
     },
     {
       "file": "index.html",
-      "line": 71827,
+      "line": 71832,
       "name": "usuario_medalhas",
       "operation": "upsert",
       "chain": [
@@ -6908,7 +6908,7 @@
     },
     {
       "file": "index.html",
-      "line": 71830,
+      "line": 71835,
       "name": "usuario_medalhas",
       "operation": "insert",
       "chain": [
@@ -6917,7 +6917,7 @@
     },
     {
       "file": "index.html",
-      "line": 71839,
+      "line": 71844,
       "name": "usuario_molduras",
       "operation": "upsert",
       "chain": [
@@ -6926,7 +6926,7 @@
     },
     {
       "file": "index.html",
-      "line": 71840,
+      "line": 71845,
       "name": "usuario_molduras",
       "operation": "insert",
       "chain": [
@@ -6935,7 +6935,7 @@
     },
     {
       "file": "index.html",
-      "line": 72437,
+      "line": 72442,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -6944,7 +6944,7 @@
     },
     {
       "file": "index.html",
-      "line": 72540,
+      "line": 72545,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -6953,7 +6953,7 @@
     },
     {
       "file": "index.html",
-      "line": 72540,
+      "line": 72545,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -6962,7 +6962,7 @@
     },
     {
       "file": "index.html",
-      "line": 72644,
+      "line": 72649,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -6972,7 +6972,7 @@
     },
     {
       "file": "index.html",
-      "line": 72667,
+      "line": 72672,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6983,7 +6983,7 @@
     },
     {
       "file": "index.html",
-      "line": 72670,
+      "line": 72675,
       "name": "app_configuracoes",
       "operation": "update",
       "chain": [
@@ -6993,7 +6993,7 @@
     },
     {
       "file": "index.html",
-      "line": 72801,
+      "line": 72806,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7006,7 +7006,7 @@
     },
     {
       "file": "index.html",
-      "line": 72803,
+      "line": 72808,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7019,7 +7019,7 @@
     },
     {
       "file": "index.html",
-      "line": 72825,
+      "line": 72830,
       "name": "livros_pessoais",
       "operation": "insert",
       "chain": [
@@ -7030,7 +7030,7 @@
     },
     {
       "file": "index.html",
-      "line": 72835,
+      "line": 72840,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7042,7 +7042,7 @@
     },
     {
       "file": "index.html",
-      "line": 72948,
+      "line": 72953,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7054,7 +7054,7 @@
     },
     {
       "file": "index.html",
-      "line": 72949,
+      "line": 72954,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7068,7 +7068,7 @@
     },
     {
       "file": "index.html",
-      "line": 72962,
+      "line": 72967,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -7079,7 +7079,7 @@
     },
     {
       "file": "index.html",
-      "line": 72977,
+      "line": 72982,
       "name": "admin_logs",
       "operation": "insert",
       "chain": [
@@ -7088,7 +7088,7 @@
     },
     {
       "file": "index.html",
-      "line": 73027,
+      "line": 73032,
       "name": "clube_albuns",
       "operation": "select",
       "chain": [
@@ -7099,7 +7099,7 @@
     },
     {
       "file": "index.html",
-      "line": 73373,
+      "line": 73378,
       "name": "desafios",
       "operation": "select",
       "chain": [
@@ -7110,7 +7110,7 @@
     },
     {
       "file": "index.html",
-      "line": 73373,
+      "line": 73378,
       "name": "desafios",
       "operation": "select",
       "chain": [
@@ -7121,7 +7121,7 @@
     },
     {
       "file": "index.html",
-      "line": 73374,
+      "line": 73379,
       "name": "usuario_desafios",
       "operation": "select",
       "chain": [
@@ -7133,7 +7133,7 @@
     },
     {
       "file": "index.html",
-      "line": 74046,
+      "line": 74051,
       "name": "desafios",
       "operation": "select",
       "chain": [
@@ -7144,7 +7144,7 @@
     },
     {
       "file": "index.html",
-      "line": 74707,
+      "line": 74712,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7157,7 +7157,7 @@
     },
     {
       "file": "index.html",
-      "line": 74727,
+      "line": 74732,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7168,7 +7168,7 @@
     },
     {
       "file": "index.html",
-      "line": 74740,
+      "line": 74745,
       "name": "solicitacoes_validacao",
       "operation": "insert",
       "chain": [
@@ -7177,7 +7177,7 @@
     },
     {
       "file": "index.html",
-      "line": 75359,
+      "line": 75364,
       "name": "clube_fotos",
       "operation": "select",
       "chain": [
@@ -7190,7 +7190,7 @@
     },
     {
       "file": "index.html",
-      "line": 75398,
+      "line": 75403,
       "name": "clube_albuns",
       "operation": "select",
       "chain": [
@@ -7201,7 +7201,7 @@
     },
     {
       "file": "index.html",
-      "line": 75412,
+      "line": 75418,
       "name": "clube_fotos",
       "operation": "select",
       "chain": [
@@ -7212,7 +7212,7 @@
     },
     {
       "file": "index.html",
-      "line": 75417,
+      "line": 75423,
       "name": "clube_fotos",
       "operation": "update",
       "chain": [
@@ -7222,7 +7222,7 @@
     },
     {
       "file": "index.html",
-      "line": 75422,
+      "line": 75428,
       "name": "clube_fotos",
       "operation": "delete",
       "chain": [
@@ -7232,7 +7232,7 @@
     },
     {
       "file": "index.html",
-      "line": 75478,
+      "line": 75485,
       "name": "clube_livro_participantes",
       "operation": "select",
       "chain": [
@@ -7246,7 +7246,7 @@
     },
     {
       "file": "index.html",
-      "line": 75479,
+      "line": 75486,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -7257,7 +7257,7 @@
     },
     {
       "file": "index.html",
-      "line": 75544,
+      "line": 75551,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -7269,7 +7269,7 @@
     },
     {
       "file": "index.html",
-      "line": 75545,
+      "line": 75552,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7280,7 +7280,7 @@
     },
     {
       "file": "index.html",
-      "line": 75546,
+      "line": 75553,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7294,7 +7294,7 @@
     },
     {
       "file": "index.html",
-      "line": 75550,
+      "line": 75557,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -7308,7 +7308,7 @@
     },
     {
       "file": "index.html",
-      "line": 75552,
+      "line": 75559,
       "name": "clube_livros_finalizados",
       "operation": "select",
       "chain": [
@@ -7321,7 +7321,7 @@
     },
     {
       "file": "index.html",
-      "line": 75583,
+      "line": 75590,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7332,7 +7332,7 @@
     },
     {
       "file": "index.html",
-      "line": 75584,
+      "line": 75591,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -7344,7 +7344,7 @@
     },
     {
       "file": "index.html",
-      "line": 75585,
+      "line": 75592,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7356,7 +7356,7 @@
     },
     {
       "file": "index.html",
-      "line": 75586,
+      "line": 75593,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7367,7 +7367,7 @@
     },
     {
       "file": "index.html",
-      "line": 75587,
+      "line": 75594,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -7379,7 +7379,7 @@
     },
     {
       "file": "index.html",
-      "line": 75589,
+      "line": 75596,
       "name": "desafios",
       "operation": "select",
       "chain": [
@@ -7390,7 +7390,7 @@
     },
     {
       "file": "index.html",
-      "line": 75589,
+      "line": 75596,
       "name": "usuario_desafios",
       "operation": "select",
       "chain": [
@@ -7402,7 +7402,7 @@
     },
     {
       "file": "index.html",
-      "line": 75608,
+      "line": 75615,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7415,7 +7415,7 @@
     },
     {
       "file": "index.html",
-      "line": 75608,
+      "line": 75615,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7428,7 +7428,7 @@
     },
     {
       "file": "index.html",
-      "line": 75612,
+      "line": 75619,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -7439,34 +7439,12 @@
     },
     {
       "file": "index.html",
-      "line": 75668,
+      "line": 75675,
       "name": "clube_livro_participantes",
       "operation": "select",
       "chain": [
         "select",
         "eq",
-        "eq",
-        "limit"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 75669,
-      "name": "clube_livro_participantes",
-      "operation": "select",
-      "chain": [
-        "select",
-        "eq",
-        "limit"
-      ]
-    },
-    {
-      "file": "index.html",
-      "line": 75674,
-      "name": "clube_livro_atual",
-      "operation": "select",
-      "chain": [
-        "select",
         "eq",
         "limit"
       ]
@@ -7474,6 +7452,28 @@
     {
       "file": "index.html",
       "line": 75676,
+      "name": "clube_livro_participantes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75681,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75683,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7484,7 +7484,7 @@
     },
     {
       "file": "index.html",
-      "line": 75687,
+      "line": 75694,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7495,7 +7495,7 @@
     },
     {
       "file": "index.html",
-      "line": 75756,
+      "line": 75763,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7506,7 +7506,7 @@
     },
     {
       "file": "index.html",
-      "line": 75808,
+      "line": 75815,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7517,7 +7517,7 @@
     },
     {
       "file": "index.html",
-      "line": 75905,
+      "line": 75912,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7530,7 +7530,7 @@
     },
     {
       "file": "index.html",
-      "line": 75906,
+      "line": 75913,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -7543,7 +7543,7 @@
     },
     {
       "file": "index.html",
-      "line": 75927,
+      "line": 75934,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -7555,7 +7555,7 @@
     },
     {
       "file": "index.html",
-      "line": 75927,
+      "line": 75934,
       "name": "metas_diarias",
       "operation": "update",
       "chain": [
@@ -7591,102 +7591,102 @@
   "rpcs": [
     {
       "file": "index.html",
-      "line": 24554,
+      "line": 24559,
       "name": "admin_remover_conta_app_v69"
     },
     {
       "file": "index.html",
-      "line": 73305,
+      "line": 73310,
       "name": "entrel_award_daily_epub_v507"
     },
     {
       "file": "index.html",
-      "line": 75482,
+      "line": 75489,
       "name": "entrel_finish_club_v507"
     },
     {
       "file": "index.html",
-      "line": 75547,
+      "line": 75554,
       "name": "entrel_award_period_goal_v507"
     },
     {
       "file": "index.html",
-      "line": 75592,
+      "line": 75599,
       "name": "entrel_apply_request_reward_v507"
     },
     {
       "file": "index.html",
-      "line": 75597,
+      "line": 75604,
       "name": "entrel_reject_request_v507"
     },
     {
       "file": "index.html",
-      "line": 75598,
+      "line": 75605,
       "name": "entrel_approve_finish_request_v508"
     },
     {
       "file": "index.html",
-      "line": 75698,
+      "line": 75705,
       "name": "entrel_finish_club_v507"
     },
     {
       "file": "index.html",
-      "line": 75708,
+      "line": 75715,
       "name": "entrel_approve_club_finish_v507"
     },
     {
       "file": "index.html",
-      "line": 75761,
+      "line": 75768,
       "name": "entrel_submit_club_finish_v509"
     },
     {
       "file": "index.html",
-      "line": 75766,
+      "line": 75773,
       "name": "entrel_admin_finish_club_v509"
     },
     {
       "file": "index.html",
-      "line": 75774,
+      "line": 75781,
       "name": "entrel_approve_club_finish_v509"
     },
     {
       "file": "index.html",
-      "line": 75816,
+      "line": 75823,
       "name": "entrel_repair_club_participants_v510"
     },
     {
       "file": "index.html",
-      "line": 75820,
+      "line": 75827,
       "name": "entrel_retry_pending_rewards_v510"
     },
     {
       "file": "index.html",
-      "line": 75830,
+      "line": 75837,
       "name": "entrel_submit_club_finish_v511"
     },
     {
       "file": "index.html",
-      "line": 75837,
+      "line": 75844,
       "name": "entrel_admin_finish_club_v511"
     },
     {
       "file": "index.html",
-      "line": 75847,
+      "line": 75854,
       "name": "entrel_approve_club_finish_v511"
     },
     {
       "file": "index.html",
-      "line": 75914,
+      "line": 75921,
       "name": "entrel_verified_monthly_progress_v512"
     },
     {
       "file": "index.html",
-      "line": 75919,
+      "line": 75926,
       "name": "entrel_award_period_goal_v507"
     },
     {
       "file": "index.html",
-      "line": 75927,
+      "line": 75934,
       "name": "entrel_award_daily_epub_v507"
     }
   ],
@@ -7774,7 +7774,7 @@
     },
     {
       "file": "index.html",
-      "line": 23959,
+      "line": 23964,
       "name": "epubs",
       "operation": "select",
       "chain": [
@@ -7783,7 +7783,7 @@
     },
     {
       "file": "index.html",
-      "line": 26877,
+      "line": 26882,
       "name": "epubs",
       "operation": "select",
       "chain": [
@@ -7792,7 +7792,7 @@
     },
     {
       "file": "index.html",
-      "line": 72197,
+      "line": 72202,
       "name": "comprovantes",
       "operation": "select",
       "chain": [
@@ -7801,7 +7801,7 @@
     },
     {
       "file": "index.html",
-      "line": 72199,
+      "line": 72204,
       "name": "comprovantes",
       "operation": "select",
       "chain": [

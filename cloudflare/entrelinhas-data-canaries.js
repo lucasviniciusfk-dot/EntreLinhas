@@ -1,4 +1,4 @@
-/* Reversible, per-page canaries for settings, library data and challenge definitions. */
+/* Reversible, per-page canaries for settings, library data, challenges and club albums. */
 (function (root) {
   'use strict';
   const params = () => new URLSearchParams(root.location.search);
@@ -15,6 +15,7 @@
   const uuid = () => root.crypto && root.crypto.randomUUID ? root.crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); });
   const byRef = ref => (root.data && Array.isArray(root.data.books) ? root.data.books : []).find(b => [b && b.id,b && b.onlinePersonalId,b && b.personalOnlineId,b && b.livroId,b && b.livro_id].some(x => text(x) === text(ref)));
   const objectUrls = new Map();
+  const clubPhotoUrls = new Map();
   async function fileUrl(value) {
     const match = text(value).match(/^cf-asset:(.+)$/);
     if (!match) return text(value);
@@ -38,6 +39,37 @@
     const result = await api().getMe();
     if (!result.ok || !result.profile || !result.profile.id) throw new Error('A conta no Cloudflare não foi confirmada.');
     return result.profile;
+  }
+  async function readClubGallery() {
+    if (!enabled('cf_albums')) throw new Error('Ative cf_albums para ler os álbuns do Clube no Cloudflare.');
+    const result=await api().listAlbums('?limit=200');
+    if(!result.ok||!Array.isArray(result.items))throw new Error('A lista de álbuns do Cloudflare não foi confirmada.');
+    const photos=[],active=new Set();
+    for(const album of result.items){
+      const response=await api().listPhotos(album.id,'&limit=300');
+      if(!response.ok||!Array.isArray(response.items))throw new Error('As fotos do álbum '+text(album.nome||album.id)+' não foram confirmadas no Cloudflare.');
+      for(const row of response.items){
+        const photo=Object.assign({},row),privatePhoto=row.origem_arquivo==='r2-private-v1'||/^private:\/\//i.test(text(row.url||row.storage_path));
+        if(privatePhoto){
+          active.add(text(row.id));
+          if(!clubPhotoUrls.has(text(row.id))){const blob=await api().getClubPhoto(row.id);clubPhotoUrls.set(text(row.id),root.URL.createObjectURL(blob));}
+          photo.url=clubPhotoUrls.get(text(row.id));
+        }else photo.url=text(row.image_url||row.url||row.foto_url||row.storage_path);
+        photo.foto_url=photo.url;photos.push(photo);
+      }
+    }
+    for(const [id,url] of clubPhotoUrls){if(!active.has(id)){try{root.URL.revokeObjectURL(url)}catch(_){}clubPhotoUrls.delete(id);}}
+    return {albums:result.items,photos};
+  }
+  async function uploadClubPhoto(albumId,file) {
+    if(!enabled('cf_albums'))throw new Error('Ative cf_albums para enviar fotos ao Cloudflare.');
+    const uploaded=await api().uploadClubPhoto(file);
+    if(!uploaded.ok||!uploaded.file||!uploaded.file.id)throw new Error('O arquivo não foi confirmado no armazenamento privado do Cloudflare.');
+    try{
+      const result=await api().addClubPhoto(albumId,uploaded.file.id);
+      if(!result.ok||(!result.photo&&!result.already_attached))throw new Error('O Cloudflare não confirmou o vínculo da foto com o álbum.');
+      return result;
+    }catch(error){try{await api().deleteFile(uploaded.file.id)}catch(_){}throw error;}
   }
   async function readLibrary(force) {
     if (!enabled('cf_library')) return;
@@ -235,6 +267,12 @@
     readChallenges:()=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para ler desafios no Cloudflare.');return api().listChallenges()},
     saveChallenge:(id,value)=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para salvar desafios no Cloudflare.');return id?api().updateChallenge(id,value):api().createChallenge(value)},
     removeChallenge:id=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para remover desafios no Cloudflare.');return api().removeChallenge(id)},
+    readClubGallery,
+    saveClubAlbum:(id,value)=>{if(!enabled('cf_albums'))throw new Error('Ative cf_albums para salvar álbuns no Cloudflare.');return id?api().updateAlbum(id,value):api().createAlbum(value)},
+    setClubAlbumLocked:(id,locked)=>{if(!enabled('cf_albums'))throw new Error('Ative cf_albums para alterar álbuns no Cloudflare.');return api().updateAlbum(id,{locked:!!locked})},
+    removeClubAlbum:id=>{if(!enabled('cf_albums'))throw new Error('Ative cf_albums para remover álbuns no Cloudflare.');return api().updateAlbum(id,{active:false})},
+    uploadClubPhoto,
+    removeClubPhoto:id=>{if(!enabled('cf_albums'))throw new Error('Ative cf_albums para remover fotos do Cloudflare.');return api().removeClubPhoto(id)},
     claimDailyReward:date=>{if(!enabled('cf_library'))throw new Error('Ative cf_library para confirmar a recompensa diária.');return api().awardDailyEpub(date)}
   });
 })(typeof window !== 'undefined' ? window : globalThis);

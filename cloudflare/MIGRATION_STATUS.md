@@ -76,7 +76,7 @@
 | Biblioteca e leituras | CRUD pessoal, progresso e pedido de conclusão integrados em canário; migration de identidades aplicada ao staging; leitura/escrita EPUB e migração de arquivos legados ainda pendentes |
 | Metas/progresso | gravação diária idempotente por livro/dia, metas canônicas semanais/mensais e leitura do progresso/recompensas no canário; outras rotinas de desafios e calendário ainda exigem revisão |
 | Desafios/medalhas/molduras | catálogo e editor de definições de desafios no canário; progresso, solicitações e recompensas ainda Supabase; seleção própria e reconciliação de medalhas/molduras validadas em canário |
-| Clube | RPCs canário e correções de aprovação; mural, gestão completa de ciclos e interface de álbuns ainda incompletos |
+| Clube | álbuns/fotos do encontro integrados em canário opt-in (`cf_albums=1`) com D1/R2 privado; mural, gestão completa de ciclos e participação/progresso do livro do clube ainda pendentes; capas seguem no fluxo de upload existente |
 | Chat | operações normais integradas; editor administrativo de cards fixados e demais wrappers legados pendentes |
 | Notificações | leitura/lida/ocultação em canário; composição administrativa e entrega push ainda Supabase |
 | Administração | fila Cloudflare limitada à finalização de livros pessoais em canário; remoção de conta, ranking, logs e demais ações não migrados integralmente |
@@ -130,3 +130,11 @@ Validação local acumulada nesta continuação: **42 testes aprovados** com D1/
 ### Reversão
 
 A entrada normal index.html mantém Supabase como fonte até validação. O canário pode ser desativado removendo seus parâmetros/entrada. Para o código remoto de staging, reimplantar a versão `a5a076e7-8c03-43fe-8408-5a1cedf5f85d`; reverter código não reverte as migrations aditivas. A versão `febf2e0f-6fe3-4163-ab6a-0c73c48236d6` é a base anterior ao trabalho. Não apagar o snapshot preservado, seus manifestos nem os históricos adicionados.
+
+## Continuação local — álbuns e fotos do Clube
+
+- `cf_albums=1` encaminha a leitura da galeria, criação/edição, tranca/destranca, remoção lógica de álbuns e adição/remoção de fotos ao Worker. Sem o parâmetro, a entrada padrão permanece no Supabase.
+- As novas fotos usam upload autenticado para R2 privado e vínculo no D1. A leitura da galeria baixa cada objeto pela rota autenticada do Worker; o bucket R2 não é exposto diretamente ao navegador.
+- Membros podem vincular seus próprios uploads apenas a álbuns ativos e destrancados, e podem remover suas próprias fotos enquanto o álbum estiver aberto. Administração mantém controle de fotos em álbuns trancados. Reenvio concorrente do mesmo arquivo no mesmo álbum não cria duas linhas.
+- Criação/edição agora preserva separadamente a capa do álbum e a capa do livro (`capa_url` e `livro_capa_url`). Os uploads de capa continuam no fluxo existente; os buckets antigos e demais domínios do Clube não foram migrados por este incremento.
+- Testes locais cobrem papéis, uploads R2, leitura autenticada, idempotência concorrente, tranca, exclusão segura e o cliente de galeria autenticado. Resultado acumulado: **44 testes aprovados**, além de `npm run check` (264 scripts/módulos) e auditoria AST atualizada. A validação Google remota continua pendente.
