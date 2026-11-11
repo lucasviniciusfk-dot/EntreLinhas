@@ -122,14 +122,14 @@ Validação local acumulada nesta continuação: **42 testes aprovados** com D1/
 
 - Cloudflare reautenticado para a conta EntreLinhas. D1 confirmado pelo nome `entrelinhas-staging` e pelo ID registrado em `STAGING_DEPLOYMENT_2026-11-11.json`.
 - Migrations `0002`, `0003` e `0004` aplicadas com sucesso via API D1. `scoped_settings` importou 11 linhas; `library_identities`, `daily_goal_progress_days` e `daily_book_progress` foram criadas sem apagar linhas existentes.
-- Worker implantado a partir do commit `a103db555f9dabd06c806d0e94942b9e6a92b316`; versão `ee1b9159-484c-4ed4-bce5-53bef863f9da`, deployment `fcbfec65-e92d-4492-aed8-c0300ea72ab3`, tráfego 100% no Worker de staging. Bindings D1, R2 e Supabase Auth foram preservados. A versão anterior `a5a076e7-8c03-43fe-8408-5a1cedf5f85d` é o rollback de código.
-- Verificação remota: `/health` retornou 200 com `ok:true`; `/api/v1/challenges`, `/api/v1/settings/global/meta_semanal` e `/api/v1/progress/weekly` retornaram 401 sem token, confirmando a barreira de autenticação. D1 manteve 13 usuários, 20 configurações e 177 livros pessoais; `scoped_settings` contém 11 linhas e as tabelas de progresso novo começaram vazias.
+- Worker atualizado com o canário de álbuns/fotos a partir da branch `migration/profile-cloudflare-shadow-write` (commit `4edc7c2ed6fc2cec3d2aa41619416ec60faac309`), versão `c71c13e3-52c3-452f-a368-bd431b5ad006`, deployment `395c4ae1-0de1-4b6a-988a-e9b658ddd4b0`, tráfego 100% no Worker de staging. Bindings D1, R2 e Supabase Auth foram preservados. A versão imediatamente anterior `ee1b9159-484c-4ed4-bce5-53bef863f9da` é o rollback de código.
+- Verificação remota após a publicação: `/health` retornou 200; `/api/v1/challenges`, `/api/v1/settings/global/meta_semanal`, `/api/v1/progress/weekly` e `/api/v1/club/albums` retornaram 401 sem token. A publicação só alterou código; as migrations e os registros D1 não foram escritos nesta etapa.
 - O teste Google autenticado continua pendente. A automação do navegador não conseguiu identificar a URL atual com confiança suficiente e foi interrompida; nenhum login foi automatizado. A página `cloudflare-validation.html` pode ser executada manualmente pelo usuário.
 - Nenhum deploy/cutover de produção ocorreu.
 
 ### Reversão
 
-A entrada normal index.html mantém Supabase como fonte até validação. O canário pode ser desativado removendo seus parâmetros/entrada. Para o código remoto de staging, reimplantar a versão `a5a076e7-8c03-43fe-8408-5a1cedf5f85d`; reverter código não reverte as migrations aditivas. A versão `febf2e0f-6fe3-4163-ab6a-0c73c48236d6` é a base anterior ao trabalho. Não apagar o snapshot preservado, seus manifestos nem os históricos adicionados.
+A entrada normal index.html mantém Supabase como fonte até validação. O canário pode ser desativado removendo seus parâmetros/entrada. Para o código remoto de staging, reimplantar a versão `ee1b9159-484c-4ed4-bce5-53bef863f9da`; reverter código não reverte as migrations aditivas. A versão `a5a076e7-8c03-43fe-8408-5a1cedf5f85d` é a base anterior aos canários recentes, e `febf2e0f-6fe3-4163-ab6a-0c73c48236d6` é a base anterior ao trabalho de migração. Não apagar o snapshot preservado, seus manifestos nem os históricos adicionados.
 
 ## Continuação local — álbuns e fotos do Clube
 
@@ -138,3 +138,10 @@ A entrada normal index.html mantém Supabase como fonte até validação. O can�
 - Membros podem vincular seus próprios uploads apenas a álbuns ativos e destrancados, e podem remover suas próprias fotos enquanto o álbum estiver aberto. Administração mantém controle de fotos em álbuns trancados. Reenvio concorrente do mesmo arquivo no mesmo álbum não cria duas linhas.
 - Criação/edição agora preserva separadamente a capa do álbum e a capa do livro (`capa_url` e `livro_capa_url`). Os uploads de capa continuam no fluxo existente; os buckets antigos e demais domínios do Clube não foram migrados por este incremento.
 - Testes locais cobrem papéis, uploads R2, leitura autenticada, idempotência concorrente, tranca, exclusão segura e o cliente de galeria autenticado. Resultado acumulado: **44 testes aprovados**, além de `npm run check` (264 scripts/módulos) e auditoria AST atualizada. A validação Google remota continua pendente.
+
+### Implantação do canário em staging
+
+- A versão 22 `c71c13e3-52c3-452f-a368-bd431b5ad006` foi publicada em `2026-11-11T19:24:54.192306Z` e recebe 100% do tráfego de staging. O deployment é `395c4ae1-0de1-4b6a-988a-e9b658ddd4b0`; a versão 21 `ee1b9159-484c-4ed4-bce5-53bef863f9da` está disponível para rollback.
+- O upload incluiu os 11 módulos atuais do Worker, preservou bindings, compatibilidade, logs e traces, e aplicou 13 alterações de fonte correspondentes ao diff de `cloudflare/worker.mjs` do commit registrado em `STAGING_DEPLOYMENT_2026-11-11.json`.
+- Após a publicação, `/health` retornou 200; as rotas de desafios, configurações globais, progresso semanal e álbuns sem token retornaram 401. Nenhuma migration nem dado foi alterado pelo deploy.
+- GitHub Actions run `43085332836` e os dois deploy previews da PR #4 concluíram com sucesso. O teste com sessão Google permanece pendente.

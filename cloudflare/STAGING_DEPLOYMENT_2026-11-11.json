@@ -1,15 +1,16 @@
 {
   "worker": "entrelinhas-api-staging",
   "environment": "staging",
-  "sourceCommit": "a103db555f9dabd06c806d0e94942b9e6a92b316",
-  "deploymentId": "fcbfec65-e92d-4492-aed8-c0300ea72ab3",
-  "versionId": "ee1b9159-484c-4ed4-bce5-53bef863f9da",
+  "sourceCommit": "4edc7c2ed6fc2cec3d2aa41619416ec60faac309",
+  "sourceBaseCommit": "a103db555f9dabd06c806d0e94942b9e6a92b316",
+  "deploymentId": "395c4ae1-0de1-4b6a-988a-e9b658ddd4b0",
+  "versionId": "c71c13e3-52c3-452f-a368-bd431b5ad006",
   "trafficPercent": 100,
-  "rollbackVersionId": "a5a076e7-8c03-43fe-8408-5a1cedf5f85d",
+  "rollbackVersionId": "ee1b9159-484c-4ed4-bce5-53bef863f9da",
   "previousVersionBeforeMigrationWork": "febf2e0f-6fe3-4163-ab6a-0c73c48236d6",
-  "publishedAt": "2026-11-11T18:49:52.481214Z",
+  "publishedAt": "2026-11-11T19:24:54.192306Z",
   "compatibilityDate": "2026-11-09",
-  "sourceHashNormalization": "Modules sent from commit a103db555f9dabd06c806d0e94942b9e6a92b316 with normalized LF line endings",
+  "sourceAssembly": "Version 22 was built from active version 21 with 13 guarded source replacements matching the worker.mjs diff in sourceCommit; module line endings were preserved from Cloudflare",
   "modules": [
     "worker.mjs",
     "achievement-catalog.mjs",
@@ -77,10 +78,11 @@
     "unauthenticatedChallenges": 401,
     "unauthenticatedGlobalSettings": 401,
     "unauthenticatedWeeklyProgress": 401,
+    "unauthenticatedClubAlbums": 401,
     "bindingsPreserved": true
   },
   "githubChecks": {
-    "actionsRunId": 43079389851,
+    "actionsRunId": 43085332836,
     "actionsConclusion": "success",
     "netlifyEntreLinhasoff": "success",
     "netlifyImaginativeBiscotti": "success"
