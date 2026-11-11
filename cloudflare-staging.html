@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Entre Linhas — Staging Cloudflare</title>
+<style>
+html,body{margin:0;height:100%;font-family:system-ui,sans-serif;background:#101114;color:#f5f5f5}
+#bar{height:auto;min-height:48px;box-sizing:border-box;padding:10px 14px;background:#17191e;border-bottom:1px solid #343740;display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:13px}
+#state{color:#ffcc70}#detail{color:#b8bec9}#app{width:100%;height:calc(100% - 54px);border:0;background:#fff}
+</style>
+</head>
+<body>
+<div id="bar"><strong>ENTRE LINHAS · STAGING CLOUDFLARE</strong><span id="state">Conectando adaptador…</span><span id="detail">Login e consultas de tabelas permanecem no Supabase; somente RPCs mapeadas usam o Worker.</span></div>
+<iframe id="app" src="./index.html" title="Entre Linhas"></iframe>
+<script src="./cloudflare/entrelinhas-rpc-adapter.staging.js"></script>
+<script>
+(function(){
+ const frame=document.getElementById('app'),state=document.getElementById('state');
+ let tries=0,done=false;
+ function install(){
+  if(done)return;
+  tries++;
+  try{
+   const w=frame.contentWindow;
+   const client=w&&w.entSupabaseClient;
+   if(client&&typeof w.installEntreLinhasCloudflareRpcAdapter==='function'){
+    w.installEntreLinhasCloudflareRpcAdapter(client,{apiBase:'https://entrelinhas-api-staging.lucasviniciusk.workers.dev'});
+    done=true;
+    const mapped=client.__entrelinhasCloudflareRpcMapped;
+    state.textContent='Adaptador instalado · '+(mapped?mapped.size:0)+' RPCs com rota Worker';
+    state.style.color='#8ee0a1';
+    return;
+   }
+  }catch(e){state.textContent='Falha ao instalar: '+(e.message||e);state.style.color='#ff8888';done=true;return;}
+  if(tries>80){state.textContent='Cliente Supabase não foi inicializado; recarregue esta página.';state.style.color='#ff8888';done=true;return;}
+  setTimeout(install,250);
+ }
+ frame.addEventListener('load',function(){setTimeout(install,300)});
+})();
+</script>
+</body>
+</html>
