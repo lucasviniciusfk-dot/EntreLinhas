@@ -67,6 +67,16 @@ test('private album photo returns actual R2 bytes and metadata',async()=>{
   const r=await rt.api('/api/v1/club/albums/photos/photo/content');assert.equal(r.status,200);assert.equal(r.headers.get('Content-Type'),'image/png');assert.deepEqual(new Uint8Array(await r.arrayBuffer()),new Uint8Array([1,2,3]));
   assert.equal((await rt.api('/api/v1/club/albums','alice','POST',{name:'Forbidden'})).status,403);
 });
+test('concurrent avatar attachment and deletion never leave a dangling reference',async()=>{
+  for(let i=0;i<4;i++){
+    await rt.api('/api/v1/me','alice','PATCH',{foto_url:''});
+    const form=new FormData();form.append('tipo','avatar');form.append('file',new File(['abc'],'race.png',{type:'image/png'}));
+    const file=(await (await rt.api('/api/v1/files/upload','alice','POST',form)).json()).file;
+    await Promise.all([rt.api('/api/v1/me','alice','PATCH',{foto_url:'cf-asset:'+file.id}),rt.api('/api/v1/files/'+file.id,'alice','DELETE')]);
+    const profile=await rt.db.prepare('SELECT foto_url FROM usuarios WHERE id=?').bind('alice').first(),asset=await rt.db.prepare('SELECT deleted_at FROM file_assets WHERE id=?').bind(file.id).first();
+    assert.ok(profile.foto_url!=='cf-asset:'+file.id||asset.deleted_at===null);
+  }
+});
 test('notification mutations obey the same recipient rule as reads',async()=>{
   await rt.insert('app_notificacoes',{id:'notice',usuario_id:'bob',target_id:'all',titulo:'Private',lida:0,lida_por:'[]',ocultada_por:'[]'});
   assert.equal((await rt.api('/api/v1/notifications/notice/read','alice','POST',{})).status,404);

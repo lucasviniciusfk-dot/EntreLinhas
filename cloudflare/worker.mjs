@@ -273,7 +273,7 @@ btn.addEventListener("click",async()=>{
    // Primeiro bloqueia o acesso no D1; se a exclusão do R2 falhar, o objeto fica inacessível pela API e pode ser limpo depois.
    const stamp=new Date().toISOString();
    if(!asset.deleted_at){
-    const result=await env.DB.prepare("UPDATE file_assets SET deleted_at=? WHERE id=? AND owner_id=? AND deleted_at IS NULL").bind(stamp,id,uid).run();
+    const result=await env.DB.prepare("UPDATE file_assets SET deleted_at=? WHERE id=? AND owner_id=? AND deleted_at IS NULL AND NOT EXISTS(SELECT 1 FROM book_file_assets WHERE asset_id=file_assets.id AND deleted_at IS NULL) AND NOT EXISTS(SELECT 1 FROM clube_fotos WHERE storage_path=file_assets.id AND origem_arquivo='r2-private-v1' AND COALESCE(ativo,1)=1) AND NOT EXISTS(SELECT 1 FROM usuarios WHERE foto_url='cf-asset:'||file_assets.id AND COALESCE(apagado,0)=0 AND COALESCE(conta_removida,0)=0)").bind(stamp,id,uid).run();
     if(!result.meta||result.meta.changes!==1)return json({ok:false,error:"Não foi possível confirmar a remoção do arquivo."},409,headers);
    }
    await env.FILES.delete(asset.object_key);

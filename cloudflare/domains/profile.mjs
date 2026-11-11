@@ -37,6 +37,7 @@ export async function handleProfile(request, env, context) {
       const keys = Object.keys(body);
       if (!keys.length || keys.some(k=>!Object.hasOwn(limits,k) && !['perfil_privado','biblioteca_publica'].includes(k))) return reply({ok:false,error:'Envie somente campos editáveis do perfil.'},400);
       const sets = [], values = [];
+      let avatarAsset=null;
       for (const key of keys) {
         let v = body[key];
         if (['perfil_privado','biblioteca_publica'].includes(key)) {
@@ -51,6 +52,7 @@ export async function handleProfile(request, env, context) {
             if (v.startsWith('cf-asset:')) {
               const asset = await env.DB.prepare("SELECT id FROM file_assets WHERE id=? AND owner_id=? AND category='avatar' AND deleted_at IS NULL").bind(v.slice(9),uid).first();
               if (!asset) return reply({ok:false,error:'Foto não pertence à sua conta ou está indisponível.'},403);
+              avatarAsset=v.slice(9);
             } else {
               let valid = false;
               try { const u = new URL(v); valid = u.protocol === 'https:' && !u.username && !u.password; } catch (_) {}
@@ -68,7 +70,8 @@ export async function handleProfile(request, env, context) {
       sets.push('atualizado_em=?'); values.push(new Date().toISOString(),uid);
       const revision=request.headers.get('If-Match');
       if(revision)values.push(revision);
-      const result = await env.DB.prepare('UPDATE usuarios SET '+sets.join(',')+' WHERE id=? AND COALESCE(apagado,0)=0 AND COALESCE(conta_removida,0)=0'+(revision?' AND atualizado_em=?':'')).bind(...values).run();
+      if(avatarAsset)values.push(avatarAsset,uid);
+      const result = await env.DB.prepare('UPDATE usuarios SET '+sets.join(',')+' WHERE id=? AND COALESCE(apagado,0)=0 AND COALESCE(conta_removida,0)=0'+(revision?' AND atualizado_em=?':'')+(avatarAsset?" AND EXISTS(SELECT 1 FROM file_assets WHERE id=? AND owner_id=? AND category='avatar' AND deleted_at IS NULL)":'')).bind(...values).run();
       if (Number(result.meta?.changes) !== 1) return reply({ok:false,error:'Gravação não confirmada. Recarregue o perfil.'},409);
     } else if (request.method !== 'GET') return null;
     const row = await env.DB.prepare('SELECT * FROM usuarios WHERE id=? LIMIT 1').bind(uid).first();
