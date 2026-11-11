@@ -66,13 +66,16 @@
         case 'entrel_repair_club_participants_v510':
           return call('/api/v1/admin/club/repair-participants', 'POST', a);
         case 'entrel_retry_pending_rewards_v510':
-          return call('/api/v1/rewards/retry-pending', 'POST', a);
+          return call('/api/v1/rewards/retry-pending', 'POST', { user_id: a.p_user_id || '' });
         case 'entrel_apply_request_reward_v507':
-          return call('/api/v1/admin/requests/apply-reward', 'POST', a);
-        case 'entrel_finish_club_v507':
+          return call('/api/v1/admin/requests/apply-reward', 'POST', {
+            request_id: a.p_request_id, user_id: a.p_user_id,
+            xp: a.p_xp, points: a.p_points
+          });
         case 'entrel_admin_finish_club_v509':
+          return call('/api/v1/admin/club/finish-participant', 'POST', { ref: a.p_ref });
         case 'entrel_admin_finish_club_v511':
-          return call('/api/v1/admin/club/finish-participant', 'POST', a);
+          return call('/api/v1/admin/club/finish-participant', 'POST', { ref: a.p_ref, cycle_id: a.p_cycle_id });
         case 'entrel_submit_club_finish_v509':
           return call('/api/v1/club/finish-request', 'POST', {
             cycle_id: global.__ENTREL_ACTIVE_CLUB_CYCLE_ID__ || ''
