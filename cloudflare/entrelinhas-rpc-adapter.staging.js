@@ -19,12 +19,13 @@
       const token = sessionResult && sessionResult.data && sessionResult.data.session &&
         sessionResult.data.session.access_token;
       if (!token) return { data: null, error: { message: 'Sessão não autenticada.' } };
-      const response = await fetch(api + path, {
+      let response;
+      try { response = await fetch(api + path, {
         method: method || 'POST',
         headers: Object.assign({ Authorization: 'Bearer ' + token }, body ? { 'Content-Type': 'application/json' } : {}),
         body: body ? JSON.stringify(body) : undefined,
         cache: 'no-store'
-      });
+      }); } catch (networkError) { return { data: null, error: { message: 'Falha de conexão com Cloudflare: ' + String(networkError && networkError.message || networkError) } }; }
       let data = null;
       const type = response.headers.get('content-type') || '';
       if (type.includes('application/json')) data = await response.json();
@@ -62,6 +63,16 @@
           return call('/api/v1/admin/requests/approve-club-finish', 'POST', {
             request_id: a.p_request_id, reason: a.p_reason
           });
+        case 'entrel_repair_club_participants_v510':
+          return call('/api/v1/admin/club/repair-participants', 'POST', a);
+        case 'entrel_retry_pending_rewards_v510':
+          return call('/api/v1/rewards/retry-pending', 'POST', a);
+        case 'entrel_apply_request_reward_v507':
+          return call('/api/v1/admin/requests/apply-reward', 'POST', a);
+        case 'entrel_finish_club_v507':
+        case 'entrel_admin_finish_club_v509':
+        case 'entrel_admin_finish_club_v511':
+          return call('/api/v1/admin/club/finish-participant', 'POST', a);
         case 'entrel_submit_club_finish_v509':
           return call('/api/v1/club/finish-request', 'POST', {
             cycle_id: global.__ENTREL_ACTIVE_CLUB_CYCLE_ID__ || ''
