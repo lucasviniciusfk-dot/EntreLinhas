@@ -317,7 +317,7 @@ btn.addEventListener("click",async()=>{
  }
  if(fileRoute&&request.method==="GET"){
   try{
-   const id=decodeURIComponent(fileRoute[1]),asset=await env.DB.prepare("SELECT id,owner_id,object_key,content_type,original_name,size_bytes FROM file_assets WHERE id=? AND owner_id=? AND deleted_at IS NULL LIMIT 1").bind(id,uid).first();
+   const id=decodeURIComponent(fileRoute[1]),asset=await env.DB.prepare("SELECT id,owner_id,object_key,content_type,original_name,size_bytes FROM file_assets WHERE id=? AND deleted_at IS NULL AND (owner_id=? OR (?=1 AND category='receipt' AND EXISTS(SELECT 1 FROM solicitacoes_validacao WHERE origem='challenge_cf_v1' AND comprovante='cf-asset:'||file_assets.id))) LIMIT 1").bind(id,uid,isAdmin?1:0).first();
    if(!asset)return json({ok:false,error:"Arquivo não encontrado."},404,headers);
    const object=await env.FILES.get(asset.object_key);if(!object)return json({ok:false,error:"Arquivo indisponível no armazenamento."},404,headers);
    const outHeaders=new Headers(headers);outHeaders.set("Content-Type",asset.content_type);outHeaders.set("Content-Length",String(asset.size_bytes));outHeaders.set("Content-Disposition",'inline; filename="'+asset.original_name.replace(/["\\\r\n]/g,"_")+'"');outHeaders.set("Cache-Control","private, no-store");outHeaders.set("X-Content-Type-Options","nosniff");
@@ -329,17 +329,18 @@ btn.addEventListener("click",async()=>{
    const id=decodeURIComponent(fileRoute[1]),asset=await env.DB.prepare("SELECT id,object_key,deleted_at FROM file_assets WHERE id=? AND owner_id=? LIMIT 1").bind(id,uid).first();
    if(!asset)return json({ok:false,error:"Arquivo não encontrado."},404,headers);
    if(!asset.deleted_at){
-    const [book,photo,avatar]=await Promise.all([
+    const [book,photo,avatar,challengeProof]=await Promise.all([
      env.DB.prepare("SELECT id FROM book_file_assets WHERE asset_id=? AND deleted_at IS NULL LIMIT 1").bind(id).first(),
      env.DB.prepare("SELECT id FROM clube_fotos WHERE storage_path=? AND origem_arquivo='r2-private-v1' AND COALESCE(ativo,1)=1 LIMIT 1").bind(id).first(),
-     env.DB.prepare("SELECT id FROM usuarios WHERE foto_url=? AND COALESCE(apagado,0)=0 AND COALESCE(conta_removida,0)=0 LIMIT 1").bind("cf-asset:"+id).first()
+     env.DB.prepare("SELECT id FROM usuarios WHERE foto_url=? AND COALESCE(apagado,0)=0 AND COALESCE(conta_removida,0)=0 LIMIT 1").bind("cf-asset:"+id).first(),
+     env.DB.prepare("SELECT id FROM solicitacoes_validacao WHERE origem='challenge_cf_v1' AND (comprovante=? OR prova=?) LIMIT 1").bind("cf-asset:"+id,"cf-asset:"+id).first()
     ]);
-    if(book||photo||avatar)return json({ok:false,error:"Arquivo ainda referenciado. Remova o vínculo antes de excluir."},409,headers);
+    if(book||photo||avatar||challengeProof)return json({ok:false,error:"Arquivo ainda referenciado. Remova o vínculo antes de excluir."},409,headers);
    }
    // Primeiro bloqueia o acesso no D1; se a exclusão do R2 falhar, o objeto fica inacessível pela API e pode ser limpo depois.
    const stamp=new Date().toISOString();
    if(!asset.deleted_at){
-    const result=await env.DB.prepare("UPDATE file_assets SET deleted_at=? WHERE id=? AND owner_id=? AND deleted_at IS NULL AND NOT EXISTS(SELECT 1 FROM book_file_assets WHERE asset_id=file_assets.id AND deleted_at IS NULL) AND NOT EXISTS(SELECT 1 FROM clube_fotos WHERE storage_path=file_assets.id AND origem_arquivo='r2-private-v1' AND COALESCE(ativo,1)=1) AND NOT EXISTS(SELECT 1 FROM usuarios WHERE foto_url='cf-asset:'||file_assets.id AND COALESCE(apagado,0)=0 AND COALESCE(conta_removida,0)=0)").bind(stamp,id,uid).run();
+    const result=await env.DB.prepare("UPDATE file_assets SET deleted_at=? WHERE id=? AND owner_id=? AND deleted_at IS NULL AND NOT EXISTS(SELECT 1 FROM book_file_assets WHERE asset_id=file_assets.id AND deleted_at IS NULL) AND NOT EXISTS(SELECT 1 FROM clube_fotos WHERE storage_path=file_assets.id AND origem_arquivo='r2-private-v1' AND COALESCE(ativo,1)=1) AND NOT EXISTS(SELECT 1 FROM usuarios WHERE foto_url='cf-asset:'||file_assets.id AND COALESCE(apagado,0)=0 AND COALESCE(conta_removida,0)=0) AND NOT EXISTS(SELECT 1 FROM solicitacoes_validacao WHERE origem='challenge_cf_v1' AND (comprovante='cf-asset:'||file_assets.id OR prova='cf-asset:'||file_assets.id))").bind(stamp,id,uid).run();
     if(!result.meta||result.meta.changes!==1)return json({ok:false,error:"Não foi possível confirmar a remoção do arquivo."},409,headers);
    }
    await env.FILES.delete(asset.object_key);

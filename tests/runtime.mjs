@@ -16,6 +16,7 @@ export async function runtime() {
     }
   });
   const db=await mf.getD1Database('DB');
+  const files=await mf.getR2Bucket('FILES');
   const schema=readFileSync(root+'schema.staging.sql','utf8').replace(/CREATE TABLE _cf_KV[\s\S]+?WITHOUT ROWID;/,'');
   // D1 exec accepts one statement per line; the captured schema contains no data.
   for(const statement of (schema+'\n'+readFileSync(root+'indexes.staging.sql','utf8')).split(';').map(s=>s.trim()).filter(Boolean))await db.prepare(statement).run();
@@ -33,5 +34,5 @@ export async function runtime() {
     const request=new globalThis.Request('https://local.test'+path,{method,headers:{...(token?{Authorization:'Bearer '+token}:{}),...(body&&!(body instanceof FormData)?{'Content-Type':'application/json'}:{})},body:body===undefined?undefined:body instanceof FormData?body:JSON.stringify(body)});
     return mf.dispatchFetch(request.url,{method,headers:Object.fromEntries(request.headers),body:body===undefined?undefined:await request.arrayBuffer()});
   };
-  return {mf,db,insert,api,close:()=>mf.dispose()};
+  return {mf,db,files,insert,api,close:()=>mf.dispose()};
 }

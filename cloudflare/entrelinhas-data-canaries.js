@@ -111,7 +111,50 @@
       api().listAdminRequests('?status=processing&source=personal_finish_cf_v1&limit=120')
     ]);
     if(!pending.ok||!processing.ok||!Array.isArray(pending.items)||!Array.isArray(processing.items))throw new Error('A fila de finalizações do Cloudflare não foi confirmada.');
-    const seen=new Set();return pending.items.concat(processing.items).filter(row=>{const key=text(row.id);if(seen.has(key))return false;seen.add(key);return true});
+    const finish=pending.items.concat(processing.items);
+    const challenges=enabled('cf_challenges')?await readChallengeRequests():[];
+    const seen=new Set();return finish.concat(challenges).filter(row=>{const key=text(row.id);if(seen.has(key))return false;seen.add(key);return true});
+  }
+  async function readChallengeRequests(){
+    if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para consultar os pedidos de desafio no Cloudflare.');
+    const [pending,processing]=await Promise.all([
+      api().listChallengeRequests('?status=pending&limit=120'),
+      api().listChallengeRequests('?status=processing&limit=120')
+    ]);
+    if(!pending.ok||!processing.ok||!Array.isArray(pending.items)||!Array.isArray(processing.items))throw new Error('A fila de desafios do Cloudflare não foi confirmada.');
+    const rows=pending.items.concat(processing.items);
+    for(const row of rows){
+      const source=text(row.comprovante||row.prova||'');
+      if(/^cf-asset:/i.test(source)){
+        try{const url=await fileUrl(source);row.comprovante=url;row.prova=url;}
+        catch(e){row.dados=Object.assign({},parse(row.dados),{proof_unavailable:true});}
+      }
+    }
+    return rows;
+  }
+  async function submitChallengeRequest(id,value,file){
+    if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para enviar solicitações de desafio ao Cloudflare.');
+    const challengeId=text(id),profile=await identity();let uploaded=null;
+    try{
+      if(file){
+        uploaded=await api().uploadFile(file,'comprovante');
+        if(!uploaded.ok||!uploaded.file||!uploaded.file.id)throw new Error('O comprovante não foi confirmado no R2 privado do Cloudflare.');
+      }
+      const result=await api().createChallengeRequest(challengeId,Object.assign({},value||{},{proof_file_id:uploaded&&uploaded.file.id||'',request_id:text(value&&value.request_id||uuid())}));
+      if(!result.ok||!result.request)throw new Error('A solicitação não foi confirmada no Cloudflare.');
+      return Object.assign({profile},result);
+    }catch(error){if(uploaded&&uploaded.file&&uploaded.file.id){try{await api().deleteFile(uploaded.file.id)}catch(_){}}throw error;}
+  }
+  async function reviewChallengeRequest(id,action,reason){
+    if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para revisar desafios no Cloudflare.');
+    const row=(await readChallengeRequests()).find(item=>text(item.id)===text(id));
+    if(!row||row.origem!=='challenge_cf_v1'||text(row.tipo).toLowerCase()!=='challenge')throw new Error('Solicitação de desafio não encontrada na fila do Cloudflare.');
+    const rejected=/reject|recus|reprov/i.test(text(action)),result=await api().reviewChallengeRequest(id,rejected?'rejected':'approved',reason||'');
+    if(!result.ok)throw new Error(text(result.error||'O Cloudflare não confirmou a revisão.'));
+    const state=root.__entrelV452Requests;if(state){state.at=0;state.loaded=false;state.fromCache=false;}
+    if(typeof root.entrelV452Refresh==='function')await root.entrelV452Refresh();
+    localSave();render();info(rejected?'Solicitação recusada':'Desafio aprovado',rejected?'A recusa foi confirmada no Cloudflare.':(result.applied?'A aprovação e a recompensa foram confirmadas no Cloudflare.':'A aprovação foi confirmada; a recompensa já estava registrada.'));
+    return true;
   }
   async function reviewFinishRequest(id,action,reason){
     if(!enabled('cf_admin'))throw new Error('Ative cf_admin para revisar pedidos do staging.');
@@ -248,7 +291,10 @@
   }
   const oldAdminReview=root.adminReviewRequestV180||root.entrelV452Review;
   if(typeof oldAdminReview==='function'){
-    const adminReview=function(id,action,reason){return enabled('cf_admin')?reviewFinishRequest(id,action,reason):oldAdminReview.apply(this,arguments)};
+    const adminReview=async function(id,action,reason){
+      if(enabled('cf_challenges')){try{if((await readChallengeRequests()).some(row=>text(row.id)===text(id)))return await reviewChallengeRequest(id,action,reason)}catch(error){if(!enabled('cf_admin'))throw error}}
+      return enabled('cf_admin')?reviewFinishRequest(id,action,reason):oldAdminReview.apply(this,arguments);
+    };
     root.adminReviewRequestV180=adminReview;root.entrelV452Review=adminReview;
     root.adminApproveRequestV67=id=>adminReview(id,'approved','');
     root.approveValidationRequestV18711=id=>adminReview(id,'approved','');root.approveValidationRequestV18712=root.approveValidationRequestV18711;
@@ -256,15 +302,34 @@
     root.finishValidationResponseV18711=root.finishValidationResponseV18712;
     try{adminReviewRequestV180=adminReview;entrelV452Review=adminReview}catch(_){}
   }
+  const oldChallengeSubmit=root.submitChallengeValidationV55||root.entrelV342SubmitValidation;
+  if(typeof oldChallengeSubmit==='function'){
+    const challengeSubmit=async function(id){
+      if(!enabled('cf_challenges'))return oldChallengeSubmit.apply(this,arguments);
+      try{
+        const state=root.__entDesafiosV55||{},challenge=(state.challenges||[]).find(item=>text(item.id||item.desafio_id)===text(id))||{},raw=parse(challenge.dados||challenge.raw&&challenge.raw.dados),requirement=text(challenge.proofRequirement||raw.proofRequirement||'optional').toLowerCase(),note=text((root.document.getElementById('v342ReqText')||root.document.getElementById('v55ReqNote')||{}).value||'').trim(),reference=text((root.document.getElementById('v342ReqReference')||root.document.getElementById('v55ReqBook')||{}).value||'').trim(),input=root.document.getElementById('v342ReqImage')||root.document.getElementById('v55ReqProof'),file=input&&input.files&&input.files[0];
+        if(['text','text_image','both'].includes(requirement)&&!note)throw new Error('Escreva a explicação exigida antes de enviar.');
+        if(['image','text_image','both'].includes(requirement)&&!file)throw new Error('Adicione o comprovante exigido antes de enviar.');
+        if(['either','any','mixed'].includes(requirement)&&!note&&!file)throw new Error('Envie um texto ou um comprovante.');
+        const progressRow=(state.progress||[]).find(row=>text(row.challengeId||row.desafio_id)===text(id)),progress=Number(progressRow&&(progressRow.progress??progressRow.progresso))||Number((root.document.getElementById('v55ReqPages')||{}).value)||0,result=await submitChallengeRequest(id,{request_id:uuid(),note,reference,progress},file);
+        if(result.already_pending){info('Solicitação em análise','Já existe um pedido pendente para este desafio.');return true;}
+        try{if(typeof root.closeModal==='function')root.closeModal()}catch(_){}
+        try{if(typeof root.loadDesafiosOnlineV55==='function')await root.loadDesafiosOnlineV55(true)}catch(_){}
+        localSave();render();info('Solicitação enviada','O pedido foi confirmado no Cloudflare e já pode ser revisado pela administração.');return true;
+      }catch(error){info('Solicitação não enviada',text(error&&error.message||error));return false;}
+    };
+    root.submitChallengeValidationV55=challengeSubmit;root.entrelV342SubmitValidation=challengeSubmit;
+    try{submitChallengeValidationV55=challengeSubmit;entrelV342SubmitValidation=challengeSubmit}catch(_){}
+  }
   root.entrelCfReconcileAwards=async function(){if(!enabled('cf_awards'))throw new Error('Ative cf_awards para usar a reconciliação de medalhas no Cloudflare.');return api().reconcileAwards()};
-  root.EntreLinhasDataCanaries=Object.freeze({enabled,readLibrary:safeReadLibrary,saveProgress:safeSaveProgress,readFinishRequests,reviewFinishRequest,
+  root.EntreLinhasDataCanaries=Object.freeze({enabled,readLibrary:safeReadLibrary,saveProgress:safeSaveProgress,readFinishRequests,reviewFinishRequest,readChallengeRequests,submitChallengeRequest,reviewChallengeRequest,
     getGlobalSetting:key=>{if(!enabled('cf_settings'))throw new Error('Ative cf_settings para ler configurações do Cloudflare.');return api().getGlobalSetting(key)},
     saveGlobalSetting:(key,value)=>{if(!enabled('cf_settings'))throw new Error('Ative cf_settings para gravar configurações no Cloudflare.');return api().saveGlobalSetting(key,value)},
     readGoalProgress:()=>{if(!enabled('cf_library'))throw new Error('Ative cf_library para ler o progresso no Cloudflare.');return api().getGoals('?daily_limit=366')},
     getWeeklyProgress:period=>{if(!enabled('cf_library')||!enabled('cf_settings'))throw new Error('Ative cf_library e cf_settings para ler metas no Cloudflare.');return api().getWeeklyProgress(period)},
     getMonthlyProgress:period=>{if(!enabled('cf_library')||!enabled('cf_settings'))throw new Error('Ative cf_library e cf_settings para ler metas no Cloudflare.');return api().getMonthlyProgress(period)},
     awardPeriod:(kind,period)=>{if(!enabled('cf_library')||!enabled('cf_settings'))throw new Error('Ative cf_library e cf_settings para confirmar recompensas periódicas.');return api().awardPeriod(kind,period)},
-    readChallenges:()=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para ler desafios no Cloudflare.');return api().listChallenges()},
+    readChallenges:()=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para ler desafios no Cloudflare.');return api().getChallengeState()},
     saveChallenge:(id,value)=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para salvar desafios no Cloudflare.');return id?api().updateChallenge(id,value):api().createChallenge(value)},
     removeChallenge:id=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para remover desafios no Cloudflare.');return api().removeChallenge(id)},
     readClubMural:includeInactive=>{if(!enabled('cf_mural'))throw new Error('Ative cf_mural para ler o Mural do Clube no Cloudflare.');return api().listClubMural(includeInactive?'?include_inactive=1':'')},
