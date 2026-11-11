@@ -50,6 +50,9 @@ test('finish requests are idempotent and award nothing until an admin approves',
   for(const response of attempts)assert.ok([200,201].includes(response.status),await response.clone().text());
   const requests=await r.db.prepare("SELECT * FROM solicitacoes_validacao WHERE usuario_id='alice' AND (livro_id='finish-book' OR json_extract(dados,'$.online_livro_id')='finish-book') AND lower(tipo) LIKE '%finish%' AND status='pending'").all();
   assert.equal(requests.results.length,1);assert.equal((await r.db.prepare("SELECT pontos FROM usuarios WHERE id='alice'").first()).pontos,20);
+  const queue=await r.api('/api/v1/admin/requests?status=pending&source=personal_finish_cf_v1','admin');assert.equal(queue.status,200);assert.deepEqual((await queue.json()).items.map(x=>x.id),[requests.results[0].id]);
+  assert.equal((await r.api('/api/v1/admin/requests?source=personal_finish_cf_v1','alice')).status,403);
+  assert.equal((await r.api('/api/v1/admin/requests/approve-book-finish','admin','POST',{request_id:'daily-unrelated'})).status,400);
   const book=await r.db.prepare("SELECT status,json_extract(dados,'$.finishRequestId') AS request_id FROM livros_pessoais WHERE id='finish-book'").first();
   assert.equal(book.status,'pending_finish');assert.equal(book.request_id,requests.results[0].id);
   const approved=await r.api('/api/v1/admin/requests/approve-book-finish','admin','POST',{request_id:requests.results[0].id,reason:'Aprovado.'});assert.equal(approved.status,200,await approved.clone().text());

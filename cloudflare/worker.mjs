@@ -332,10 +332,12 @@ btn.addEventListener("click",async()=>{
   if(url.pathname==="/api/v1/admin/requests"&&request.method==="GET"){
    if(!isAdmin)return json({ok:false,error:"Acesso administrativo não confirmado."},403,headers);
    const limit=clampInt(url.searchParams.get("limit"),100,1,200),status=String(url.searchParams.get("status")||"pending").toLowerCase();
+   const source=String(url.searchParams.get("source")||"");if(source&&source!=="personal_finish_cf_v1")return json({ok:false,error:"Filtro de origem inválido."},400,headers);
    const allowed=["pending","processing","pendente","processando","approved","approved_all","rejected"];
    if(!allowed.includes(status))return json({ok:false,error:"Filtro de status inválido."},400,headers);
    const where=status==="approved_all"?"lower(COALESCE(status,'')) IN ('approved','aprovado','aprovada')":status==="rejected"?"lower(COALESCE(status,'')) IN ('rejected','recusado','recusada')":"lower(COALESCE(status,''))=?";
-   const q=await env.DB.prepare("SELECT id,usuario_id,usuario_nome,tipo,livro_id,livro_titulo,paginas,status,origem,livro,resenha,prova,comprovante,dados,xp,pontos,created_at,criado_em,updated_at,atualizado_em FROM solicitacoes_validacao WHERE "+where+" ORDER BY COALESCE(created_at,criado_em) DESC LIMIT ?").bind(...(status==="approved_all"||status==="rejected"?[limit]:[status,limit])).all();
+   const sourceWhere=source==="personal_finish_cf_v1"?" AND origem='personal_finish_cf_v1' AND lower(COALESCE(tipo,'')) LIKE '%finish%'":"";
+   const q=await env.DB.prepare("SELECT id,usuario_id,usuario_nome,tipo,livro_id,livro_titulo,paginas,status,origem,livro,resenha,prova,comprovante,dados,xp,pontos,created_at,criado_em,updated_at,atualizado_em FROM solicitacoes_validacao WHERE "+where+sourceWhere+" ORDER BY COALESCE(created_at,criado_em) DESC LIMIT ?").bind(...(status==="approved_all"||status==="rejected"?[limit]:[status,limit])).all();
    return json({ok:true,items:q.results||[],count:(q.results||[]).length},200,headers);
   }
   if(url.pathname==="/api/v1/admin/requests/reject"&&request.method==="POST"){
@@ -478,6 +480,7 @@ btn.addEventListener("click",async()=>{
    const req=await env.DB.prepare("SELECT * FROM solicitacoes_validacao WHERE id=? LIMIT 1").bind(requestId).first();
    if(!req)return json({ok:false,error:"Solicitação não encontrada."},404,headers);
    const status=String(req.status||"pending").toLowerCase();
+   if(!/finish|finaliz/i.test(String(req.tipo||"")))return json({ok:false,error:"Esta rota aceita apenas solicitações de finalização de livro."},400,headers);
    if(["approved","aprovado","aprovada"].includes(status))return json({ok:true,applied:false,already_reviewed:true,status:"approved"},200,headers);
    if(["rejected","recusado","recusada"].includes(status))return json({ok:false,error:"Esta solicitação já foi recusada."},409,headers);
    const data=parseObject(req.dados),userId=String(req.usuario_id||"");
@@ -491,7 +494,7 @@ btn.addEventListener("click",async()=>{
    if(!book&&title)book=await env.DB.prepare("SELECT id,paginas,dados FROM livros_pessoais WHERE usuario_id=? AND lower(trim(titulo))=lower(?) ORDER BY atualizado_em DESC LIMIT 1").bind(userId,title).first();
    if(!book)return json({ok:false,error:"O livro não foi localizado na biblioteca online do usuário."},404,headers);
    const targetUser=await env.DB.prepare("SELECT id FROM usuarios WHERE id=? LIMIT 1").bind(userId).first();if(!targetUser)return json({ok:false,error:"O perfil do usuário não está disponível no banco de staging."},404,headers);
-   const total=Math.max(1,Number(book.paginas)||Number(req.paginas)||Number(data.paginas)||1),xp=Math.max(0,Number(req.xp??data.xp??data.rewardXp)||0),points=Math.max(0,Number(req.pontos??data.pontos??data.rewardPoints)||10),stamp=new Date().toISOString(),claim="bookfinish:"+userId+":"+book.id;
+   const total=Math.max(1,Number(book.paginas)||Number(req.paginas)||Number(data.paginas)||1),xp=Math.max(0,Number(req.xp??data.xp??data.rewardXp??0)||0),points=Math.max(0,Number(req.pontos??data.pontos??data.rewardPoints??10)||0),stamp=new Date().toISOString(),claim="bookfinish:"+userId+":"+book.id;
    const oldBookData=parseObject(book.dados);const newBookData=JSON.stringify({...oldBookData,finishPending:false,finished:true,finalizado:true,finishedAt:oldBookData.finishedAt||stamp,finishApprovedAt:stamp,finishRequestId:requestId,finishRewardClaim:claim,v510:true});
    const batch=[
     env.DB.prepare("INSERT OR IGNORE INTO entrel_reward_claims_v510(claim_key,usuario_id,source_type,source_id,xp,pontos,applied,created_at) VALUES(?,?,?,?,?,?,0,?)").bind(claim,userId,"book_finish",requestId,xp,points,stamp),

@@ -72,6 +72,27 @@
     return mapped;
   }
   async function safeReadLibrary(force){try{return await readLibrary(force)}catch(e){root.__entrelCfLibraryError=text(e&&e.message||e);try{console.warn('[Cloudflare library]',root.__entrelCfLibraryError)}catch(_){}return []}}
+  async function readFinishRequests(){
+    if(!enabled('cf_admin'))throw new Error('Ative cf_admin para consultar a fila administrativa do staging.');
+    const result=await api().listAdminRequests('?status=pending&source=personal_finish_cf_v1&limit=120');
+    if(!result.ok||!Array.isArray(result.items))throw new Error('A fila de finalizações do Cloudflare não foi confirmada.');
+    return result.items;
+  }
+  async function reviewFinishRequest(id,action,reason){
+    if(!enabled('cf_admin'))throw new Error('Ative cf_admin para revisar pedidos do staging.');
+    try{
+      const rows=await readFinishRequests(),row=rows.find(item=>text(item.id)===text(id));
+      if(!row||row.origem!=='personal_finish_cf_v1'||!/finish|finaliz/i.test(text(row.tipo)))throw new Error('Esta fila aceita somente finalizações pessoais enviadas pelo canário.');
+      const rejected=/reject|recus|reprov/i.test(text(action));
+      const result=rejected?await api().rejectRequest(id,reason||'Solicitação recusada pela administração.'):await api().approveBookFinish(id,reason||'Solicitação aprovada.');
+      if(!result.ok)throw new Error('O Cloudflare não confirmou a revisão.');
+      const state=root.__entrelV452Requests;
+      if(state){state.at=0;state.loaded=false;state.fromCache=false;}
+      if(typeof root.entrelV452Refresh==='function')await root.entrelV452Refresh();
+      localSave();render();info(rejected?'Solicitação recusada':'Livro finalizado',rejected?'A recusa foi confirmada no Cloudflare.':'A aprovação e a recompensa foram confirmadas no Cloudflare.');
+      return true;
+    }catch(e){info('Erro ao revisar',text(e&&e.message||e));return false;}
+  }
   async function saveProgress(book, requestedPage) {
     if (!enabled('cf_library')) return false;
     if (!book) return false;
@@ -164,6 +185,16 @@
     const book=byRef(ref);if(!book)throw new Error('Livro não encontrado.');const input=root.document.getElementById('newPage');
     const page=input?Number(input.value):Number(book.readerPage||book.currentPage||0),ok=await safeSaveProgress(book,page);render();return ok;
   };
+  const oldAdminReview=root.adminReviewRequestV180||root.entrelV452Review;
+  if(typeof oldAdminReview==='function'){
+    const adminReview=function(id,action,reason){return enabled('cf_admin')?reviewFinishRequest(id,action,reason):oldAdminReview.apply(this,arguments)};
+    root.adminReviewRequestV180=adminReview;root.entrelV452Review=adminReview;
+    root.adminApproveRequestV67=id=>adminReview(id,'approved','');
+    root.approveValidationRequestV18711=id=>adminReview(id,'approved','');root.approveValidationRequestV18712=root.approveValidationRequestV18711;
+    root.finishValidationResponseV18712=function(id,action){const note=text((root.document.getElementById('adminValidationMsg18712')||{}).value);return adminReview(id,/reject|recus/i.test(text(action))?'rejected':'approved',note)};
+    root.finishValidationResponseV18711=root.finishValidationResponseV18712;
+    try{adminReviewRequestV180=adminReview;entrelV452Review=adminReview}catch(_){}
+  }
   root.entrelCfReconcileAwards=async function(){if(!enabled('cf_awards'))throw new Error('Ative cf_awards para usar a reconciliação de medalhas no Cloudflare.');return api().reconcileAwards()};
-  root.EntreLinhasDataCanaries=Object.freeze({enabled,readLibrary:safeReadLibrary,saveProgress:safeSaveProgress});
+  root.EntreLinhasDataCanaries=Object.freeze({enabled,readLibrary:safeReadLibrary,saveProgress:safeSaveProgress,readFinishRequests,reviewFinishRequest});
 })(typeof window !== 'undefined' ? window : globalThis);

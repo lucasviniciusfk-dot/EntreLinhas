@@ -79,7 +79,7 @@
 | Clube | RPCs canário e correções de aprovação; mural, gestão completa de ciclos e interface de álbuns ainda incompletos |
 | Chat | operações normais integradas; editor administrativo de cards fixados e demais wrappers legados pendentes |
 | Notificações | leitura/lida/ocultação em canário; composição administrativa e entrega push ainda Supabase |
-| Administração | guardas e fluxos de aprovação testados localmente; remoção de conta, ranking, logs e demais ações não migrados integralmente |
+| Administração | fila Cloudflare limitada à finalização de livros pessoais em canário; remoção de conta, ranking, logs e demais ações não migrados integralmente |
 | Recompensas | metas e aprovação testadas localmente; reconciliação histórica e contratos restantes pendentes |
 | Arquivos | avatar e arquivos privados próprios testados; novas capas pessoais podem vincular asset R2; migração dos três buckets e leitores legados pendente |
 
@@ -92,7 +92,7 @@ Foram concluídos localmente novos contratos de backend e integração opt-in do
 - Configurações: rotas autenticadas para preferências da própria conta e leitura/escrita por escopo; alterações globais exigem permissão administrativa e marcadores de recompensa permanecem exclusivos do servidor. A migration `0002_scoped_settings.sql` cria armazenamento com escopo e importa as configurações legadas sem sobrescrever chaves irmãs.
 - Biblioteca/leitura: rotas para listar, criar, editar, remover logicamente e sincronizar progresso preservando IDs; validação de identidade, proteção contra regressão de progresso antigo, prevenção de livros duplicados e solicitação idempotente de finalização sem conceder recompensa antes da aprovação. A migration `0003_library_identities.sql` adiciona a chave de deduplicação. Assets privados ficam vinculados ao livro e não são removidos enquanto referenciados.
 - Conquistas: `POST /api/v1/me/awards/reconcile` calcula medalhas e molduras a partir de evidência no D1, é idempotente e não altera XP nem pontos. O corpo da requisição não escolhe usuário nem prêmios.
-- Frontend: `index.html` carrega o adaptador opt-in. `cf_settings=1` e `cf_library=1` encaminham os fluxos cobertos ao Cloudflare; o caminho padrão permanece no Supabase. A reconciliação manual de conquistas é exposta apenas com `cf_awards=1`.
+- Frontend: `index.html` carrega o adaptador opt-in. `cf_settings=1` e `cf_library=1` encaminham os fluxos cobertos ao Cloudflare; `cf_admin=1` limita a fila e a revisão às finalizações pessoais originadas no canário. O caminho padrão permanece no Supabase. A reconciliação manual de conquistas é exposta apenas com `cf_awards=1`.
 
 Validação local: **37 testes aprovados**, incluindo D1/R2 em workerd, e `npm run check` compilou os 264 scripts inline e módulos do navegador; `git diff --check` passou. Esses resultados não substituem autenticação Google real nem execução contra o staging remoto.
 

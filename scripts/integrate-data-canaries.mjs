@@ -15,5 +15,11 @@ if(!html.includes('/* CF_DATA_CANARIES_V2 */')){
   replaceInFunction('async function refreshLibrary(force){','if(S.libraryLoading)',"if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_library'))return window.EntreLinhasDataCanaries.readLibrary(!!force);if(S.libraryLoading)");
   html+='\n<!-- /* CF_DATA_CANARIES_V2 */ -->\n';
 }
+if(!html.includes('/* CF_DATA_CANARIES_V3 */')){
+  replaceInFunction('async function readRequestBatch(){','var c=client();',"if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_admin'))return await window.EntreLinhasDataCanaries.readFinishRequests();var c=client();");
+  replaceInFunction('async function loadRequests(force){','if(REQUEST_STATE.loading)return;if(!REQUEST_STATE.loaded)restoreRequestCache();',"if(REQUEST_STATE.loading)return;var cloudflareAdmin=window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_admin');if(!cloudflareAdmin&&!REQUEST_STATE.loaded)restoreRequestCache();else if(cloudflareAdmin){REQUEST_STATE.loaded=false;REQUEST_STATE.at=0;REQUEST_STATE.requests=[];REQUEST_STATE.users=[];REQUEST_STATE.challenges=[]}");
+  replaceInFunction('async function loadRequests(force){','var c=client();if(!c){if(!REQUEST_STATE.requests.length)',"var c=client();if(!c&&!cloudflareAdmin){if(!REQUEST_STATE.requests.length)");
+  html+='\n<!-- /* CF_DATA_CANARIES_V3 */ -->\n';
+}
 writeFileSync(path,html.replace(/\n/g,newline));
-console.log('Integrated opt-in Cloudflare settings, library reads and reader writes.');
+console.log('Integrated opt-in Cloudflare settings, library, reader writes and personal finish review.');
