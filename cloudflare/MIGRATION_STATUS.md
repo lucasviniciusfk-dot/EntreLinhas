@@ -72,18 +72,31 @@
 | Domínio | Situação real |
 |---|---|
 | Perfis | edição própria em canário; listagem social, avatares de terceiros e outros sincronizadores ainda precisam de paridade |
-| Configurações | 70 referências legadas; esquema usuario_id/chave exige contrato e não foi convertido em CRUD genérico |
-| Biblioteca e leituras | rotas existentes; frontend completo, arquivos EPUB e conflitos entre aparelhos ainda não migrados |
+| Configurações | preferências e escopos pessoais/globais implementados em canário; migration remota pendente; demais chaves continuam com operações específicas |
+| Biblioteca e leituras | CRUD pessoal, progresso e pedido de conclusão integrados em canário; leitura/escrita EPUB e migração de arquivos legados ainda pendentes |
 | Metas/progresso | recompensas e JSON corrigidos; escritores de metas e calendário continuam legados |
-| Desafios/medalhas/molduras | autorização de seleção própria validada; catálogo, concessões e administração ainda legados |
+| Desafios/medalhas/molduras | autorização de seleção própria validada e reconciliação de medalhas/molduras implementada em canário; fluxos administrativos e desafios ainda legados |
 | Clube | RPCs canário e correções de aprovação; mural, gestão completa de ciclos e interface de álbuns ainda incompletos |
 | Chat | operações normais integradas; editor administrativo de cards fixados e demais wrappers legados pendentes |
 | Notificações | leitura/lida/ocultação em canário; composição administrativa e entrega push ainda Supabase |
 | Administração | guardas e fluxos de aprovação testados localmente; remoção de conta, ranking, logs e demais ações não migrados integralmente |
 | Recompensas | metas e aprovação testadas localmente; reconciliação histórica e contratos restantes pendentes |
-| Arquivos | avatar e arquivos privados próprios testados; três buckets e todos os leitores antigos ainda precisam de migração |
+| Arquivos | avatar e arquivos privados próprios testados; novas capas pessoais podem vincular asset R2; migração dos três buckets e leitores legados pendente |
 
 A varredura AST continua encontrando 566 acessos estáticos a tabelas e 20 RPCs em 17 nomes, porque inclui funções antigas sobrescritas e caminhos de fallback. Esse total não prova quais funções executam. O inventário registra linhas e operações para a continuação por domínio. Não houve substituição global de from/rpc/fetch.
+
+## Continuação local — configurações, biblioteca e conquistas
+
+Foram concluídos localmente novos contratos de backend e integração opt-in do frontend:
+
+- Configurações: rotas autenticadas para preferências da própria conta e leitura/escrita por escopo; alterações globais exigem permissão administrativa e marcadores de recompensa permanecem exclusivos do servidor. A migration `0002_scoped_settings.sql` cria armazenamento com escopo e importa as configurações legadas sem sobrescrever chaves irmãs.
+- Biblioteca/leitura: rotas para listar, criar, editar, remover logicamente e sincronizar progresso preservando IDs; validação de identidade, proteção contra regressão de progresso antigo, prevenção de livros duplicados e solicitação idempotente de finalização sem conceder recompensa antes da aprovação. A migration `0003_library_identities.sql` adiciona a chave de deduplicação. Assets privados ficam vinculados ao livro e não são removidos enquanto referenciados.
+- Conquistas: `POST /api/v1/me/awards/reconcile` calcula medalhas e molduras a partir de evidência no D1, é idempotente e não altera XP nem pontos. O corpo da requisição não escolhe usuário nem prêmios.
+- Frontend: `index.html` carrega o adaptador opt-in. `cf_settings=1` e `cf_library=1` encaminham os fluxos cobertos ao Cloudflare; o caminho padrão permanece no Supabase. A reconciliação manual de conquistas é exposta apenas com `cf_awards=1`.
+
+Validação local: **37 testes aprovados**, incluindo D1/R2 em workerd, e `npm run check` compilou os 264 scripts inline e módulos do navegador; `git diff --check` passou. Esses resultados não substituem autenticação Google real nem execução contra o staging remoto.
+
+**Estado da publicação:** as migrations `0002` e `0003` e as novas rotas ainda não foram aplicadas ao D1/Worker remoto. A conexão Cloudflare solicitou reautenticação durante esta continuação; o usuário iniciou a reconexão e o conector ainda não está disponível. Não executar cutover de produção. O teste real do Google e a reconciliação das diferenças de dados listadas acima também continuam pendentes.
 
 ### Reversão
 

@@ -12,4 +12,5 @@ for(const file of readdirSync(new URL('../cloudflare/',import.meta.url)).filter(
 const validation=readFileSync(new URL('../cloudflare-validation.html',import.meta.url),'utf8');
 for(const m of validation.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi))if(!/\bsrc\s*=/.test(m[1]))new vm.Script(m[2],{filename:'cloudflare-validation.html'});
 if(!html.includes('./cloudflare/entrelinhas-profile-data.js')||!html.includes('/* CF_PROFILE_INTEGRATION_V1 */'))throw new Error('Profile integration missing.');
+if(!html.includes('./cloudflare/entrelinhas-data-canaries.js')||!html.includes('/* CF_DATA_CANARIES_V1 */'))throw new Error('Cloudflare data canaries missing.');
 console.log('Parsed '+checked+' inline scripts and Cloudflare browser modules successfully.');

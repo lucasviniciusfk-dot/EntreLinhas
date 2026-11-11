@@ -1,3 +1,6 @@
+import {handleSettings} from "./domains/settings.mjs";
+import {handleLibrary} from "./domains/library.mjs";
+import {handleAchievements} from "./domains/achievements.mjs";
 import {handleSnapshot} from "./domains/snapshots.mjs";
 import {handleChat} from "./domains/chat.mjs";
 /* Snapshot revisado do Worker entrelinhas-api-staging.
@@ -90,6 +93,9 @@ btn.addEventListener("click",async()=>{
  const isAdmin=Number(access.profile.is_admin)===1||Number(access.profile.admin_principal)===1||String(access.user.email||"").toLowerCase()==="lucasviniciusfk@gmail.com";
 
  const profileRequest=url.pathname==="/api/v1/me/bootstrap"?new Request(url.origin+"/api/v1/me",{headers:request.headers}):request;
+ const settingsResponse=await handleSettings(request,env,{uid,headers,isAdmin});if(settingsResponse)return settingsResponse;
+ const libraryResponse=await handleLibrary(request,env,{uid,headers,isAdmin});if(libraryResponse)return libraryResponse;
+ const achievementResponse=await handleAchievements(request,env,{uid,headers,email:access.user.email||access.profile.email});if(achievementResponse)return achievementResponse;
  const profileResponse=await handleProfile(profileRequest,env,{uid,headers,authUser:access.user});if(profileResponse)return profileResponse;
  const snapshotResponse=await handleSnapshot(request,env,{uid,headers});if(snapshotResponse)return snapshotResponse;
  const chatResponse=await handleChat(request,env,{uid,headers,isAdmin});if(chatResponse)return chatResponse;

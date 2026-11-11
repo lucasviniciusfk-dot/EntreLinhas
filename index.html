@@ -20283,6 +20283,7 @@ body.entrel-v490-auth-screen .entrel-v476-confirm-top{
   }
 
   async function saveProgressNowV8(book){
+    if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_library'))return window.EntreLinhasDataCanaries.saveProgress(book);
     try{
       const sb=sbV8();
       const user=await userV8();
@@ -30082,6 +30083,7 @@ html[data-ent-theme="escuro"] .profile-v166 .profile-hero-v59,html[data-ent-them
 
   function livroIdsFor(book){var ids=bookKeys(book).filter(function(x){return x&&x.length<900;}); return Array.from(new Set(ids));}
   async function saveProgressDirect(book,opts){
+    if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_library'))return window.EntreLinhasDataCanaries.saveProgress(book);
     try{
       if(!book)return; var uid=await authId(); uid=uid||String(book.userId||localUid()||''); if(!uid)return;
       book.userId=uid;
@@ -42747,6 +42749,7 @@ body.ent-theme-escuro #app .seq-medal-list .seq-medal-meta{
   }
 
   async function upsertBookProgressOnline(book, reason){
+      if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_library'))return await window.EntreLinhasDataCanaries.saveProgress(book);
     try{
       if(!book)return false;
       var uid = await authUid();
@@ -75572,7 +75575,7 @@ albumLockedV425.__v483=true;
   function localPersonal(b){var src=norm(b&&(b.source||b.origem||b.tipo||''));return !!(b&&(b.personalOnlineId||b.onlinePersonalId||b.personalFingerprint||b.usuario_id||b.userId||/personal|pessoal|manual|epub/.test(src)))&&!/club|clube|global|public|catalog/.test(src)}
   function signature(b){return norm(b&&(b.title||b.titulo))+'|'+norm(b&&(b.author||b.autor))}
   function rowToLocal(r,uid){var d=obj(r.dados),pages=Math.max(1,n(r.paginas)||300),page=Math.max(0,n(r.pagina_atual||r.paginas_lidas));return {id:r.id,onlinePersonalId:r.id,personalOnlineId:r.id,livroId:r.livro_id||r.id,personalFingerprint:r.livro_id||r.id,userId:uid,title:r.titulo||'Livro',author:r.autor||'Autor não identificado',genre:r.genero||'Outro',pages:pages,currentPage:page,readerPage:page,epubProgress:Math.max(n(r.progresso),Math.round(page/pages*100)),epubCfi:r.epub_cfi||'',status:r.status||'reading',finished:/finished|finalizado|concluido/i.test(s(r.status)),finalizado:/finished|finalizado|concluido/i.test(s(r.status)),source:(r.epub_storage_path||r.epub_url)?'personal-epub-online-r2':'personal-manual-online',cover:r.capa_url||'',epubStoragePath:r.epub_storage_path||r.epub_url||'',epubRemoteUrl:r.epub_storage_path||r.epub_url||'',updatedAt:r.atualizado_em?Date.parse(r.atualizado_em):Date.now(),syncedOnline:true,dados:d}}
-  async function refreshLibrary(force){if(S.libraryLoading)return S.libraryLoading;if(!force&&S.libraryAt&&Date.now()-S.libraryAt<60*1000)return;S.libraryLoading=(async function(){var user=await authUser(),c=db(),cols='id,usuario_id,livro_id,titulo,autor,genero,paginas,capa_url,epub_url,epub_storage_path,pagina_atual,progresso,epub_cfi,status,ativo,atualizado_em,dados',r=await c.from('livros_pessoais').select(cols).eq('usuario_id',user.id).eq('ativo',true).order('atualizado_em',{ascending:false}).limit(500);if(r.error&&/epub_storage_path|column|schema cache/i.test(s(r.error.message)))r=await c.from('livros_pessoais').select(cols.replace(',epub_storage_path','')).eq('usuario_id',user.id).eq('ativo',true).order('atualizado_em',{ascending:false}).limit(500);if(r.error)throw r.error;var remote=(r.data||[]).map(function(x){return rowToLocal(x,user.id)}),byId={},bySig={};remote.forEach(function(b){byId[s(b.id)]=b;if(b.livroId)byId[s(b.livroId)]=b;bySig[signature(b)]=b});var books=Array.isArray(data&&data.books)?data.books:[],globals=[],locals=[];books.forEach(function(b){if(!localPersonal(b)){globals.push(b);return}var owner=localOwner(b);if(owner&&owner!==user.id)return;var match=byId[s(b.id)]||byId[s(b.onlinePersonalId)]||byId[s(b.livroId)]||bySig[signature(b)];if(match){match=Object.assign({},b,match,{userId:user.id});byId[s(match.id)]=match;bySig[signature(match)]=match}else if(owner===user.id){locals.push(b)}});var merged=[],seen={};remote.concat(locals).forEach(function(b){var k=s(b.id)||signature(b);if(!seen[k]){seen[k]=1;merged.push(b)}});data.books=globals.concat(merged);S.libraryAt=Date.now();saveSafe();if(force)renderSafe();return merged})().catch(function(e){console.warn('[v506 biblioteca]',e);return []}).finally(function(){S.libraryLoading=null});return S.libraryLoading}
+  async function refreshLibrary(force){if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_library'))return window.EntreLinhasDataCanaries.readLibrary(!!force);if(S.libraryLoading)return S.libraryLoading;if(!force&&S.libraryAt&&Date.now()-S.libraryAt<60*1000)return;S.libraryLoading=(async function(){var user=await authUser(),c=db(),cols='id,usuario_id,livro_id,titulo,autor,genero,paginas,capa_url,epub_url,epub_storage_path,pagina_atual,progresso,epub_cfi,status,ativo,atualizado_em,dados',r=await c.from('livros_pessoais').select(cols).eq('usuario_id',user.id).eq('ativo',true).order('atualizado_em',{ascending:false}).limit(500);if(r.error&&/epub_storage_path|column|schema cache/i.test(s(r.error.message)))r=await c.from('livros_pessoais').select(cols.replace(',epub_storage_path','')).eq('usuario_id',user.id).eq('ativo',true).order('atualizado_em',{ascending:false}).limit(500);if(r.error)throw r.error;var remote=(r.data||[]).map(function(x){return rowToLocal(x,user.id)}),byId={},bySig={};remote.forEach(function(b){byId[s(b.id)]=b;if(b.livroId)byId[s(b.livroId)]=b;bySig[signature(b)]=b});var books=Array.isArray(data&&data.books)?data.books:[],globals=[],locals=[];books.forEach(function(b){if(!localPersonal(b)){globals.push(b);return}var owner=localOwner(b);if(owner&&owner!==user.id)return;var match=byId[s(b.id)]||byId[s(b.onlinePersonalId)]||byId[s(b.livroId)]||bySig[signature(b)];if(match){match=Object.assign({},b,match,{userId:user.id});byId[s(match.id)]=match;bySig[signature(match)]=match}else if(owner===user.id){locals.push(b)}});var merged=[],seen={};remote.concat(locals).forEach(function(b){var k=s(b.id)||signature(b);if(!seen[k]){seen[k]=1;merged.push(b)}});data.books=globals.concat(merged);S.libraryAt=Date.now();saveSafe();if(force)renderSafe();return merged})().catch(function(e){console.warn('[v506 biblioteca]',e);return []}).finally(function(){S.libraryLoading=null});return S.libraryLoading}
   window.entrelV506RefreshLibrary=refreshLibrary;window.entrelV482LoadOwnLibrary=function(force){return refreshLibrary(!!force)};window.loadPersonalLibraryOnlineV5=window.entrelV482LoadOwnLibrary;window.syncPersonalLibraryV34=window.entrelV482LoadOwnLibrary;
 
   /* ---------- Livro do mês: mesma fonte para Clube e Desafios ---------- */
@@ -75903,6 +75906,7 @@ albumLockedV425.__v483=true;
   try{console.info('[EntreLinhas v513] participantes e sinopse do ciclo estabilizados.')}catch(e){}
 })();
 </script>
+<script src="./cloudflare/entrelinhas-data-canaries.js"></script>
 </body>
 </html>
 
@@ -75911,3 +75915,7 @@ albumLockedV425.__v483=true;
 <!-- /* CF_CHAT_INTEGRATION_V1 */ -->
 
 <!-- /* CF_NOTIFICATIONS_INTEGRATION_V1 */ -->
+
+<!-- /* CF_DATA_CANARIES_V1 */ -->
+
+<!-- /* CF_DATA_CANARIES_V2 */ -->
