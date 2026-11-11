@@ -1,5 +1,5 @@
 import {Miniflare,Response} from 'miniflare';
-import {readFileSync} from 'node:fs';
+import {readFileSync,readdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 const root=fileURLToPath(new URL('../cloudflare/',import.meta.url));
 export async function runtime() {
@@ -19,6 +19,7 @@ export async function runtime() {
   const schema=readFileSync(root+'schema.staging.sql','utf8').replace(/CREATE TABLE _cf_KV[\s\S]+?WITHOUT ROWID;/,'');
   // D1 exec accepts one statement per line; the captured schema contains no data.
   for(const statement of (schema+'\n'+readFileSync(root+'indexes.staging.sql','utf8')).split(';').map(s=>s.trim()).filter(Boolean))await db.prepare(statement).run();
+  for(const file of readdirSync(root+'migrations').filter(f=>f.endsWith('.sql')).sort())for(const sql of readFileSync(root+'migrations/'+file,'utf8').split(';').map(s=>s.trim()).filter(Boolean))await db.prepare(sql).run();
   async function insert(table,row){
     const cols=(await db.prepare('PRAGMA table_info('+table+')').all()).results;
     const complete={};

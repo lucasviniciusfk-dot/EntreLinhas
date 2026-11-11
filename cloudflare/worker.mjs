@@ -1,3 +1,4 @@
+import {handleSnapshot} from "./domains/snapshots.mjs";
 import {handleChat} from "./domains/chat.mjs";
 /* Snapshot revisado do Worker entrelinhas-api-staging.
  * Patch: erros de consulta D1 durante a resolução do perfil retornam 503 controlado.
@@ -90,6 +91,7 @@ btn.addEventListener("click",async()=>{
 
  const profileRequest=url.pathname==="/api/v1/me/bootstrap"?new Request(url.origin+"/api/v1/me",{headers:request.headers}):request;
  const profileResponse=await handleProfile(profileRequest,env,{uid,headers,authUser:access.user});if(profileResponse)return profileResponse;
+ const snapshotResponse=await handleSnapshot(request,env,{uid,headers});if(snapshotResponse)return snapshotResponse;
  const chatResponse=await handleChat(request,env,{uid,headers,isAdmin});if(chatResponse)return chatResponse;
 
  // Recompensas periódicas: replica as regras v507/v512, com identidade derivada da sessão.
