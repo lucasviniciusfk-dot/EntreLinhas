@@ -92,3 +92,20 @@ Não alterar o frontend ainda. Primeiro especificar endpoints separados e valida
 5. login: manter criação/recuperação de perfil compatível com Supabase Auth/Google.
 
 Essa análise fecha o contrato do primeiro domínio e evita uma substituição insegura por CRUD irrestrito. Ainda não é implementação de endpoint nem teste autenticado.
+
+
+## Atualização de implementação — 2026-11-11
+
+Foi adicionada ao Worker de staging a rota autenticada `PATCH /api/v1/me`.
+
+- Autentica o token pela sessão Supabase Auth existente; o ID do usuário vem exclusivamente do token validado, nunca do corpo.
+- Permite atualizar somente `nome`, `bio`, `livro_favorito`, `perfil_privado` e `biblioteca_publica`.
+- Não permite alterar `id`, `email`, `xp`, `pontos`, `nivel`, `is_admin`, `admin_principal`, banimento ou campos de auditoria.
+- Mantém os bindings existentes de D1, R2 e Supabase Auth ao atualizar o script.
+- Upload do Worker de staging confirmado pela API Cloudflare: tag `7f4f365bdfe84a19bbb44abbfada48a4`, deployment ID `c3efa67e93804ce6904ca0b7265a205d`.
+
+### Limitação de validação
+A tentativa de testar a URL pública do Worker a partir deste ambiente retornou uma página `Forbidden` do ambiente de execução, antes de ser possível validar o JSON da resposta. Portanto, a publicação do script foi confirmada, mas o teste HTTP funcional/autenticado ainda não foi aprovado.
+
+### Situação do item 1
+**Não concluído.** Esta alteração cobre somente uma operação do domínio de perfil. O frontend ainda precisa ser integrado para usar a rota, e continuam pendentes as operações das outras tabelas, as RPCs, as configurações `app_configuracoes`, as operações administrativas e o Storage. Não fazer cutover nem remover Supabase.
