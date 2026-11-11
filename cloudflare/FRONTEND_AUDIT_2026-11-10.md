@@ -188,3 +188,10 @@ O teste usa o token da sessão Google/Supabase e a URL correta do Worker de stag
 Ampliei o teste somente-leitura do clube: depois de listar álbuns e fotos, ele tenta baixar o conteúdo da primeira foto retornada pela rota autenticada `/api/v1/club/albums/photos/:id/content`. O resultado só é aprovado se a resposta HTTP for bem-sucedida, o corpo tiver bytes e o `Content-Type` for de imagem. Se o álbum não tiver fotos, o teste registra corretamente que essa verificação não se aplica. Nenhum arquivo é enviado, alterado ou removido.
 
 Commit da alteração: `31fd2c6e65d71011c9f6713b6920034d2e945ab8`. A validação foi estática; ainda depende de execução no navegador com a sessão Google real.
+
+
+## Marco 8/10 — cliente Cloudflare com leitura do clube
+
+O cliente reutilizável `cloudflare/entrelinhas-api-client.js` agora expõe `getClubAlbums(limit)`, `getClubAlbumPhotos(albumId, limit)` e `getClubPhotoContent(photoId)`. As chamadas usam o token da sessão Supabase Auth, validam os IDs antes de montar as rotas e limitam os parâmetros de paginação. O download de foto trata resposta binária, exige `Content-Type` de imagem e rejeita conteúdo vazio. O módulo continua opt-in: não intercepta `fetch`, não redireciona chamadas antigas e não altera dados.
+
+Commit: `7241433cf316b408160465942011b00c553b71d8`. Implementação registrada; execução funcional com a sessão Google ainda pendente.
