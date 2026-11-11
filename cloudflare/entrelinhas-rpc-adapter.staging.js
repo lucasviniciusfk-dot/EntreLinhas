@@ -29,7 +29,8 @@
       'entrel_finish_club_v507',
       'entrel_admin_finish_club_v511',
       'entrel_repair_club_participants_v510',
-      'entrel_retry_pending_rewards_v510'
+      'entrel_retry_pending_rewards_v510',
+      'entrel_apply_request_reward_v507'
     ]);
 
     async function call(path, method, body) {
@@ -95,6 +96,10 @@
           return call('/api/v1/admin/club/repair-participants', 'POST', {});
         case 'entrel_retry_pending_rewards_v510':
           return call('/api/v1/rewards/retry-pending', 'POST', { user_id: a.p_user_id || null });
+        case 'entrel_apply_request_reward_v507':
+          return call('/api/v1/admin/requests/apply-reward', 'POST', {
+            request_id: a.p_request_id, user_id: a.p_user_id, xp: a.p_xp, points: a.p_points
+          });
         default:
           return originalRpc(name, args);
       }
