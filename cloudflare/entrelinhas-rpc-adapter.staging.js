@@ -13,6 +13,7 @@
     if (client.__entrelinhasCloudflareRpcInstalled) return client;
     const api = String((options && options.apiBase) || DEFAULT_API).replace(/\/$/, '');
     const originalRpc = client.rpc.bind(client);
+    const getCycle = options && typeof options.getCycle === 'function' ? options.getCycle : () => '';
     const mapped = new Set([
       'entrel_verified_monthly_progress_v512',
       'entrel_award_period_goal_v507',
@@ -22,6 +23,8 @@
       'entrel_approve_club_finish_v507',
       'entrel_approve_club_finish_v509',
       'entrel_approve_club_finish_v511',
+      'entrel_submit_club_finish_v509',
+      'entrel_admin_finish_club_v509',
       'entrel_submit_club_finish_v511',
       'entrel_finish_club_v507',
       'entrel_admin_finish_club_v511',
@@ -74,6 +77,10 @@
           return call('/api/v1/admin/requests/approve-club-finish', 'POST', {
             request_id: a.p_request_id, reason: a.p_reason
           });
+        case 'entrel_submit_club_finish_v509':
+          return call('/api/v1/club/finish-request', 'POST', { cycle_id: getCycle() });
+        case 'entrel_admin_finish_club_v509':
+          return call('/api/v1/admin/club/finish-participant', 'POST', { ref: a.p_ref });
         case 'entrel_submit_club_finish_v511':
           return call('/api/v1/club/finish-request', 'POST', { cycle_id: a.p_cycle_id });
         case 'entrel_finish_club_v507':
