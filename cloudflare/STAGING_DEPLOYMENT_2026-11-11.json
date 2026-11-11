@@ -1,0 +1,47 @@
+{
+  "worker": "entrelinhas-api-staging",
+  "environment": "staging",
+  "deploymentId": "c7b8774a-c9c7-4fa5-b76d-b403acd2fd09",
+  "versionId": "a5a076e7-8c03-43fe-8408-5a1cedf5f85d",
+  "trafficPercent": 100,
+  "previousVersionBeforeThisTask": "febf2e0f-6fe3-4163-ab6a-0c73c48236d6",
+  "publishedAt": "2026-11-11T16:20:57.402978Z",
+  "compatibilityDate": "2026-11-09",
+  "sourceHashNormalization": "LF newlines and trimEnd; all four modules matched local source",
+  "moduleSha256": {
+    "worker.mjs": "d8d62d7c085e71dd5f4eb787b9554e48ba8d6ac9d933b0f5d9c4de341d8bbcad",
+    "domains/chat.mjs": "3c9eae641e740b147aa2b30bd27e27ca33799c6bd9dac06a72a8df06243ce208",
+    "domains/profile.mjs": "ba7914ed47ed3ebfc790989739fc2922053e0c47581f36659eb1c9b238b51a10",
+    "domains/snapshots.mjs": "e8a9877cec4fece05438b0024435f026b402a24c4ec8be997fbbabcd24056ec5"
+  },
+  "bindings": [
+    {
+      "name": "DB",
+      "type": "d1",
+      "database_id": "6fe9cebc-cccf-4de0-b7bd-abbdaa2d31ad"
+    },
+    {
+      "name": "FILES",
+      "type": "r2_bucket",
+      "bucket_name": "entrelinhas-staging-private"
+    },
+    {
+      "name": "SUPABASE_PUBLISHABLE_KEY",
+      "type": "plain_text"
+    },
+    {
+      "name": "SUPABASE_URL",
+      "type": "plain_text"
+    }
+  ],
+  "remoteChecks": {
+    "health": 200,
+    "unauthenticatedProfile": 401,
+    "unauthenticatedChat": 401,
+    "unauthenticatedNotifications": 401,
+    "unauthenticatedSnapshot": 401,
+    "previewCors": true
+  },
+  "realGoogleSessionTest": "pending user browser execution",
+  "productionCutover": false
+}

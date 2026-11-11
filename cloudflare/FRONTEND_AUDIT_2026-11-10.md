@@ -216,3 +216,15 @@ Nenhum registro foi apagado ou sobrescrito. Esta reconciliação fecha apenas es
 ## Auditoria de contagem das 48 tabelas — 2026-11-11
 
 Consulta agregada executada no Supabase (schema `public`) e no D1 staging para as 48 tabelas listadas pelo catálogo do Supabase. Resultado: **48/48 tabelas com a mesma contagem de linhas** entre origem e destino após as reconciliações registradas acima. A comparação foi feita por contagem total de cada tabela; ela não substitui comparação linha a linha, validação de hashes/JSON, nem os testes de integridade referencial (que permanecem sem aprovação devido ao `SQLITE_AUTH` nos PRAGMAs).
+
+## Implementação e nova evidência — 2026-11-11
+
+O PR #4 original não havia modificado index.html: o workflow falhou ao localizar uma quebra de linha. A edição real foi aplicada no checkout local, com âncoras verificadas e tratamento de CRLF.
+
+Perfil próprio, operações normais do chat e estado individual de notificações possuem caminhos Cloudflare explícitos no canário. A entrada normal preserva a fonte Supabase enquanto a validação com Google não terminar. Não houve substituição global de .from(), .rpc() ou fetch.
+
+A varredura atual usa AST e está em FRONTEND_INVENTORY_2026-11-11.json. Os 566 acessos a tabelas incluem código antigo sobrescrito e caminhos legados ainda necessários. A presença de uma alternativa Cloudflare não significa que todos os escritores antigos daquele domínio foram removidos.
+
+Foram adicionados 28 testes, a página cloudflare-validation.html e os relatórios MIGRATION_STATUS.md, INTEGRITY_2026-11-11.json e STAGING_DEPLOYMENT_2026-11-11.json. Quatro módulos do Worker publicado foram baixados novamente e seus SHA-256 coincidem com os arquivos locais.
+
+A comparação encontrou diferenças com contagens iguais e um snapshot inválido/truncado de 8.000.000 caracteres. O original completo foi preservado no R2 privado com verificação SHA-256. Onze registros ausentes foram copiados de forma aditiva, com backup e conferência posterior. Consulte SNAPSHOT_PRESERVATION_2026-11-11.md e DELTA_RECONCILIATION_2026-11-11.md. Produção não passou por cutover.

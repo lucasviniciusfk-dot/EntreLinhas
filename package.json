@@ -15,6 +15,7 @@
     "node": ">=24.0.0"
   },
   "devDependencies": {
+    "acorn": "8.19.0",
     "miniflare": "4.20260730.0",
     "workerd": "1.20261110.1"
   }

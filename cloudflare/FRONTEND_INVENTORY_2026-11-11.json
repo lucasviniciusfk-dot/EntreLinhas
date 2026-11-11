@@ -1,0 +1,7812 @@
+{
+  "generatedAt": "2026-11-11T16:20:08.000Z",
+  "method": "AST; includes old overridden functions; does not prove runtime activity",
+  "tableCalls": 566,
+  "tables": 26,
+  "byTable": {
+    "leituras": 32,
+    "livros": 5,
+    "metas_usuarios": 29,
+    "usuario_desafios": 11,
+    "usuarios": 86,
+    "clube_albuns": 12,
+    "livros_pessoais": 88,
+    "metas_diarias": 32,
+    "chat_mensagens": 20,
+    "clube_livro_atual": 20,
+    "clube_mural_reacoes": 9,
+    "clube_mural": 4,
+    "clube_fotos": 8,
+    "usuario_medalhas": 22,
+    "usuario_molduras": 12,
+    "app_configuracoes": 70,
+    "chat_reacoes": 9,
+    "app_notificacoes": 22,
+    "admin_logs": 7,
+    "desafios": 13,
+    "solicitacoes_validacao": 21,
+    "ranking_temporadas": 2,
+    "clube_biblioteca": 7,
+    "clube_livros_finalizados": 7,
+    "push_subscriptions": 1,
+    "clube_livro_participantes": 17
+  },
+  "rpcOccurrences": 20,
+  "rpcNames": [
+    "admin_remover_conta_app_v69",
+    "entrel_admin_finish_club_v509",
+    "entrel_admin_finish_club_v511",
+    "entrel_apply_request_reward_v507",
+    "entrel_approve_club_finish_v507",
+    "entrel_approve_club_finish_v509",
+    "entrel_approve_club_finish_v511",
+    "entrel_approve_finish_request_v508",
+    "entrel_award_daily_epub_v507",
+    "entrel_award_period_goal_v507",
+    "entrel_finish_club_v507",
+    "entrel_reject_request_v507",
+    "entrel_repair_club_participants_v510",
+    "entrel_retry_pending_rewards_v510",
+    "entrel_submit_club_finish_v509",
+    "entrel_submit_club_finish_v511",
+    "entrel_verified_monthly_progress_v512"
+  ],
+  "storageOccurrences": 13,
+  "storageBuckets": [
+    "epubs",
+    "capas",
+    "comprovantes"
+  ],
+  "fetchOccurrences": 28,
+  "staticFetchOccurrences": 0,
+  "dynamic": [
+    {
+      "file": "index.html",
+      "line": 6141,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 6257,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 7390,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18310,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18314,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18315,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18316,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18317,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18366,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18374,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18419,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18419,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18421,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18423,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18424,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18425,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 18426,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 19365,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 19367,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 19373,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 19502,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 21597,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 21599,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 21605,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 21774,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22048,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22053,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22058,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22063,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22079,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22082,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22095,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22107,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22120,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22141,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22244,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22247,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22249,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22281,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22281,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22284,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22424,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22426,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22427,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22568,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 22572,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23252,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23258,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23262,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23265,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23330,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23340,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23348,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23350,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23352,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23373,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23396,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23397,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23400,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23400,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23402,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23404,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 23407,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 24397,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 26228,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 27097,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 27147,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 27713,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 27955,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 27955,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 28169,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 28881,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 28883,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 28890,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 28893,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 29095,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 29099,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 29170,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 29965,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 29965,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 29965,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30686,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30686,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30766,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30766,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30769,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30795,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30797,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30799,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30918,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30923,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30924,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30926,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 30927,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 31427,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 31429,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 31430,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 31472,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 31481,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 31481,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 31786,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 31787,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 31899,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 31899,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 32157,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 32203,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 33068,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 33070,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 33303,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 33332,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 33703,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 33709,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 33868,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 33878,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 34597,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 34602,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 34621,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 34623,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 34626,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 34976,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 34978,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 35517,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 35543,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 43916,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 44174,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 46025,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 46630,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 46630,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 46637,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 46665,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 46668,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 47230,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 48569,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 48571,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 49164,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 49165,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 49837,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 49838,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 49968,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 49968,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50714,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50715,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50814,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50836,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50846,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50849,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50855,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50860,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50898,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50905,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50920,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50928,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 50960,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 51174,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 51175,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 51176,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 51559,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 51590,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 51651,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 51652,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 51668,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 51682,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 51693,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 59108,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 59121,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 59444,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 59528,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 64929,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 64930,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 64931,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 65083,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 65084,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68497,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68680,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68692,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68693,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68693,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68694,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68696,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68696,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68701,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68800,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68800,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68912,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68988,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 68990,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 69560,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 69579,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 69579,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 69595,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 69596,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 69599,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 69599,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 69599,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 69696,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 69718,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 70458,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 70586,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 70813,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 70973,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71303,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71304,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71317,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71319,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71322,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71348,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71349,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71646,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71665,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71665,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71667,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71668,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71669,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71669,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71669,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71669,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 71792,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72218,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72223,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72415,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72506,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72508,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72510,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72516,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72610,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72616,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72911,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72920,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72927,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72932,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 72933,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73068,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73069,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73075,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73087,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73100,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73123,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73127,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73131,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73132,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73152,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73154,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73238,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73238,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73243,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73243,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73477,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73478,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73478,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73479,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73479,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73511,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73515,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73517,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73532,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73533,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73544,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73545,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73573,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73573,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73595,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73595,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73669,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73670,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73670,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73674,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73685,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73729,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73732,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73736,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73737,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73787,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73787,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73836,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73941,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73942,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73943,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73944,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73980,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73990,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73990,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 73996,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74026,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74026,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74027,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74035,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74173,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74180,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74184,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74185,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74222,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74223,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74224,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74226,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74227,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74471,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 74740,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75031,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75032,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75033,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75035,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75079,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75087,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75097,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75276,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75284,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75294,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75313,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75499,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75500,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75627,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75628,
+      "method": "from"
+    }
+  ],
+  "calls": [
+    {
+      "file": "index.html",
+      "line": 8090,
+      "name": "leituras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 8092,
+      "name": "leituras",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 8095,
+      "name": "leituras",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 14405,
+      "name": "livros",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 14448,
+      "name": "livros",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 14502,
+      "name": "livros",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 14559,
+      "name": "livros",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 18311,
+      "name": "leituras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 18312,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 18313,
+      "name": "usuario_desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19046,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19056,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19062,
+      "name": "usuarios",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19295,
+      "name": "clube_albuns",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19407,
+      "name": "livros_pessoais",
+      "operation": "upsert",
+      "chain": [
+        "upsert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19420,
+      "name": "leituras",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19439,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19475,
+      "name": "livros_pessoais",
+      "operation": "upsert",
+      "chain": [
+        "upsert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19520,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19565,
+      "name": "livros_pessoais",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19584,
+      "name": "metas_diarias",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19584,
+      "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19588,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19592,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19836,
+      "name": "livros_pessoais",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19845,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 20172,
+      "name": "livros",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 20262,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 20271,
+      "name": "leituras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 20299,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 20316,
+      "name": "leituras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 20317,
+      "name": "leituras",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 20318,
+      "name": "leituras",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 20843,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 20845,
+      "name": "chat_mensagens",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 20846,
+      "name": "chat_mensagens",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21567,
+      "name": "metas_diarias",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21575,
+      "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21656,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "in",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21662,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21697,
+      "name": "livros_pessoais",
+      "operation": "upsert",
+      "chain": [
+        "upsert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21709,
+      "name": "leituras",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21734,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21756,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21758,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21803,
+      "name": "livros_pessoais",
+      "operation": "upsert",
+      "chain": [
+        "upsert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21841,
+      "name": "livros_pessoais",
+      "operation": "upsert",
+      "chain": [
+        "upsert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21881,
+      "name": "livros_pessoais",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21949,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 21950,
+      "name": "leituras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22524,
+      "name": "clube_livro_atual",
+      "operation": "upsert",
+      "chain": [
+        "upsert",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22524,
+      "name": "clube_livro_atual",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22546,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22546,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22710,
+      "name": "clube_mural_reacoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22710,
+      "name": "clube_mural_reacoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22765,
+      "name": "clube_mural",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22767,
+      "name": "clube_mural",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22769,
+      "name": "clube_mural",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22785,
+      "name": "clube_mural_reacoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22787,
+      "name": "clube_mural_reacoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22829,
+      "name": "clube_albuns",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22971,
+      "name": "clube_fotos",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22980,
+      "name": "clube_albuns",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 22982,
+      "name": "clube_albuns",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23059,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23309,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23311,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23861,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23862,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23863,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23864,
+      "name": "usuario_medalhas",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23865,
+      "name": "usuario_molduras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23866,
+      "name": "usuario_desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23899,
+      "name": "usuario_medalhas",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23901,
+      "name": "usuario_molduras",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23967,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "in",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23971,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23975,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23976,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23977,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23978,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23979,
+      "name": "leituras",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24049,
+      "name": "usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24051,
+      "name": "usuario_molduras",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24145,
+      "name": "usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24222,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24231,
+      "name": "chat_mensagens",
+      "operation": "select",
+      "chain": [
+        "select",
+        "or",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24231,
+      "name": "chat_reacoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "in"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24233,
+      "name": "chat_mensagens",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24236,
+      "name": "chat_reacoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24236,
+      "name": "chat_reacoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24239,
+      "name": "chat_mensagens",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24240,
+      "name": "chat_reacoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24240,
+      "name": "chat_mensagens",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24245,
+      "name": "chat_mensagens",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24245,
+      "name": "chat_mensagens",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24246,
+      "name": "chat_mensagens",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24247,
+      "name": "chat_mensagens",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24321,
+      "name": "app_notificacoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24327,
+      "name": "app_notificacoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24332,
+      "name": "app_notificacoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24332,
+      "name": "app_notificacoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24345,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24345,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24346,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24398,
+      "name": "admin_logs",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24399,
+      "name": "app_notificacoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24433,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24433,
+      "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24434,
+      "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24434,
+      "name": "metas_diarias",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24437,
+      "name": "desafios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24437,
+      "name": "desafios",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24439,
+      "name": "desafios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24443,
+      "name": "solicitacoes_validacao",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24444,
+      "name": "metas_diarias",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24445,
+      "name": "usuario_desafios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24446,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24449,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24451,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24452,
+      "name": "usuario_medalhas",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24453,
+      "name": "usuario_medalhas",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24455,
+      "name": "usuario_molduras",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24455,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24457,
+      "name": "ranking_temporadas",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24457,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 24963,
+      "name": "solicitacoes_validacao",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25562,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25713,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25715,
+      "name": "usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25717,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25798,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25813,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25813,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25813,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25813,
+      "name": "usuario_medalhas",
+      "operation": "select",
+      "chain": [
+        "select"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25813,
+      "name": "usuario_desafios",
+      "operation": "select",
+      "chain": [
+        "select"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25822,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25941,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25941,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25941,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25941,
+      "name": "usuario_medalhas",
+      "operation": "select",
+      "chain": [
+        "select"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25941,
+      "name": "usuario_desafios",
+      "operation": "select",
+      "chain": [
+        "select"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25954,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25954,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25963,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25963,
+      "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 25978,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26037,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26040,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26047,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26048,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26065,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26072,
+      "name": "metas_diarias",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26079,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26106,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26106,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26113,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26129,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26129,
+      "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26132,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26133,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26254,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26256,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26256,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26263,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26348,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "in",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26350,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26549,
+      "name": "livros_pessoais",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26659,
+      "name": "clube_biblioteca",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26668,
+      "name": "clube_albuns",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26674,
+      "name": "clube_fotos",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26685,
+      "name": "clube_albuns",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26695,
+      "name": "clube_albuns",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26695,
+      "name": "clube_albuns",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26815,
+      "name": "livros_pessoais",
+      "operation": "upsert",
+      "chain": [
+        "upsert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26822,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26823,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26824,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26834,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26849,
+      "name": "leituras",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26910,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26911,
+      "name": "clube_biblioteca",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27038,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27100,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27101,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27102,
+      "name": "usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27130,
+      "name": "usuario_medalhas",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27131,
+      "name": "usuario_molduras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27132,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27154,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27154,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27155,
+      "name": "clube_biblioteca",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27432,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27433,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27434,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27577,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27578,
+      "name": "clube_biblioteca",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27579,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27585,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27592,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27592,
+      "name": "livros_pessoais",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27717,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27844,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 27844,
+      "name": "livros_pessoais",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28176,
+      "name": "admin_logs",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "then",
+        "catch"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28177,
+      "name": "app_notificacoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28220,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28240,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28240,
+      "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28241,
+      "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28241,
+      "name": "metas_diarias",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28243,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28249,
+      "name": "desafios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28249,
+      "name": "desafios",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28250,
+      "name": "desafios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28255,
+      "name": "solicitacoes_validacao",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28256,
+      "name": "usuario_desafios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28256,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28257,
+      "name": "solicitacoes_validacao",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28263,
+      "name": "usuario_medalhas",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28264,
+      "name": "usuario_medalhas",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28265,
+      "name": "usuario_molduras",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28265,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28266,
+      "name": "usuario_molduras",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28271,
+      "name": "clube_livro_atual",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28273,
+      "name": "clube_mural",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28275,
+      "name": "clube_albuns",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28276,
+      "name": "clube_biblioteca",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28280,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28280,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28281,
+      "name": "ranking_temporadas",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28283,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28809,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28810,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28810,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28814,
+      "name": "clube_mural_reacoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28815,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28831,
+      "name": "clube_mural_reacoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28831,
+      "name": "clube_mural_reacoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28831,
+      "name": "clube_mural_reacoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 28831,
+      "name": "clube_mural_reacoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29177,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29587,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29588,
+      "name": "clube_biblioteca",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29589,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29598,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29616,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29616,
+      "name": "livros_pessoais",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29651,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29796,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29797,
+      "name": "clube_biblioteca",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29798,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29803,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29803,
+      "name": "livros_pessoais",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29804,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29816,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29901,
+      "name": "app_notificacoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29901,
+      "name": "app_notificacoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29903,
+      "name": "solicitacoes_validacao",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29927,
+      "name": "app_notificacoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29930,
+      "name": "chat_mensagens",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29958,
+      "name": "leituras",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 29958,
+      "name": "leituras",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30095,
+      "name": "livros_pessoais",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30100,
+      "name": "leituras",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30100,
+      "name": "leituras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30100,
+      "name": "leituras",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30100,
+      "name": "leituras",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30114,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30119,
+      "name": "leituras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30167,
+      "name": "leituras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30435,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30466,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30467,
+      "name": "app_configuracoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30474,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30498,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30546,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30571,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30572,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30573,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "in"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30574,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "or",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30606,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "in",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30607,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "like",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30622,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30623,
+      "name": "app_configuracoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30624,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30631,
+      "name": "app_configuracoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "in"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30632,
+      "name": "app_configuracoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "like"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 30644,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32135,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32147,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32166,
+      "name": "usuario_medalhas",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32169,
+      "name": "usuario_medalhas",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32204,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32220,
+      "name": "usuario_molduras",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32337,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32352,
+      "name": "usuario_medalhas",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32356,
+      "name": "usuario_molduras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32488,
+      "name": "usuario_molduras",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32489,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32489,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32489,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32577,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32620,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32621,
+      "name": "clube_livros_finalizados",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32676,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32678,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "like",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32679,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "like",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32680,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "in",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32690,
+      "name": "app_configuracoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32707,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 32714,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 34899,
+      "name": "app_notificacoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 34903,
+      "name": "app_notificacoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 42765,
+      "name": "livros_pessoais",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 42770,
+      "name": "leituras",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 42770,
+      "name": "leituras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 42770,
+      "name": "leituras",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 42770,
+      "name": "leituras",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 42794,
+      "name": "usuario_medalhas",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 42865,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 42867,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 42874,
+      "name": "metas_diarias",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 42875,
+      "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43201,
+      "name": "usuario_medalhas",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43952,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43954,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43956,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43956,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43957,
+      "name": "livros_pessoais",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43957,
+      "name": "livros_pessoais",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43959,
+      "name": "leituras",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43959,
+      "name": "leituras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43959,
+      "name": "leituras",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 43959,
+      "name": "leituras",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 44192,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 44197,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 44238,
+      "name": "metas_diarias",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 44245,
+      "name": "metas_diarias",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 44250,
+      "name": "metas_diarias",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 44264,
+      "name": "metas_diarias",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 44292,
+      "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 44297,
+      "name": "metas_usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 44302,
+      "name": "metas_usuarios",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 45754,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 45759,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "gte",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 45917,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 45923,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "gte",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 45945,
+      "name": "metas_usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 45951,
+      "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 45975,
+      "name": "metas_diarias",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 47362,
+      "name": "desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 47363,
+      "name": "usuario_desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 47364,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 47604,
+      "name": "usuario_desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 47610,
+      "name": "desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "in"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 48784,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 49226,
+      "name": "desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 49227,
+      "name": "usuario_desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 49228,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 54522,
+      "name": "livros_pessoais",
+      "operation": "upsert",
+      "chain": [
+        "upsert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 54749,
+      "name": "clube_fotos",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 54764,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 54765,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 54780,
+      "name": "clube_fotos",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 56138,
+      "name": "metas_diarias",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 56143,
+      "name": "metas_diarias",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 56168,
+      "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 56204,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 56206,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 56210,
+      "name": "livros_pessoais",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 56223,
+      "name": "leituras",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 56242,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 56243,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 56244,
+      "name": "leituras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 56245,
+      "name": "metas_usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 56246,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "gte",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 57777,
+      "name": "app_notificacoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 57785,
+      "name": "app_notificacoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 57827,
+      "name": "app_notificacoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 57839,
+      "name": "app_notificacoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 58822,
+      "name": "app_notificacoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 59749,
+      "name": "push_subscriptions",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 59991,
+      "name": "app_notificacoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64627,
+      "name": "usuario_medalhas",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64640,
+      "name": "usuario_medalhas",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64647,
+      "name": "usuario_medalhas",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64705,
+      "name": "usuario_medalhas",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64716,
+      "name": "usuario_medalhas",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64726,
+      "name": "usuario_medalhas",
+      "operation": "update",
+      "chain": [
+        "update"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64745,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64756,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64964,
+      "name": "app_notificacoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64964,
+      "name": "app_notificacoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64980,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64980,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64980,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 64997,
+      "name": "chat_reacoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "in",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66378,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66378,
+      "name": "chat_mensagens",
+      "operation": "select",
+      "chain": [
+        "select"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66378,
+      "name": "chat_mensagens",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66378,
+      "name": "chat_mensagens",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66378,
+      "name": "chat_mensagens",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66378,
+      "name": "chat_reacoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "in"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66388,
+      "name": "chat_mensagens",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66388,
+      "name": "chat_mensagens",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66389,
+      "name": "app_notificacoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66389,
+      "name": "app_notificacoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66396,
+      "name": "chat_reacoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66396,
+      "name": "chat_reacoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66400,
+      "name": "chat_mensagens",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66401,
+      "name": "chat_reacoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66401,
+      "name": "chat_mensagens",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66401,
+      "name": "chat_mensagens",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66482,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66483,
+      "name": "clube_livro_participantes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "in",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66483,
+      "name": "clube_livro_participantes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66484,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66485,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66489,
+      "name": "clube_livros_finalizados",
+      "operation": "select",
+      "chain": [
+        "select",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66533,
+      "name": "clube_livro_participantes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "in",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66543,
+      "name": "clube_livro_participantes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66549,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66555,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66558,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66559,
+      "name": "app_configuracoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66563,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66564,
+      "name": "clube_livros_finalizados",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66572,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66575,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66579,
+      "name": "clube_livro_participantes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66587,
+      "name": "clube_livro_participantes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66588,
+      "name": "clube_livro_atual",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66593,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66593,
+      "name": "clube_livro_participantes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66740,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66744,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66744,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66745,
+      "name": "app_configuracoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66746,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66755,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66756,
+      "name": "clube_albuns",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66757,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66772,
+      "name": "clube_livro_participantes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66773,
+      "name": "clube_livro_participantes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "is"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66776,
+      "name": "clube_livro_participantes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66897,
+      "name": "clube_livro_atual",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66897,
+      "name": "clube_livro_atual",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66903,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66903,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66924,
+      "name": "clube_livro_participantes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66924,
+      "name": "clube_livro_participantes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66932,
+      "name": "clube_livro_participantes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66937,
+      "name": "clube_livro_participantes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66954,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66955,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66955,
+      "name": "app_configuracoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66956,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66956,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 66957,
+      "name": "clube_livros_finalizados",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 67009,
+      "name": "clube_livro_atual",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 68056,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 68057,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 68595,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 68596,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 68597,
+      "name": "metas_usuarios",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 68597,
+      "name": "metas_diarias",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 68598,
+      "name": "admin_logs",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 68599,
+      "name": "app_notificacoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 68801,
+      "name": "admin_logs",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 68831,
+      "name": "admin_logs",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 68987,
+      "name": "admin_logs",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69061,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "gte",
+        "lte",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69061,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69061,
+      "name": "clube_livros_finalizados",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69063,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69065,
+      "name": "app_configuracoes",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69067,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69067,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69068,
+      "name": "app_configuracoes",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69070,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "like",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69071,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69084,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69084,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69094,
+      "name": "solicitacoes_validacao",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69094,
+      "name": "solicitacoes_validacao",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69097,
+      "name": "solicitacoes_validacao",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69097,
+      "name": "solicitacoes_validacao",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69101,
+      "name": "solicitacoes_validacao",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69101,
+      "name": "solicitacoes_validacao",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69202,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69212,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "gte",
+        "lte",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69213,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69214,
+      "name": "clube_livros_finalizados",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69215,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 69728,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 70983,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 70983,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 71305,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 71720,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 71721,
+      "name": "leituras",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 71722,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 71723,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 71817,
+      "name": "usuario_medalhas",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 71820,
+      "name": "usuario_medalhas",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 71829,
+      "name": "usuario_molduras",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 71830,
+      "name": "usuario_molduras",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72427,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72530,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72530,
+      "name": "app_configuracoes",
+      "operation": "upsert",
+      "chain": [
+        "upsert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72634,
+      "name": "livros_pessoais",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72657,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "like",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72660,
+      "name": "app_configuracoes",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72791,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72793,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72815,
+      "name": "livros_pessoais",
+      "operation": "insert",
+      "chain": [
+        "insert",
+        "select",
+        "single"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72825,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72938,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72939,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72952,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72967,
+      "name": "admin_logs",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 73017,
+      "name": "clube_albuns",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 73362,
+      "name": "desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 73362,
+      "name": "desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 73363,
+      "name": "usuario_desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 74035,
+      "name": "desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "in",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 74682,
+      "name": "solicitacoes_validacao",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 74702,
+      "name": "solicitacoes_validacao",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 74715,
+      "name": "solicitacoes_validacao",
+      "operation": "insert",
+      "chain": [
+        "insert"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75326,
+      "name": "clube_fotos",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75365,
+      "name": "clube_albuns",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75379,
+      "name": "clube_fotos",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75384,
+      "name": "clube_fotos",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75389,
+      "name": "clube_fotos",
+      "operation": "delete",
+      "chain": [
+        "delete",
+        "eq"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75445,
+      "name": "clube_livro_participantes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75446,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75511,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "in",
+        "in",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75512,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75513,
+      "name": "solicitacoes_validacao",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "in",
+        "gte",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75517,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "gte",
+        "lte",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75519,
+      "name": "clube_livros_finalizados",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "gte",
+        "lte",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75550,
+      "name": "solicitacoes_validacao",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75551,
+      "name": "app_configuracoes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75552,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "or",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75553,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75554,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75556,
+      "name": "desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75556,
+      "name": "usuario_desafios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75575,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75575,
+      "name": "livros_pessoais",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75579,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75635,
+      "name": "clube_livro_participantes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75636,
+      "name": "clube_livro_participantes",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75641,
+      "name": "clube_livro_atual",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75643,
+      "name": "solicitacoes_validacao",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75654,
+      "name": "solicitacoes_validacao",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75723,
+      "name": "solicitacoes_validacao",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75775,
+      "name": "solicitacoes_validacao",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75872,
+      "name": "solicitacoes_validacao",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "in",
+        "order",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75873,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "gte",
+        "lt",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75886,
+      "name": "metas_diarias",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "eq",
+        "limit"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 75886,
+      "name": "metas_diarias",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "eq"
+      ]
+    },
+    {
+      "file": "cloudflare/entrelinhas-profile-data.js",
+      "line": 27,
+      "name": "usuarios",
+      "operation": "select",
+      "chain": [
+        "select",
+        "eq",
+        "maybeSingle"
+      ]
+    },
+    {
+      "file": "cloudflare/entrelinhas-profile-data.js",
+      "line": 77,
+      "name": "usuarios",
+      "operation": "update",
+      "chain": [
+        "update",
+        "eq",
+        "select",
+        "single"
+      ]
+    }
+  ],
+  "rpcs": [
+    {
+      "file": "index.html",
+      "line": 24554,
+      "name": "admin_remover_conta_app_v69"
+    },
+    {
+      "file": "index.html",
+      "line": 73295,
+      "name": "entrel_award_daily_epub_v507"
+    },
+    {
+      "file": "index.html",
+      "line": 75449,
+      "name": "entrel_finish_club_v507"
+    },
+    {
+      "file": "index.html",
+      "line": 75514,
+      "name": "entrel_award_period_goal_v507"
+    },
+    {
+      "file": "index.html",
+      "line": 75559,
+      "name": "entrel_apply_request_reward_v507"
+    },
+    {
+      "file": "index.html",
+      "line": 75564,
+      "name": "entrel_reject_request_v507"
+    },
+    {
+      "file": "index.html",
+      "line": 75565,
+      "name": "entrel_approve_finish_request_v508"
+    },
+    {
+      "file": "index.html",
+      "line": 75665,
+      "name": "entrel_finish_club_v507"
+    },
+    {
+      "file": "index.html",
+      "line": 75675,
+      "name": "entrel_approve_club_finish_v507"
+    },
+    {
+      "file": "index.html",
+      "line": 75728,
+      "name": "entrel_submit_club_finish_v509"
+    },
+    {
+      "file": "index.html",
+      "line": 75733,
+      "name": "entrel_admin_finish_club_v509"
+    },
+    {
+      "file": "index.html",
+      "line": 75741,
+      "name": "entrel_approve_club_finish_v509"
+    },
+    {
+      "file": "index.html",
+      "line": 75783,
+      "name": "entrel_repair_club_participants_v510"
+    },
+    {
+      "file": "index.html",
+      "line": 75787,
+      "name": "entrel_retry_pending_rewards_v510"
+    },
+    {
+      "file": "index.html",
+      "line": 75797,
+      "name": "entrel_submit_club_finish_v511"
+    },
+    {
+      "file": "index.html",
+      "line": 75804,
+      "name": "entrel_admin_finish_club_v511"
+    },
+    {
+      "file": "index.html",
+      "line": 75814,
+      "name": "entrel_approve_club_finish_v511"
+    },
+    {
+      "file": "index.html",
+      "line": 75877,
+      "name": "entrel_verified_monthly_progress_v512"
+    },
+    {
+      "file": "index.html",
+      "line": 75882,
+      "name": "entrel_award_period_goal_v507"
+    },
+    {
+      "file": "index.html",
+      "line": 75886,
+      "name": "entrel_award_daily_epub_v507"
+    }
+  ],
+  "storage": [
+    {
+      "file": "index.html",
+      "line": 14480,
+      "name": "epubs",
+      "operation": "select",
+      "chain": [
+        "upload"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 14487,
+      "name": "capas",
+      "operation": "select",
+      "chain": [
+        "upload"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 14489,
+      "name": "capas",
+      "operation": "select",
+      "chain": [
+        "getPublicUrl"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 14521,
+      "name": "epubs",
+      "operation": "select",
+      "chain": [
+        "createSignedUrl"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 14537,
+      "name": "epubs",
+      "operation": "select",
+      "chain": [
+        "createSignedUrl"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19868,
+      "name": "capas",
+      "operation": "select",
+      "chain": [
+        "upload"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19870,
+      "name": "capas",
+      "operation": "select",
+      "chain": [
+        "getPublicUrl"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 19881,
+      "name": "epubs",
+      "operation": "select",
+      "chain": [
+        "upload"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 20052,
+      "name": "epubs",
+      "operation": "select",
+      "chain": [
+        "createSignedUrl"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 23959,
+      "name": "epubs",
+      "operation": "select",
+      "chain": [
+        "createSignedUrl"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 26877,
+      "name": "epubs",
+      "operation": "select",
+      "chain": [
+        "createSignedUrl"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72187,
+      "name": "comprovantes",
+      "operation": "select",
+      "chain": [
+        "upload"
+      ]
+    },
+    {
+      "file": "index.html",
+      "line": 72189,
+      "name": "comprovantes",
+      "operation": "select",
+      "chain": [
+        "getPublicUrl"
+      ]
+    }
+  ]
+}
