@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Entre Linhas — verificação de staging</title>
+<style>
+:root{color-scheme:dark}body{font:16px system-ui,sans-serif;background:#111;color:#f4f4f4;max-width:680px;margin:32px auto;padding:20px}
+main{background:#1d1d1d;border:1px solid #333;border-radius:16px;padding:24px}
+h1{font-size:1.35rem}p{line-height:1.5;color:#ccc}
+button{width:100%;padding:15px;border:0;border-radius:10px;background:#f0f0f0;color:#111;font-weight:700;font-size:1rem;margin:12px 0;cursor:pointer}
+button:disabled{opacity:.5}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#090909;border-radius:10px;padding:14px;min-height:80px}
+small{color:#aaa}
+</style>
+</head>
+<body><main>
+<h1>Entre Linhas — teste técnico do Cloudflare</h1>
+<p>Esta página usa o mesmo domínio do aplicativo para concluir o login Google/PKCE. Não é necessário informar sua senha se sua conta Google já estiver conectada.</p>
+<p><small>O teste envia somente um PNG sintético de 1×1 pixel, confere upload no R2, metadados no D1, download, integridade e exclusão automática. Nenhum arquivo pessoal é utilizado.</small></p>
+<button id="go">Entrar com Google e executar teste</button>
+<pre id="out">Preparando…</pre>
+</main>
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+const SUPABASE_URL="https://jxzcuqwlnqxnhftffbjx.supabase.co";
+const SUPABASE_KEY="sb_publishable_LyHzFw6vbzqAPXlLPPPFYA_pQMNyqQc";
+const API="https://entrelinhas-api-staging.lucasviniciusfk.workers.dev";
+const STORAGE_KEY="entrelinhas-staging-oauth-test";
+const supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{flowType:"pkce",persistSession:true,autoRefreshToken:false,detectSessionInUrl:true,storage:window.sessionStorage,storageKey:STORAGE_KEY}});
+const out=document.getElementById("out"),btn=document.getElementById("go");
+function log(s){out.textContent+="\n"+s;}
+async function runTest(token){
+ let fileId=null,deleted=false;
+ try{
+  out.textContent="Sessão Google confirmada. Testando Worker, D1 e R2…";
+  const bytes=Uint8Array.from([137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,1,0,0,0,1,8,6,0,0,0,31,21,196,137,0,0,0,13,73,68,65,84,120,156,99,248,207,192,240,31,0,5,0,1,255,137,153,61,29,0,0,0,0,73,69,78,68,174,66,96,130]);
+  const form=new FormData();form.append("file",new Blob([bytes],{type:"image/png"}),"staging-test.png");form.append("tipo","avatar");
+  const up=await fetch(API+"/api/v1/files/upload",{method:"POST",headers:{Authorization:"Bearer "+token},body:form});
+  const upData=await up.json();if(!up.ok||!upData.file||!upData.file.id)throw new Error("Upload falhou (HTTP "+up.status+"): "+(upData.error||"resposta inválida"));
+  fileId=upData.file.id;log("Upload + registro D1: OK.");
+  const down=await fetch(API+"/api/v1/files/"+encodeURIComponent(fileId),{headers:{Authorization:"Bearer "+token},cache:"no-store"});
+  if(!down.ok)throw new Error("Download falhou (HTTP "+down.status+").");
+  const got=new Uint8Array(await down.arrayBuffer());if(got.length!==bytes.length||got.some((v,i)=>v!==bytes[i]))throw new Error("Integridade do arquivo: conteúdo diferente.");
+  log("Download e integridade byte a byte: OK.");
+  const del=await fetch(API+"/api/v1/files/"+encodeURIComponent(fileId),{method:"DELETE",headers:{Authorization:"Bearer "+token}});
+  const delData=await del.json();if(!del.ok||!delData.deleted)throw new Error("Exclusão falhou (HTTP "+del.status+").");
+  deleted=true;log("Exclusão do arquivo temporário: OK.");
+  const check=await fetch(API+"/api/v1/files/"+encodeURIComponent(fileId),{headers:{Authorization:"Bearer "+token},cache:"no-store"});
+  if(check.status!==404)throw new Error("Verificação pós-exclusão inesperada: HTTP "+check.status);
+  out.textContent="SUCESSO — fluxo de arquivos validado.\n"+out.textContent;
+ }catch(e){
+  log("FALHA: "+e.message);
+  if(fileId&&!deleted){try{const clean=await fetch(API+"/api/v1/files/"+encodeURIComponent(fileId),{method:"DELETE",headers:{Authorization:"Bearer "+token}});if(clean.ok)log("Limpeza automática do arquivo temporário: OK.");else log("ATENÇÃO: limpeza não confirmada (HTTP "+clean.status+").");}catch(_){log("ATENÇÃO: não foi possível confirmar a limpeza automática.");}}
+ }finally{
+  try{await supabase.auth.signOut({scope:"local"});}catch(_){}
+  try{sessionStorage.removeItem(STORAGE_KEY);}catch(_){}
+  btn.disabled=false;
+ }
+}
+btn.addEventListener("click",async()=>{
+ btn.disabled=true;out.textContent="Abrindo autenticação Google…";
+ const {error}=await supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.href.split("?")[0].split("#")[0]}});
+ if(error){out.textContent="Não foi possível iniciar o Google: "+error.message;btn.disabled=false;}
+});
+(async()=>{
+ const params=new URLSearchParams(location.search);
+ if(params.has("error")){out.textContent="Login não concluído: "+(params.get("error_description")||params.get("error"));return;}
+ const {data,error}=await supabase.auth.getSession();
+ if(error){out.textContent="Erro ao recuperar sessão: "+error.message;return;}
+ if(data.session&&data.session.access_token){btn.disabled=true;await runTest(data.session.access_token);}
+ else out.textContent="Pronto. Toque no botão para iniciar.";
+})().catch(e=>{out.textContent="Falha ao iniciar: "+(e.message||String(e));btn.disabled=false;});
+</script></body></html>
