@@ -22,7 +22,11 @@
       'entrel_approve_club_finish_v507',
       'entrel_approve_club_finish_v509',
       'entrel_approve_club_finish_v511',
-      'entrel_submit_club_finish_v511'
+      'entrel_submit_club_finish_v511',
+      'entrel_finish_club_v507',
+      'entrel_admin_finish_club_v511',
+      'entrel_repair_club_participants_v510',
+      'entrel_retry_pending_rewards_v510'
     ]);
 
     async function call(path, method, body) {
@@ -72,6 +76,18 @@
           });
         case 'entrel_submit_club_finish_v511':
           return call('/api/v1/club/finish-request', 'POST', { cycle_id: a.p_cycle_id });
+        case 'entrel_finish_club_v507':
+          return call('/api/v1/admin/club/finish-participant', 'POST', {
+            participant_id: a.p_participant_id, user_id: a.p_user_id
+          });
+        case 'entrel_admin_finish_club_v511':
+          return call('/api/v1/admin/club/finish-participant', 'POST', {
+            ref: a.p_ref, cycle_id: a.p_cycle_id
+          });
+        case 'entrel_repair_club_participants_v510':
+          return call('/api/v1/admin/club/repair-participants', 'POST', {});
+        case 'entrel_retry_pending_rewards_v510':
+          return call('/api/v1/rewards/retry-pending', 'POST', { user_id: a.p_user_id || null });
         default:
           return originalRpc(name, args);
       }
