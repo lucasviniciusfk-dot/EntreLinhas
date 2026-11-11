@@ -44,10 +44,20 @@ test('R2 bytes and D1 metadata round-trip; another user cannot read or delete',a
   assert.equal((await rt.api('/api/v1/files/'+file.id,'bob','DELETE')).status,404);
   const down=await rt.api('/api/v1/files/'+file.id);assert.deepEqual(new Uint8Array(await down.arrayBuffer()),bytes);
   assert.equal((await rt.api('/api/v1/me','alice','PATCH',{foto_url:'cf-asset:'+file.id})).status,200);
+  assert.equal((await rt.api('/api/v1/files/'+file.id,'alice','DELETE')).status,409);
+  assert.equal((await rt.api('/api/v1/me','alice','PATCH',{foto_url:''})).status,200);
+  assert.equal((await rt.api('/api/v1/files/'+file.id,'alice','DELETE')).status,200);
   assert.equal((await rt.api('/api/v1/files/'+file.id,'alice','DELETE')).status,200);
   assert.equal((await rt.api('/api/v1/files/'+file.id)).status,404);
   const row=await rt.db.prepare('SELECT * FROM file_assets WHERE id=?').bind(file.id).first();assert.ok(row.deleted_at);
   assert.equal(await (await rt.mf.getR2Bucket('FILES')).head(row.object_key),null);
+});
+test('stale profile revision cannot overwrite a newer edit',async()=>{
+  const before=(await (await rt.api('/api/v1/me')).json()).profile;
+  await rt.api('/api/v1/me','alice','PATCH',{bio:'newer'});
+  const stale=await rt.mf.dispatchFetch('https://local.test/api/v1/me',{method:'PATCH',headers:{Authorization:'Bearer alice','Content-Type':'application/json','If-Match':before.atualizado_em},body:JSON.stringify({bio:'stale'})});
+  assert.equal(stale.status,409);
+  assert.equal((await rt.db.prepare('SELECT bio FROM usuarios WHERE id=?').bind('alice').first()).bio,'newer');
 });
 test('private album photo returns actual R2 bytes and metadata',async()=>{
   await rt.insert('clube_albuns',{id:'album',nome:'Encontro',ativo:1});

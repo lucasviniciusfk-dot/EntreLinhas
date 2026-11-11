@@ -260,12 +260,22 @@ btn.addEventListener("click",async()=>{
  }
  if(fileRoute&&request.method==="DELETE"){
   try{
-   const id=decodeURIComponent(fileRoute[1]),asset=await env.DB.prepare("SELECT id,object_key FROM file_assets WHERE id=? AND owner_id=? AND deleted_at IS NULL LIMIT 1").bind(id,uid).first();
+   const id=decodeURIComponent(fileRoute[1]),asset=await env.DB.prepare("SELECT id,object_key,deleted_at FROM file_assets WHERE id=? AND owner_id=? LIMIT 1").bind(id,uid).first();
    if(!asset)return json({ok:false,error:"Arquivo não encontrado."},404,headers);
+   if(!asset.deleted_at){
+    const [book,photo,avatar]=await Promise.all([
+     env.DB.prepare("SELECT id FROM book_file_assets WHERE asset_id=? AND deleted_at IS NULL LIMIT 1").bind(id).first(),
+     env.DB.prepare("SELECT id FROM clube_fotos WHERE storage_path=? AND origem_arquivo='r2-private-v1' AND COALESCE(ativo,1)=1 LIMIT 1").bind(id).first(),
+     env.DB.prepare("SELECT id FROM usuarios WHERE foto_url=? AND COALESCE(apagado,0)=0 AND COALESCE(conta_removida,0)=0 LIMIT 1").bind("cf-asset:"+id).first()
+    ]);
+    if(book||photo||avatar)return json({ok:false,error:"Arquivo ainda referenciado. Remova o vínculo antes de excluir."},409,headers);
+   }
    // Primeiro bloqueia o acesso no D1; se a exclusão do R2 falhar, o objeto fica inacessível pela API e pode ser limpo depois.
    const stamp=new Date().toISOString();
-   const result=await env.DB.prepare("UPDATE file_assets SET deleted_at=? WHERE id=? AND owner_id=? AND deleted_at IS NULL").bind(stamp,id,uid).run();
-   if(!result.meta||result.meta.changes!==1)return json({ok:false,error:"Não foi possível confirmar a remoção do arquivo."},409,headers);
+   if(!asset.deleted_at){
+    const result=await env.DB.prepare("UPDATE file_assets SET deleted_at=? WHERE id=? AND owner_id=? AND deleted_at IS NULL").bind(stamp,id,uid).run();
+    if(!result.meta||result.meta.changes!==1)return json({ok:false,error:"Não foi possível confirmar a remoção do arquivo."},409,headers);
+   }
    await env.FILES.delete(asset.object_key);
    return json({ok:true,deleted:true,id:id},200,headers);
   }catch(e){return json({ok:false,error:"Arquivo bloqueado para acesso; a limpeza do armazenamento pode precisar ser repetida."},500,headers);}
