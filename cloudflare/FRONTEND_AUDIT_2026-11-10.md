@@ -165,3 +165,12 @@ Verificação após commit: os cinco nomes não aparecem mais como casos encamin
 Ampliei o botão de teste da página `cloudflare-staging.html`: após login Google, executa nove requisições GET autenticadas e somente de leitura para perfil, livro atual do clube, biblioteca do clube, biblioteca pessoal, metas, leituras, notificações, chat e desafios. Cada resultado mostra HTTP, sucesso/falha e mensagem de erro; também é exibido no console e em um relatório na tela. Nenhuma escrita, recompensa ou alteração de dados é feita por essa bateria.
 
 Verificação realizada no código: as nove rotas estão presentes no teste e os resultados são contabilizados individualmente. A execução depende de abrir o preview, fazer login Google e clicar em **Testar perfil** (o botão foi mantido, embora agora execute a bateria). Até essa execução, os endpoints não estão declarados funcionalmente aprovados.
+
+
+## Marco 5/10 — validação do preview após as alterações dos marcos 2–4
+
+Consultei novamente o status combinado do commit atual do PR #2 (`a20c7fbcecb69b6a7365becdde4279d57ed2c1b4`). Os dois deploy previews reportaram `success`:
+- `netlify/imaginative-biscotti-5dfac8/deploy-preview`
+- `netlify/entrelinhasoff/deploy-preview`
+
+Os cinco arquivos esperados permanecem no PR, incluindo a página de staging, cliente API, adaptador RPC e auditoria. O PR segue draft e `mergeable=false`; nenhum merge foi feito. Este resultado valida publicação do preview para o commit consultado, não substitui o teste funcional autenticado no navegador nem aprova cutover.
