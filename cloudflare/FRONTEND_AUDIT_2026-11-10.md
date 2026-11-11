@@ -181,3 +181,10 @@ Os cinco arquivos esperados permanecem no PR, incluindo a página de staging, cl
 A inspeção do Worker confirmou que existem rotas autenticadas de leitura para `GET /api/v1/club/albums` e `GET /api/v1/club/albums/photos?album_id=...`. Ampliei a bateria do preview para testar a listagem de álbuns e, quando existir um álbum ativo, consultar até cinco fotos desse álbum. Quando não houver álbum ativo, a consulta de fotos é marcada como não aplicável, sem criar registros nem alterar dados.
 
 O teste usa o token da sessão Google/Supabase e a URL correta do Worker de staging. A alteração foi verificada estaticamente no arquivo; a execução real no navegador continua pendente.
+
+
+## Marco 7/10 — validação do conteúdo privado das fotos
+
+Ampliei o teste somente-leitura do clube: depois de listar álbuns e fotos, ele tenta baixar o conteúdo da primeira foto retornada pela rota autenticada `/api/v1/club/albums/photos/:id/content`. O resultado só é aprovado se a resposta HTTP for bem-sucedida, o corpo tiver bytes e o `Content-Type` for de imagem. Se o álbum não tiver fotos, o teste registra corretamente que essa verificação não se aplica. Nenhum arquivo é enviado, alterado ou removido.
+
+Commit da alteração: `31fd2c6e65d71011c9f6713b6920034d2e945ab8`. A validação foi estática; ainda depende de execução no navegador com a sessão Google real.
