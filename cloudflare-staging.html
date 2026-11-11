@@ -58,7 +58,7 @@ html,body{margin:0;min-height:100%;background:#101014;color:#f5f5f5;font:14px sy
         if(albums&&albums.ok){
           try{
             const token=(await client.auth.getSession()).data.session.access_token;
-            const albumResponse=await fetch('https://entrelinhas-api-staging.workers.dev/api/v1/club/albums?limit=1',{headers:{Authorization:'Bearer '+token},cache:'no-store'});
+            const albumResponse=await fetch('https://entrelinhas-api-staging.lucasviniciusk.workers.dev/api/v1/club/albums?limit=1',{headers:{Authorization:'Bearer '+token},cache:'no-store'});
             const albumPayload=await albumResponse.json();
             const album=albumPayload.items&&albumPayload.items[0];
             if(album&&album.id){
@@ -66,7 +66,7 @@ html,body{margin:0;min-height:100%;background:#101014;color:#f5f5f5;font:14px sy
               const photoPayload=await photoResponse.json();
               results.push({route:'/api/v1/club/albums/photos?album_id='+album.id,label:'Fotos do álbum',status:photoResponse.status,ok:photoResponse.ok&&photoPayload.ok===true,error:photoPayload.error||null});
             }else{
-              results.push({route:'/api/v1/club/albums/photos',label:'Fotos do álbum',status:200,ok:true,error:'Ignorado: não há álbum ativo para consultar.'});
+              results.push({route:'/api/v1/club/albums/photos',label:'Fotos do álbum',status:0,ok:true,error:'Não aplicável: não há álbum ativo para consultar.'});
             }
           }catch(e){results.push({route:'/api/v1/club/albums/photos',label:'Fotos do álbum',status:0,ok:false,error:e.message||String(e)});}
         }
