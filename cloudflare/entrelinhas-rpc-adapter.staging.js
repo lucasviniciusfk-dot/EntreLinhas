@@ -57,12 +57,8 @@
           return call('/api/v1/admin/requests/approve-book-finish', 'POST', {
             request_id: a.p_request_id, reason: a.p_reason
           });
-        case 'entrel_approve_club_finish_v507':
-        case 'entrel_approve_club_finish_v509':
-        case 'entrel_approve_club_finish_v511':
-          return call('/api/v1/admin/requests/approve-club-finish', 'POST', {
-            request_id: a.p_request_id, reason: a.p_reason
-          });
+        // As três versões desta RPC têm regras de aprovação/recompensa distintas.
+        // Permanecem no Supabase até existir paridade comprovada no Worker.
         case 'entrel_repair_club_participants_v510':
           return call('/api/v1/admin/club/repair-participants', 'POST', a);
         case 'entrel_retry_pending_rewards_v510':
@@ -72,12 +68,8 @@
             request_id: a.p_request_id, user_id: a.p_user_id,
             xp: a.p_xp, points: a.p_points
           });
-        case 'entrel_submit_club_finish_v509':
-          return call('/api/v1/club/finish-request', 'POST', {
-            cycle_id: global.__ENTREL_ACTIVE_CLUB_CYCLE_ID__ || ''
-          });
-        case 'entrel_submit_club_finish_v511':
-          return call('/api/v1/club/finish-request', 'POST', { cycle_id: a.p_cycle_id });
+        // A finalização do clube ainda não tem paridade funcional comprovada.
+        // Manter a RPC original no Supabase evita alterar ciclo/recompensas.
         default:
           return originalRpc(name, args);
       }
