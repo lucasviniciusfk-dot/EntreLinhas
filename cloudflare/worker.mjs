@@ -105,7 +105,7 @@ btn.addEventListener("click",async()=>{
   try{
    const body=await readBody(request),kind=validText(body.kind,10,"Tipo",true).toLowerCase(),period=validText(body.period_key,10,"Período",true);
    if(kind!=="weekly"&&kind!=="monthly")return json({ok:false,error:"Tipo de meta periódica inválido."},400,headers);
-   let start,end;
+   let start,end,weeklyStart=period;
    if(kind==="weekly"){
     if(!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(period)||Number.isNaN(Date.parse(period+"T00:00:00Z"))||new Date(period+"T00:00:00Z").toISOString().slice(0,10)!==period)return json({ok:false,error:"Período semanal inválido."},400,headers);
     start=new Date(period+"T00:00:00Z");end=new Date(start.getTime()+7*86400000);
@@ -113,11 +113,16 @@ btn.addEventListener("click",async()=>{
     if(!/^[0-9]{4}-[0-9]{2}$/.test(period)||Number.isNaN(Date.parse(period+"-01T00:00:00Z"))||new Date(period+"-01T00:00:00Z").toISOString().slice(0,7)!==period)return json({ok:false,error:"Período mensal inválido."},400,headers);
     start=new Date(period+"-01T00:00:00Z");end=new Date(Date.UTC(start.getUTCFullYear(),start.getUTCMonth()+1,1));
    }
-   // O RPC original interpreta os limites de período no fuso America/Manaus (UTC-4).
-   const from=new Date(start.getTime()+4*3600000).toISOString(),to=new Date(end.getTime()+4*3600000).toISOString();
-   const rewardRow=await env.DB.prepare("SELECT valor FROM app_configuracoes WHERE chave=? AND usuario_id IN ('global','00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000181') ORDER BY atualizado_em DESC LIMIT 1").bind(kind==="weekly"?"meta_semanal":"meta_mensal").first();
+   const rewardRow=await env.DB.prepare("SELECT valor,atualizado_em FROM app_configuracoes WHERE chave=? AND usuario_id IN ('global','00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000181') ORDER BY atualizado_em DESC LIMIT 1").bind(kind==="weekly"?"meta_semanal":"meta_mensal").first();
    const rewardConfig=parseObject(rewardRow&&rewardRow.valor);
    if(!rewardRow||rewardConfig.active===false||rewardConfig.ativa===false)return json({ok:false,applied:false,reason:"goal_inactive"},200,headers);
+   if(kind==="weekly"){
+    const monday=new Date(period+"T00:00:00Z"),sunday=new Date(monday.getTime()+6*86400000),updated=Number(rewardConfig.updatedAt)||Date.parse(rewardConfig.atualizado_em||rewardRow.atualizado_em||"");
+    if(Number.isFinite(updated)&&updated>monday.getTime()&&updated<=sunday.getTime()+86400000){const parts=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Manaus",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date(updated)),date={};parts.forEach(x=>date[x.type]=x.value);const changed=date.year+"-"+date.month+"-"+date.day;if(changed>period&&changed<=sunday.toISOString().slice(0,10))weeklyStart=changed;}
+    start=new Date(weeklyStart+"T00:00:00Z");
+   }
+   // O RPC original interpreta os limites de período no fuso America/Manaus (UTC-4).
+   const from=new Date(start.getTime()+4*3600000).toISOString(),to=new Date(end.getTime()+4*3600000).toISOString();
    let target=Math.floor(Number(rewardConfig.target??rewardConfig.meta??rewardConfig.valor));
    const xpAdd=Math.max(0,Math.floor(Number(rewardConfig.rewardXp??rewardConfig.xp??rewardConfig.xp_recompensa)||0)),pointsAdd=Math.max(0,Math.floor(Number(rewardConfig.rewardPoints??rewardConfig.pontos??rewardConfig.estrelinhas)||0));
    if(!Number.isFinite(target)||target<1)return json({ok:false,error:"Configuração de meta inválida."},422,headers);
@@ -125,7 +130,7 @@ btn.addEventListener("click",async()=>{
    if(kind==="weekly"){
     const type=String(rewardConfig.tipo||rewardConfig.type||"paginas").toLowerCase();
     if(type.includes("pagina")){
-     const verified=await env.DB.prepare("SELECT COALESCE(SUM(MAX(0,paginas_lidas)),0) AS total FROM metas_diarias WHERE usuario_id=? AND data>=? AND data<?").bind(uid,period,end.toISOString().slice(0,10)).first();
+     const verified=await env.DB.prepare("SELECT COALESCE(SUM(MAX(0,paginas_lidas)),0) AS total FROM metas_diarias WHERE usuario_id=? AND data>=? AND data<?").bind(uid,weeklyStart,end.toISOString().slice(0,10)).first();
      current=Number(verified&&verified.total)||0;
     }else if(type.includes("livro")){
      const verified=await env.DB.prepare("SELECT COUNT(DISTINCT COALESCE(NULLIF(livro_id,''),NULLIF(json_extract(dados,'$.book_id'),''),id)) AS total FROM solicitacoes_validacao WHERE usuario_id=? AND lower(status) IN ('approved','aprovado','aprovada') AND COALESCE(origem,'') NOT LIKE 'auto_reward_%' AND COALESCE(revisado_em,created_at)>=? AND COALESCE(revisado_em,created_at)<? AND (lower(tipo) LIKE '%finish%' OR lower(tipo) LIKE '%finaliz%')").bind(uid,from,to).first();
@@ -308,6 +313,21 @@ btn.addEventListener("click",async()=>{
   if(request.method==="GET"&&url.pathname==="/api/v1/library/books"){const limit=clampInt(url.searchParams.get("limit"),200,1,500),cursor=url.searchParams.get("before"),cursorId=url.searchParams.get("before_id");if((cursor&&!cursorId)||(!cursor&&cursorId))return json({ok:false,error:"Use before e before_id juntos para paginar."},400,headers);const sql="SELECT id,usuario_id,livro_id,titulo,autor,genero,paginas,capa,capa_url,epub_storage_path,pagina_atual,progresso,epub_cfi,status,ativo,dados,publico,criado_em,atualizado_em,finalizado_em FROM livros_pessoais WHERE usuario_id=? AND COALESCE(ativo,1)=1 AND (? IS NULL OR atualizado_em < ? OR (atualizado_em = ? AND id < ?)) ORDER BY atualizado_em DESC,id DESC LIMIT ?";const r=await env.DB.prepare(sql).bind(uid,cursor,cursor,cursor,cursorId,limit).all();const items=r.results||[],last=items.length?items[items.length-1]:null;return json({ok:true,items,count:items.length,limit,nextCursor:last?{before:last.atualizado_em,before_id:last.id}:null},200,headers);}
   if(request.method==="GET"&&url.pathname==="/api/v1/reading"){const limit=clampInt(url.searchParams.get("limit"),200,1,1000);const r=await env.DB.prepare("SELECT * FROM leituras WHERE usuario_id=? ORDER BY atualizado_em DESC LIMIT ?").bind(uid,limit).all();return json({ok:true,items:r.results||[],count:(r.results||[]).length,limit},200,headers);}
   if(request.method==="GET"&&url.pathname==="/api/v1/goals"){const limit=clampInt(url.searchParams.get("daily_limit"),90,1,366);const [s,d]=await Promise.all([env.DB.prepare("SELECT * FROM metas_usuarios WHERE usuario_id=? LIMIT 1").bind(uid).first(),env.DB.prepare("SELECT * FROM metas_diarias WHERE usuario_id=? ORDER BY data DESC LIMIT ?").bind(uid,limit).all()]);return json({ok:true,summary:s||null,daily:d.results||[],dailyCount:(d.results||[]).length},200,headers);}
+  if(request.method==="GET"&&url.pathname==="/api/v1/progress/weekly"){
+   const period=url.searchParams.get("period")||"";
+   if(!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(period)||Number.isNaN(Date.parse(period+"T00:00:00Z"))||new Date(period+"T00:00:00Z").toISOString().slice(0,10)!==period)return json({ok:false,error:"Período semanal inválido. Use AAAA-MM-DD."},400,headers);
+   const cfg=await env.DB.prepare("SELECT valor,atualizado_em FROM app_configuracoes WHERE chave='meta_semanal' AND usuario_id IN ('global','00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000181') ORDER BY atualizado_em DESC LIMIT 1").first(),goal=parseObject(cfg&&cfg.valor),type=String(goal.tipo||goal.type||"paginas").toLowerCase();
+   const monday=new Date(period+"T00:00:00Z"),weekEnd=new Date(monday.getTime()+6*86400000),last=weekEnd.toISOString().slice(0,10),updated=Number(goal.updatedAt)||Date.parse(goal.atualizado_em||cfg&&cfg.atualizado_em||"");let start=period;
+   if(Number.isFinite(updated)&&updated>monday.getTime()&&updated<=weekEnd.getTime()+86400000){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Manaus',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(updated)),date={};parts.forEach(x=>date[x.type]=x.value);const changed=date.year+'-'+date.month+'-'+date.day;if(changed>period&&changed<=last)start=changed;}
+   const next=new Date(weekEnd.getTime()+86400000).toISOString().slice(0,10),from=new Date(Date.parse(start+"T00:00:00Z")+4*3600000).toISOString(),to=new Date(Date.parse(next+"T00:00:00Z")+4*3600000).toISOString();
+   const [pageRows,booksRow]=await Promise.all([
+    env.DB.prepare("SELECT COALESCE(SUM(MAX(0,COALESCE(paginas_lidas,0))),0) AS pages,COUNT(DISTINCT CASE WHEN COALESCE(paginas_lidas,0)>0 OR concluida=1 OR concluida IS TRUE THEN data END) AS days FROM metas_diarias WHERE usuario_id=? AND data>=? AND data<?").bind(uid,start,next).first(),
+    env.DB.prepare("SELECT COUNT(DISTINCT COALESCE(NULLIF(livro_id,''),NULLIF(json_extract(dados,'$.book_id'),''),id)) AS books FROM solicitacoes_validacao WHERE usuario_id=? AND lower(status) IN ('approved','aprovado','aprovada') AND COALESCE(origem,'') NOT LIKE 'auto_reward_%' AND COALESCE(revisado_em,created_at)>=? AND COALESCE(revisado_em,created_at)<? AND (lower(tipo) LIKE '%finish%' OR lower(tipo) LIKE '%finaliz%')").bind(uid,from,to).first()
+   ]);
+   const pages=Number(pageRows&&pageRows.pages)||0,days=Number(pageRows&&pageRows.days)||0,books=Number(booksRow&&booksRow.books)||0,target=Math.max(1,Math.floor(Number(goal.target??goal.meta??goal.valor)||70));
+   const current=type.includes('manual')?0:type.includes('livro')?books:type.includes('dia')?days:pages;
+   return json({ok:true,period,start,end:last,type,current,target,pages,days,books,complete:!type.includes('manual')&&current>=target,active:goal.active!==false&&goal.ativa!==false},200,headers);
+  }
   if(request.method==="GET"&&url.pathname==="/api/v1/progress/monthly"){
    const period=url.searchParams.get("period")||"";
    if(!/^[0-9]{4}-[0-9]{2}$/.test(period)||Number.isNaN(Date.parse(period+"-01T00:00:00Z"))||new Date(period+"-01T00:00:00Z").toISOString().slice(0,7)!==period)return json({ok:false,error:"Período mensal inválido. Use AAAA-MM."},400,headers);

@@ -15,9 +15,25 @@ export function handleSettings(request,env,context){
     }
     const scope=route[1],key=text(decodeURIComponent(route[2]||''),240,'Chave',true);
     if(!scope)throw new DomainError('Operação de configurações inválida.');
+    if(!['user','global'].includes(scope))throw new DomainError('Escopo de configurações inválido.');
+    const owner=scope==='global'?'global':uid;
+    if(request.method==='GET'){
+      if(scope==='user'&&key!=='preferences'&&!/^(reader_|preferences_|mural_feed_|book_pref_)/.test(key))throw new DomainError('Esta configuração exige uma operação específica.',403);
+      if(key==='preferences'&&scope==='user'){
+        const current=await first(env.DB,'SELECT * FROM app_configuracoes WHERE usuario_id=?',uid);
+        return reply(headers,{row:current?{id:current.id,usuario_id:uid,configuracoes:parse(current.configuracoes),atualizado_em:current.atualizado_em}:null});
+      }
+      const current=await first(env.DB,'SELECT * FROM scoped_settings WHERE scope=? AND owner_id=? AND key=?',scope,owner,key);
+      if(current)return reply(headers,{row:{id:current.legacy_id||('setting:'+scope+':'+owner+':'+key),usuario_id:current.legacy_user_id||owner,chave:key,valor:parse(current.value),ativo:!!current.active,atualizado_em:current.updated_at}});
+      const legacy=scope==='global'
+        ?await first(env.DB,"SELECT * FROM app_configuracoes WHERE chave=? AND (usuario_id='global' OR usuario_id LIKE '00000000-0000-0000-0000-000000000%') ORDER BY COALESCE(atualizado_em,criado_em,'') DESC,CASE WHEN usuario_id='00000000-0000-0000-0000-000000000000' THEN 0 WHEN usuario_id='00000000-0000-0000-0000-000000000181' THEN 1 WHEN usuario_id='global' THEN 2 ELSE 3 END LIMIT 1",key)
+        :await first(env.DB,'SELECT * FROM app_configuracoes WHERE usuario_id=? AND chave=? ORDER BY COALESCE(atualizado_em,criado_em,\'\') DESC LIMIT 1',uid,key);
+      if(!legacy)return reply(headers,{row:null});
+      return reply(headers,{row:{id:legacy.id,usuario_id:legacy.usuario_id,chave:key,valor:parse(legacy.valor),configuracoes:parse(legacy.configuracoes),ativo:legacy.ativo!==0,atualizado_em:legacy.atualizado_em}});
+    }
     if(scope==='global')requireAdmin(context);
     if(protectedKey(key))throw new DomainError('Marcadores de recompensa são controlados pelo servidor.',403);
-    const b=request.method==='DELETE'?{}:await body(request,524288),owner=scope==='global'?'global':uid,now=stamp();
+    const b=request.method==='DELETE'?{}:await body(request,524288),now=stamp();
     if(key==='preferences'){
       if(scope!=='user')throw new DomainError('Preferências pertencem à conta.',403);
       const current=await first(env.DB,'SELECT * FROM app_configuracoes WHERE usuario_id=?',uid),prefs={...object(current?.configuracoes)};

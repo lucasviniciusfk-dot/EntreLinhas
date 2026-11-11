@@ -69071,8 +69071,8 @@ html[data-ent-theme="escuro"] .entrel-v455-admin-kpis div,html[data-ent-theme="e
   async function checkWeekly(id,goal,progress,source,forcedPeriod){if(!id||!goal.active)return false;var p=progress||await queryMember(id,goal),period=forcedPeriod||p;if(!p.complete&&source!=='manual')return false;if(await hasClaim(id,period.key))return false;var ok=await insertClaim(id,period.key,{goalId:goal.goalId,source:source||'automatic',progress:p,rewardXp:goal.rewardXp,rewardPoints:goal.rewardPoints});if(!ok)return false;try{await reward(id,goal,period,source);return true}catch(e){try{var c=db(),k=claimKey(id,period.key);if(c)await c.from('app_configuracoes').delete().eq('usuario_id',id).eq('chave',k);localStorage.removeItem('entrel_'+k)}catch(x){}throw e}}
   function parseClaim(r){var v=configValue(r)||{},key=s(r.chave),weekly=key.indexOf(CLAIM_PREFIX)===0,monthly=key.indexOf('meta_mensal_claim_')===0||key.indexOf('reward_monthly_')===0;if(!weekly&&!monthly)return null;var period=s(v.period||v.month||'');if(!period){var m=key.match(/(20\d{2}-\d{2}(?:-\d{2})?)/);period=m?m[1]:''}return {id:s(r.id||key),userId:s(r.usuario_id||r.user_id),type:weekly?'weekly':'monthly',period:period,at:s(r.atualizado_em||v.createdAt||r.created_at||''),xp:n(v.rewardXp),points:n(v.rewardPoints),source:s(v.source||v.reason||'automática')}}
   async function loadClaims(id,all){var c=db();if(!c)return [];try{var q=c.from('app_configuracoes').select('usuario_id,chave,valor,ativo,atualizado_em,created_at').like('chave','%claim%').order('atualizado_em',{ascending:false}).limit(all?1000:120);if(!all)q=q.eq('usuario_id',id);var r=await q;if(r.error)return [];var seen={};return (r.data||[]).map(parseClaim).filter(function(x){if(!x)return false;var k=x.userId+'|'+x.type+'|'+x.period;if(seen[k])return false;seen[k]=1;return true})}catch(e){return []}}
-  async function loadConfig(force){var id=uid();if(!force&&S.weekly&&Date.now()-S.at<TTL)return S.weekly;var c=db(),g=null;if(c)try{var r=await c.from('app_configuracoes').select('usuario_id,chave,valor,ativo,atualizado_em').eq('usuario_id',GLOBAL_ID).eq('chave',CONFIG_KEY).order('atualizado_em',{ascending:false}).limit(1);if(!r.error&&r.data&&r.data.length)g=normalizeWeekly(configValue(r.data[0]))}catch(e){}if(!g)try{g=normalizeWeekly(JSON.parse(localStorage.getItem('entrel_meta_semanal_v455')||'null'))}catch(e){}S.weekly=g||defaultWeekly();try{localStorage.setItem('entrel_meta_semanal_v455',JSON.stringify(S.weekly))}catch(e){}return S.weekly}
-  async function loadMember(force){var id=uid();if(!id)return;if(S.loading)return;if(!force&&S.loaded&&Date.now()-S.at<TTL)return;if(!force&&!S.loaded&&loadCache(id))return;S.loading=true;S.error='';try{var g=await loadConfig(force);var all=await Promise.all([queryMember(id,g),loadClaims(id,false)]);S.progress=all[0];S.claims=all[1];S.at=Date.now();S.loaded=true;saveCache(id);/* v491: conclusão atualiza apenas o progresso; XP e Estrelinhas dependem de aprovação administrativa explícita. */}catch(e){S.error=s(e&&e.message||e);if(!S.loaded)loadCache(id)}S.loading=false}
+  async function loadConfig(force){var id=uid();if(!force&&S.weekly&&Date.now()-S.at<TTL)return S.weekly;var g=null;if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_settings')){var response=await window.EntreLinhasDataCanaries.getGlobalSetting(CONFIG_KEY);if(!response||!response.ok)throw new Error('A configuração semanal não foi confirmada no Cloudflare.');g=response.row&&normalizeWeekly(configValue(response.row));}else{var c=db();if(c)try{var r=await c.from('app_configuracoes').select('usuario_id,chave,valor,ativo,atualizado_em').eq('usuario_id',GLOBAL_ID).eq('chave',CONFIG_KEY).order('atualizado_em',{ascending:false}).limit(1);if(!r.error&&r.data&&r.data.length)g=normalizeWeekly(configValue(r.data[0]))}catch(e){}}if(!g)try{g=normalizeWeekly(JSON.parse(localStorage.getItem('entrel_meta_semanal_v455')||'null'))}catch(e){}S.weekly=g||defaultWeekly();try{localStorage.setItem('entrel_meta_semanal_v455',JSON.stringify(S.weekly))}catch(e){}return S.weekly}
+  async function loadMember(force){var id=uid();if(!id)return;if(S.loading)return;if(!force&&S.loaded&&Date.now()-S.at<TTL)return;if(!force&&!S.loaded&&loadCache(id))return;S.loading=true;S.error='';try{var g=await loadConfig(force);if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_settings')&&window.EntreLinhasDataCanaries.enabled('cf_library')){var period=weekInfo(),response=await window.EntreLinhasDataCanaries.getWeeklyProgress(period.key);if(!response||!response.ok)throw new Error('O progresso semanal não foi confirmado no Cloudflare.');S.progress={key:response.period,start:response.start,end:response.end,label:dateBR(response.start)+' — '+dateBR(response.end),current:n(response.current),target:n(response.target)||g.target,pct:Math.min(100,Math.round(n(response.current)/Math.max(1,n(response.target)||g.target)*100)),complete:!!response.complete,pages:n(response.pages),days:n(response.days),books:n(response.books)};S.claims=await loadClaims(id,false)}else{var all=await Promise.all([queryMember(id,g),loadClaims(id,false)]);S.progress=all[0];S.claims=all[1]}S.at=Date.now();S.loaded=true;saveCache(id);/* v491: conclusão atualiza apenas o progresso; XP e Estrelinhas dependem de aprovação administrativa explícita. */}catch(e){S.error=s(e&&e.message||e);if(!S.loaded)loadCache(id)}S.loading=false}
   function unit(type,value){return value+' '+(type==='livros'?(value===1?'livro':'livros'):type==='dias'?(value===1?'dia':'dias'):'páginas')}
   function weeklyBlock(){var g=S.weekly||defaultWeekly(),p=S.progress||{current:0,target:g.target,pct:0,complete:false,label:weekInfo().label};if(!g.active)return '<div class="goal-block-v185242 entrel-v455-weekly"><div class="goal-title"><b>🗓️ Meta da Semana</b><span class="badge">Inativa</span></div><p class="muted">A administração ainda não ativou uma meta semanal.</p></div>';return '<div class="goal-block-v185242 entrel-v455-weekly"><div class="goal-title"><b>🗓️ '+esc(g.title)+'</b><span class="badge">'+(p.complete?'✓':n(p.pct)+'%')+'</span></div><div class="goal-line"><span>Meta:</span><strong>'+esc(unit(g.type,g.target))+'</strong></div><div class="goal-line"><span>Semana:</span><strong>'+esc(unit(g.type,n(p.current)))+'</strong></div><div class="progress"><span style="width:'+Math.min(100,n(p.pct))+'%"></span></div>'+(p.complete?'<div class="goal-complete-v185242">🎉 Meta semanal concluída</div>':'<span class="goal-reward-v185242">Recompensa: +'+n(g.rewardXp)+' XP e +'+n(g.rewardPoints)+' Estrelinhas</span>')+'<div class="entrel-v455-goal-meta"><span>'+esc(p.label||weekInfo().label)+'</span>'+(g.type==='paginas'?'<span>'+n(p.days||0)+' dia(s) de leitura</span>':'')+'</div><div class="entrel-v455-goal-actions"><button class="btn small secondary" onclick="entrelV455OpenHistory()">Histórico</button><button class="btn small secondary" onclick="openValidationRequestV18711(\'weekly\')">Validar leitura externa</button></div></div>'}
   function transformHome(html){try{var t=document.createElement('template');t.innerHTML=s(html);var card=t.content.querySelector('.goals-unified-v185242');if(!card)return s(html);var old=card.querySelector('.entrel-v455-weekly');if(old)old.remove();var blocks=card.querySelectorAll('.goal-block-v185242'),week=document.createElement('div');week.innerHTML=weeklyBlock();var node=week.firstElementChild;if(blocks.length>1)card.insertBefore(node,blocks[1]);else card.appendChild(node);var sub=card.querySelector('.goals-head p.muted');if(sub)sub.textContent='Meta diária, semanal e mensal em um só lugar';return t.innerHTML}catch(e){console.warn('[v455 home]',e);return s(html)}}
@@ -69199,6 +69199,14 @@ body.ent-theme-escuro .goals-unified-v185242.entrel-v456-compact .entrel-v456-hi
     T.loading=true;
     try{
       var goal=normalizeWeekly((S&&S.weekly)||defaultWeekly());
+      if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_settings')&&window.EntreLinhasDataCanaries.enabled('cf_library')){
+        var globalConfig=await window.EntreLinhasDataCanaries.getGlobalSetting('meta_semanal');if(!globalConfig||!globalConfig.ok)throw new Error('A meta semanal não foi confirmada no Cloudflare.');
+        goal=normalizeWeekly(globalConfig.row&&configValue(globalConfig.row)||goal);S.weekly=goal;
+        var cloudPeriod=periodForGoal(goal),weekly=await window.EntreLinhasDataCanaries.getWeeklyProgress(cloudPeriod.key);if(!weekly||!weekly.ok)throw new Error('O progresso semanal não foi confirmado no Cloudflare.');
+        T.week={key:weekly.period,start:weekly.start,end:weekly.end,label:dateBR(weekly.start)+' — '+dateBR(weekly.end),current:n(weekly.current),target:n(weekly.target)||goal.target,pct:Math.min(100,Math.round(n(weekly.current)/Math.max(1,n(weekly.target)||goal.target)*100)),complete:!!weekly.complete,pages:n(weekly.pages),days:n(weekly.days),books:n(weekly.books)};S.progress=T.week;
+        var goalSnapshot=await window.EntreLinhasDataCanaries.readGoalProgress();if(goalSnapshot&&goalSnapshot.ok)T.historyDaily=(goalSnapshot.daily||[]).filter(function(row){return (row.concluida===true||row.concluida===1)}).slice(0,10).map(function(row){return {date:s(row.data).slice(0,10),pages:n(row.paginas_lidas),done:true}});else T.historyDaily=[];
+        T.loaded=true;T.lastAt=Date.now();T.loading=false;return;
+      }
       var c=db();
       if(c){
         try{
@@ -73323,6 +73331,7 @@ albumLockedV425.__v483=true;
   }
 
   async function recordPageBatch(item){
+    if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_library'))return;
     var uid=await authUid();if(!uid)return;var book=localBook(item.bookId);if(!book)return;var before=Math.max(0,Math.floor(n(item.before))),after=Math.max(0,Math.floor(n(item.after)));if(after<=before)return;
     var row=await persistBookProgress(uid,book,after),key=s(row&&(row.livro_id||row.id)||fingerprint(book)||onlineBookId(book)||book.id),date=requestDate(null),target=await goalTarget(uid),day=await dailyRow(uid,date,target);if(day.concluida===true){if(!day.recompensada&&/leitor|reader|epub|auto_pending_admin/i.test(s(day.origem||'')))await awardDaily(uid,date,day);return}var books=parseObj(day.livros),bi=parseObj(books[key]),serverLast=Math.max(n(bi.lastPage),before),gained=Math.max(0,after-serverLast);if(gained<=0)return;
     bi.lastPage=Math.max(after,serverLast+gained);bi.gained=n(bi.gained)+gained;bi.updatedAt=nowIso();bi.reason=item.reason||'reader_v483';books[key]=bi;var pages=Math.min(target,n(day.paginas_lidas)+gained),stamp=nowIso();
@@ -74168,10 +74177,16 @@ albumLockedV425.__v483=true;
     try{if(data&&data.screen==='home')renderSafe()}catch(e){}
     return {weekly:STATE.weekly,monthly:STATE.monthly};
   }
+  function cloudflareSettings(){try{return !!(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_settings'))}catch(e){return false}}
+  function readCloudflareGoalRow(key,owner,response){if(!response||!response.ok)throw new Error('A meta '+key+' não foi confirmada no Cloudflare.');if(!response.row)return null;return Object.assign({},response.row,{usuario_id:owner,chave:key})}
   async function readCanonicalGoals(force){
     if(STATE.loading)return STATE.loading;
     if(!force&&STATE.at&&Date.now()-STATE.at<REFRESH_TTL)return Promise.resolve({weekly:STATE.weekly,monthly:STATE.monthly});
     STATE.loading=(async function(){
+      if(cloudflareSettings()){
+        var cf=window.EntreLinhasDataCanaries,responses=await Promise.all([cf.getGlobalSetting(WEEKLY_KEY),cf.getGlobalSetting(MONTHLY_KEY)]);
+        return applyGoals([readCloudflareGoalRow(WEEKLY_KEY,WEEKLY_OWNER,responses[0]),readCloudflareGoalRow(MONTHLY_KEY,MONTHLY_OWNER,responses[1])].filter(Boolean));
+      }
       var c=db();if(!c)return {weekly:STATE.weekly,monthly:STATE.monthly};
       var r=await c.from(CONFIG_TABLE).select('usuario_id,chave,valor,ativo,atualizado_em').in('usuario_id',[WEEKLY_OWNER,MONTHLY_OWNER]).in('chave',[WEEKLY_KEY,MONTHLY_KEY]).limit(8);
       if(r.error)throw r.error;
@@ -74183,6 +74198,13 @@ albumLockedV425.__v483=true;
     var c=db();if(!c)return null;var r=await c.from(CONFIG_TABLE).select('usuario_id,chave,valor,ativo,atualizado_em').eq('usuario_id',owner).eq('chave',key).order('atualizado_em',{ascending:false}).limit(1);if(r.error)throw r.error;return (r.data||[])[0]||null;
   }
   async function writeCanonicalConfig(owner,key,value){
+    if(cloudflareSettings()){
+      if(key!==WEEKLY_KEY&&key!==MONTHLY_KEY)throw new Error('Esta gravação global não está liberada neste canário.');
+      var cf=window.EntreLinhasDataCanaries,saved=await cf.saveGlobalSetting(key,value);if(!saved||!saved.ok)throw new Error('O Cloudflare não confirmou a nova configuração.');
+      var response=await cf.getGlobalSetting(key),verified=readCloudflareGoalRow(key,owner,response),v=configValue(verified);
+      if(!verified||!v||s(v.goalId)!==s(value.goalId)||n(v.target!=null?v.target:(v.meta!=null?v.meta:v.valor))!==n(value.target!=null?value.target:(value.meta!=null?value.meta:value.valor)))throw new Error('O Cloudflare não confirmou a nova configuração.');
+      return verified;
+    }
     var c=db();if(!c)throw new Error('Supabase indisponível.');var existing=await exactConfig(owner,key),payload={usuario_id:owner,chave:key,valor:value,ativo:true,atualizado_em:now()},r;
     if(existing)r=await c.from(CONFIG_TABLE).update({valor:value,ativo:true,atualizado_em:payload.atualizado_em}).eq('usuario_id',owner).eq('chave',key).select('usuario_id,chave,valor,ativo,atualizado_em').limit(1);
     else r=await c.from(CONFIG_TABLE).insert(payload).select('usuario_id,chave,valor,ativo,atualizado_em').limit(1);
@@ -74204,7 +74226,7 @@ albumLockedV425.__v483=true;
     if(!isAdmin())return info('Acesso negado','Somente a administração pode alterar a meta semanal.');
     try{
       var g=normalizeWeekly({title:(document.getElementById('v455Title')||{}).value,type:(document.getElementById('v455Type')||{}).value,target:n((document.getElementById('v455Target')||{}).value),active:(document.getElementById('v455Active')||{}).value==='true',rewardXp:n((document.getElementById('v455Xp')||{}).value),rewardPoints:n((document.getElementById('v455Points')||{}).value),description:(document.getElementById('v455Desc')||{}).value,goalId:'meta_semanal_'+Date.now(),updatedAt:Date.now()});
-      await writeCanonicalConfig(WEEKLY_OWNER,WEEKLY_KEY,g);applyWeekly(g);STATE.at=Date.now();closeSafe();renderSafe();info('Meta semanal salva','A nova quantidade e a recompensa foram confirmadas no Supabase.');
+      await writeCanonicalConfig(WEEKLY_OWNER,WEEKLY_KEY,g);applyWeekly(g);STATE.at=Date.now();closeSafe();renderSafe();info('Meta semanal salva','A nova quantidade e a recompensa foram confirmadas no '+(cloudflareSettings()?'Cloudflare.':'Supabase.'));
     }catch(e){info('Erro ao salvar meta semanal',s(e&&e.message||e))}
   };
   try{entrelV455SaveWeekly=window.entrelV455SaveWeekly}catch(e){}
@@ -74213,7 +74235,7 @@ albumLockedV425.__v483=true;
     if(!isAdmin())return info('Acesso negado','Somente a administração pode alterar a meta mensal.');
     try{
       var g=normalizeMonthly({titulo:(document.getElementById('mmTitle185')||{}).value||'Meta do Mês',tipo:(document.getElementById('mmType185')||{}).value||'livros',meta:n((document.getElementById('mmMeta185')||{}).value)||1,ativa:s((document.getElementById('mmAtiva185')||{}).value||'true')==='true',inicio:(document.getElementById('mmInicio185')||{}).value||null,fim:(document.getElementById('mmFim185')||{}).value||null,xp:n((document.getElementById('mmXp185')||{}).value),pontos:n((document.getElementById('mmPts185')||{}).value),descricao:(document.getElementById('mmDesc185')||{}).value||'',goalId:'meta_mensal_'+Date.now(),updatedAt:Date.now(),atualizado_em:now()});
-      await writeCanonicalConfig(MONTHLY_OWNER,MONTHLY_KEY,g);applyMonthly(g);STATE.at=Date.now();closeSafe();renderSafe();info('Meta mensal salva','A nova quantidade e a recompensa foram confirmadas no Supabase.');
+      await writeCanonicalConfig(MONTHLY_OWNER,MONTHLY_KEY,g);applyMonthly(g);STATE.at=Date.now();closeSafe();renderSafe();info('Meta mensal salva','A nova quantidade e a recompensa foram confirmadas no '+(cloudflareSettings()?'Cloudflare.':'Supabase.'));
     }catch(e){info('Erro ao salvar meta mensal',s(e&&e.message||e))}
   };
   try{adminSaveMonthlyGoalV185=window.adminSaveMonthlyGoalV185}catch(e){}
@@ -74655,6 +74677,7 @@ albumLockedV425.__v483=true;
 
   var VERSION='v502', TTL=10*60*1000, LOOKBACK_DAYS=370;
   var S=window.__entrelV498Prologue=window.__entrelV498Prologue||{uid:'',at:0,loading:null,daily:[],medals:[],frames:[],challenges:[],error:''};
+  var cloudflareGoalSnapshot=null,cloudflareGoalSnapshotAt=0;
   function str(v){return String(v==null?'':v)}
   function num(v){var x=Number(v);return isFinite(x)?x:0}
   function now(){return new Date().toISOString()}
@@ -74739,6 +74762,12 @@ albumLockedV425.__v483=true;
   }
 
   async function query(table,columns,build,limit){
+    if((table==='metas_diarias'||table==='metas_usuarios')&&window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_library')){
+      if(!cloudflareGoalSnapshot||Date.now()-cloudflareGoalSnapshotAt>30000){cloudflareGoalSnapshot=await window.EntreLinhasDataCanaries.readGoalProgress();cloudflareGoalSnapshotAt=Date.now();}
+      if(!cloudflareGoalSnapshot||!cloudflareGoalSnapshot.ok)throw new Error('O progresso diário não foi confirmado no Cloudflare.');
+      if(table==='metas_usuarios')return cloudflareGoalSnapshot.summary?[cloudflareGoalSnapshot.summary]:[];
+      var since=yearStart(),rows=(cloudflareGoalSnapshot.daily||[]).filter(function(r){return str(r.data)>=since}).sort(function(a,b){return str(a.data).localeCompare(str(b.data))});return limit?rows.slice(-limit):rows;
+    }
     var c=db();if(!c)return [];
     try{var q=c.from(table).select(columns);if(typeof build==='function')q=build(q);if(limit)q=q.limit(limit);var r=await q;if(r.error)throw r.error;return r.data||[]}
     catch(e){console.warn('[v498 '+table+']',e&&e.message||e);return []}
@@ -74751,7 +74780,8 @@ albumLockedV425.__v483=true;
       var pages=Math.max(0,num(r.paginas_lidas)),done=!!r.concluida||pages>=20;
       cache.days[k]=Object.assign({},r,{meta_paginas:20,paginas_lidas:pages,concluida:done});
       data.dailyProgress[k]=data.dailyProgress[k]||{};
-      data.dailyProgress[k][uid]={pages:pages,done:done,rewarded:!!r.recompensada,goalTarget:20,origem:r.origem||'',epubBookPages:r.livros||{}};
+      var bookPages=r.livros||{};if(typeof bookPages==='string'){try{bookPages=JSON.parse(bookPages)}catch(e){bookPages={}}}
+      data.dailyProgress[k][uid]={pages:pages,done:done,rewarded:!!r.recompensada,goalTarget:20,origem:r.origem||'',epubBookPages:bookPages};
     });
   }
   function mergeProfile(rows,goals){
@@ -74771,6 +74801,7 @@ albumLockedV425.__v483=true;
   }
   async function hydrate(force){
     if(S.loading)return S.loading;
+    if(force){cloudflareGoalSnapshot=null;cloudflareGoalSnapshotAt=0;}
     if(!force&&S.at&&Date.now()-S.at<TTL)return S;
     S.loading=(async function(){
       var user=await authUser();if(!user||!uuidOk(user.id))return S;var uid=user.id;S.uid=uid;
@@ -75876,6 +75907,10 @@ albumLockedV425.__v483=true;
   async function monthlyPages(uid,mk){var c=db(),start=mk+'-01',d=new Date(start+'T12:00:00Z');d.setUTCMonth(d.getUTCMonth()+1);var end=d.toISOString().slice(0,10);try{var r=await c.from('metas_diarias').select('data,paginas_lidas').eq('usuario_id',uid).gte('data',start).lt('data',end).limit(40);if(r.error)throw r.error;return (r.data||[]).reduce(function(a,x){return a+Math.max(0,n(x.paginas_lidas))},0)}catch(e){return 0}}
   async function refreshMonthly(force){
     if(ST.loading)return ST.loading;
+    if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_settings')&&window.EntreLinhasDataCanaries.enabled('cf_library')){
+      var cloudMonth=monthKey();if(!force&&ST.uid&&ST.month===cloudMonth&&ST.at&&Date.now()-ST.at<TTL)return ST;
+      ST.loading=(async function(){var uid=await authUid();if(!uid){ST.current=0;ST.target=goalTarget(goal());ST.month=cloudMonth;return ST}var response=await window.EntreLinhasDataCanaries.getMonthlyProgress(cloudMonth);if(!response||!response.ok)throw new Error('A meta mensal não foi confirmada no Cloudflare.');var kind=norm(response.type||'livros');ST.uid=uid;ST.month=cloudMonth;ST.current=Math.max(0,n(response.current));ST.target=goalTarget(goal());ST.type=kind.indexOf('pagina')>=0?'paginas':kind.indexOf('clube')>=0?'livro_clube':kind.indexOf('manual')>=0?'manual':'livros';ST.complete=ST.type!=='manual'&&ST.current>=ST.target;ST.pct=Math.min(100,Math.round(ST.current/Math.max(1,ST.target)*100));ST.keys=[];ST.at=Date.now();window.__entrelV506MonthlyProgress={month:ST.month,current:ST.current,target:ST.target,complete:ST.complete,pct:ST.pct,books:ST.type==='livros'?ST.current:0,v512:true,serverVerified:true};try{data.monthlyGoalProgressV512={uid:uid,month:ST.month,current:ST.current,target:ST.target,complete:ST.complete,keys:[],at:ST.at,serverVerified:true};saveSafe()}catch(e){}return ST})().catch(function(e){console.warn('[v512 meta mensal Cloudflare]',e);ST.current=0;ST.complete=false;ST.pct=0;return ST}).finally(function(){ST.loading=null});return ST.loading;
+    }
     var mk=monthKey();if(!force&&ST.uid&&ST.month===mk&&ST.at&&Date.now()-ST.at<TTL)return ST;
     ST.loading=(async function(){var uid=await authUid(),g=goal(),type=goalType(g),target=goalTarget(g),current=0,keys=[],c=db(),verified=false;if(!uid){ST.current=0;ST.target=target;ST.month=mk;return ST}if(c&&typeof c.rpc==='function'){try{var vr=await c.rpc('entrel_verified_monthly_progress_v512',{p_user_id:uid,p_period_key:mk});if(!vr.error){var vo=vr.data||{};if(Array.isArray(vo))vo=vo[0]||{};current=Math.max(0,n(vo.current));var vt=norm(vo.type||'');if(vt.indexOf('pagina')>=0)type='paginas';else if(vt.indexOf('clube')>=0)type='livro_clube';else if(vt.indexOf('manual')>=0)type='manual';else type='livros';verified=true}else if(!/function|schema cache|could not find|PGRST202/i.test(s(vr.error&&vr.error.message)))throw vr.error}catch(e){if(!/function|schema cache|could not find|PGRST202/i.test(s(e&&e.message||e)))throw e}}if(!verified){var rows=await queryApproved(uid);var trusted=rows.filter(function(r){return approvedStatus(r)&&explicitApproval(r)&&!hidden(r)&&approvalMonth(r)===mk&&bookEvidence(r)}),seen={};trusted.forEach(function(r){var k=bookKey(r);if(!seen[k]){seen[k]=1;keys.push(k)}});if(type==='paginas')current=await monthlyPages(uid,mk);else if(type==='livro_clube')current=trusted.some(clubEvidence)?1:0;else if(type==='manual')current=0;else current=keys.length}ST.uid=uid;ST.month=mk;ST.current=current;ST.target=target;ST.complete=type!=='manual'&&current>=target;ST.pct=Math.min(100,Math.round(current/Math.max(1,target)*100));ST.keys=keys;ST.at=Date.now();window.__entrelV506MonthlyProgress={month:mk,current:current,target:target,complete:ST.complete,pct:ST.pct,books:type==='livros'?current:0,v512:true,serverVerified:verified};try{data.monthlyGoalProgressV512={uid:uid,month:mk,current:current,target:target,complete:ST.complete,keys:keys.slice(0,50),at:ST.at,serverVerified:verified};saveSafe()}catch(e){}return ST})().catch(function(e){console.warn('[v512 meta mensal]',e);ST.current=0;ST.complete=false;ST.pct=0;return ST}).finally(function(){ST.loading=null});return ST.loading
   }
@@ -75886,8 +75921,15 @@ albumLockedV425.__v483=true;
   function dailyProgress(){var raw={pages:0,done:false,goalTarget:DAILY_TARGET};try{if(typeof window.__entrelV512OldDailyProgress==='function')raw=window.__entrelV512OldDailyProgress()||raw}catch(e){}var pages=Math.max(0,n(raw.pages||raw.paginas_lidas)),done=!!raw.done||!!raw.concluida||pages>=DAILY_TARGET;return Object.assign({},raw,{pages:pages,paginas_lidas:pages,goalTarget:DAILY_TARGET,meta_paginas:DAILY_TARGET,done:done,concluida:done})}
   if(!window.__entrelV512OldDailyProgress)window.__entrelV512OldDailyProgress=window.v18DailyProgress;
   window.v18DailyProgress=function(){return dailyProgress()};try{v18DailyProgress=window.v18DailyProgress}catch(e){}
-  async function reconcileToday(){try{var c=db(),uid=await authUid();if(!c||!uid)return;var d=new Date(),date;try{var pp=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Manaus',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d),oo={};pp.forEach(function(x){oo[x.type]=x.value});date=oo.year+'-'+oo.month+'-'+oo.day}catch(e){date=d.toISOString().slice(0,10)}var r=await c.from('metas_diarias').select('usuario_id,data,meta_paginas,paginas_lidas,concluida,recompensada,origem').eq('usuario_id',uid).eq('data',date).limit(1);if(r.error)return;var row=(r.data||[])[0];if(!row)return;var pages=Math.max(0,n(row.paginas_lidas)),auto=/leitor|reader|epub|auto_pending_admin/i.test(s(row.origem||''));if(n(row.meta_paginas)!==DAILY_TARGET||(!row.concluida&&pages>=DAILY_TARGET)){await c.from('metas_diarias').update({meta_paginas:DAILY_TARGET,concluida:pages>=DAILY_TARGET?true:!!row.concluida,concluida_em:pages>=DAILY_TARGET?new Date().toISOString():undefined,atualizado_em:new Date().toISOString()}).eq('usuario_id',uid).eq('data',date)}if(pages>=DAILY_TARGET&&!row.recompensada&&auto){var rr=await c.rpc('entrel_award_daily_epub_v507',{p_user_id:uid,p_date:date});if(rr.error)console.warn('[v512 recompensa diária]',rr.error)}}catch(e){console.warn('[v512 meta diária]',e)}}
+  async function reconcileToday(){
+    if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_library')){
+      try{var cfDate;try{var parts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Manaus',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()),values={};parts.forEach(function(x){values[x.type]=x.value});cfDate=values.year+'-'+values.month+'-'+values.day}catch(e){cfDate=new Date().toISOString().slice(0,10)}var snapshot=await window.EntreLinhasDataCanaries.readGoalProgress(),row=snapshot&&snapshot.ok&&(snapshot.daily||[]).find(function(x){return s(x.data)===cfDate});if(row&&(row.concluida===true||row.concluida===1)&&!row.recompensada&&/leitor|reader|epub/i.test(s(row.origem||''))){await window.EntreLinhasDataCanaries.claimDailyReward(cfDate);if(typeof window.entrelV498LoadPrologue==='function')await window.entrelV498LoadPrologue(true)}}catch(cfError){console.warn('[v512 meta diária Cloudflare]',cfError)}return;
+    }
+    try{var c=db(),uid=await authUid();if(!c||!uid)return;var d=new Date(),date;try{var pp=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Manaus',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d),oo={};pp.forEach(function(x){oo[x.type]=x.value});date=oo.year+'-'+oo.month+'-'+oo.day}catch(e){date=d.toISOString().slice(0,10)}var r=await c.from('metas_diarias').select('usuario_id,data,meta_paginas,paginas_lidas,concluida,recompensada,origem').eq('usuario_id',uid).eq('data',date).limit(1);if(r.error)return;var row=(r.data||[])[0];if(!row)return;var pages=Math.max(0,n(row.paginas_lidas)),auto=/leitor|reader|epub|auto_pending_admin/i.test(s(row.origem||''));if(n(row.meta_paginas)!==DAILY_TARGET||(!row.concluida&&pages>=DAILY_TARGET)){await c.from('metas_diarias').update({meta_paginas:DAILY_TARGET,concluida:pages>=DAILY_TARGET?true:!!row.concluida,concluida_em:pages>=DAILY_TARGET?new Date().toISOString():undefined,atualizado_em:new Date().toISOString()}).eq('usuario_id',uid).eq('data',date)}if(pages>=DAILY_TARGET&&!row.recompensada&&auto){var rr=await c.rpc('entrel_award_daily_epub_v507',{p_user_id:uid,p_date:date});if(rr.error)console.warn('[v512 recompensa diária]',rr.error)}}catch(e){console.warn('[v512 meta diária]',e)}
+  }
   setTimeout(function(){refreshMonthly(true).then(renderSafe);reconcileToday().then(renderSafe)},700);
+  var oldMonthlyAward=window.entrelCheckMonthlyGoalRewardV217;
+  window.entrelCheckMonthlyGoalRewardV217=async function(userId,reason){if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_settings')&&window.EntreLinhasDataCanaries.enabled('cf_library')){try{var p=await refreshMonthly(true),g=goal();if(!p.complete||goalType(g)==='manual')return false;var award=await window.EntreLinhasDataCanaries.awardPeriod('monthly',p.month);return !!(award&&(award.applied||award.already_rewarded))}catch(e){console.warn('[v512 recompensa mensal Cloudflare]',e);return false}}return typeof oldMonthlyAward==='function'?oldMonthlyAward.apply(this,arguments):false};
   window.ENTRELINHAS_DAILY_GOAL_FIXED=DAILY_TARGET;
   window.ENTRELINHAS_VERSION='v512';window.ENTRELINHAS_PWA_VERSION='1.0.49-v513';
   window.entrelV512Status=function(){return {version:'v512',dailyTarget:20,monthlyApprovedCompletionsOnly:true,legacyUpdatedAtIgnored:true,monthlyCacheMinutes:5,newPolling:false,newRealtime:false,lowEgress:true}};

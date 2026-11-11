@@ -23,6 +23,17 @@ test('global settings update the matching canonical legacy row without changing 
   const old=await r.db.prepare('SELECT valor FROM app_configuracoes WHERE id=?').bind('weekly-old').first(),current=await r.db.prepare('SELECT valor FROM app_configuracoes WHERE id=?').bind('weekly-current').first();
   assert.equal(old.valor,'{"target":5}');assert.equal(JSON.parse(current.valor).target,20);
 });
+test('global goal settings can be read by members and written only by admins',async()=>{
+  await r.insert('app_configuracoes',{id:'monthly-goal-test',usuario_id:'00000000-0000-0000-0000-000000000002',chave:'meta_mensal_test',valor:'{"target":75}',ativo:1,atualizado_em:'2026-01-01T00:00:00Z'});
+  const read=await r.api('/api/v1/settings/global/meta_mensal_test','alice');assert.equal(read.status,200);
+  assert.equal((await read.json()).row.valor.target,75);
+  const write=await r.api('/api/v1/settings/global/meta_mensal_test','alice','PUT',{value:{target:90}});assert.equal(write.status,403);
+  const admin=await r.api('/api/v1/settings/global/meta_mensal_test','admin','PUT',{value:{target:90}});assert.equal(admin.status,200);
+  const reread=await r.api('/api/v1/settings/global/meta_mensal_test','alice');assert.equal((await reread.json()).row.valor.target,90);
+  assert.equal((await r.api('/api/v1/settings/user/reader_size','bob')).status,200);
+  assert.equal((await r.api('/api/v1/settings/user/reader_size','alice','PUT',{value:{size:120}})).status,200);
+  assert.equal((await (await r.api('/api/v1/settings/user/reader_size','alice')).json()).row.valor.size,120);
+});
 test('book IDs, partial fields and linked reading IDs are preserved',async()=>{
   const created=await r.api('/api/v1/library/books','alice','POST',{id:'book-stable',livro_id:'logical-stable',titulo:'Duna',autor:'Herbert',paginas:200,publico:true,dados:{custom:'kept',reward_applied:true}});
   assert.equal(created.status,201,await created.clone().text());
@@ -83,4 +94,19 @@ test('private shelves are protected and stale device copies do not regress progr
   assert.equal((await r.api('/api/v1/library/books/book-stable?member_id=alice','bob')).status,404);
   assert.equal((await r.api('/api/v1/library/books/book-stable','alice','DELETE')).status,200);
   assert.ok(await r.db.prepare('SELECT id FROM livros_pessoais WHERE id=?').bind('book-stable').first());
+});
+
+test('daily reading progress is derived from owned books, deduplicated per book and rewarded once',async()=>{
+  for(const id of ['daily-a','daily-b'])assert.equal((await r.api('/api/v1/library/books','bob','POST',{id,titulo:id,autor:'Leitora',paginas:100,pagina_atual:0})).status,201);
+  const first=await r.api('/api/v1/reading','bob','POST',{book_id:'daily-a',current_page:8,status:'reading'});assert.equal(first.status,200,await first.clone().text());
+  let goal=(await first.json()).daily_goal;assert.equal(goal.pages,8);assert.equal(goal.completed,false);
+  const replay=await r.api('/api/v1/reading','bob','POST',{book_id:'daily-a',current_page:8,status:'reading'});goal=(await replay.json()).daily_goal;assert.equal(goal.pages,8);
+  const increment=await r.api('/api/v1/reading','bob','POST',{book_id:'daily-a',current_page:13,status:'reading'});goal=(await increment.json()).daily_goal;assert.equal(goal.pages,13);
+  const secondBook=await r.api('/api/v1/reading','bob','POST',{book_id:'daily-b',current_page:7,status:'reading'});goal=(await secondBook.json()).daily_goal;assert.equal(goal.pages,20);assert.equal(goal.completed,true);assert.equal(goal.origin,'leitor_cloudflare_v1');
+  const awards=await Promise.all(Array.from({length:8},()=>r.api('/api/v1/rewards/daily-epub','bob','POST',{date:goal.date})));
+  const awardRows=await Promise.all(awards.map(x=>x.json()));assert.equal(awardRows.filter(x=>x.applied).length,1);
+  assert.equal((await r.db.prepare("SELECT paginas_lidas,concluida,recompensada FROM metas_diarias WHERE usuario_id='bob' AND data=?").bind(goal.date).first()).recompensada,1);
+  assert.equal((await r.db.prepare("SELECT pontos FROM usuarios WHERE id='bob'").first()).pontos,30);
+  assert.equal((await r.db.prepare("SELECT SUM(pages_read) AS n FROM daily_book_progress WHERE usuario_id='bob' AND data=?").bind(goal.date).first()).n,20);
+  assert.equal((await r.api('/api/v1/reading','alice','POST',{book_id:'daily-a',current_page:100,status:'reading'})).status,404);
 });

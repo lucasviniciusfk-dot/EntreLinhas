@@ -12,9 +12,13 @@ function auth(){return{getSession:async()=>({data:{session:{user:{id:'alice'},ac
 test('client uses the verified hostname, bearer auth and multipart headers',async()=>{
   const c=context(),calls=[],api=c.EntreLinhasCloudflareApi.create({client:{auth:auth()},fetch:async(url,init)=>{calls.push({url,init});return Response.json({ok:true,profile:{id:'alice'}})}});
   await api.updateMe({bio:''});await api.uploadFile(new File(['abc'],'photo.png',{type:'image/png'}),'avatar');
+  await api.getGlobalSetting('meta_semanal');await api.saveGlobalSetting('meta_semanal',{target:90});await api.saveReading({book_id:'book',current_page:8});await api.awardDailyEpub('2026-11-11');await api.getMonthlyProgress('2026-11');await api.awardPeriod('monthly','2026-11');
   assert.equal(calls[0].url,'https://entrelinhas-api-staging.lucasviniciusfk.workers.dev/api/v1/me');
   assert.equal(calls[0].init.headers.get('Authorization'),'Bearer private-test-token');
   assert.equal(calls[1].init.headers.has('Content-Type'),false);
+  assert.deepEqual(calls.slice(2).map(x=>x.url.replace('https://entrelinhas-api-staging.lucasviniciusfk.workers.dev','')),[
+    '/api/v1/settings/global/meta_semanal','/api/v1/settings/global/meta_semanal','/api/v1/reading','/api/v1/rewards/daily-epub','/api/v1/progress/monthly?period=2026-11','/api/v1/rewards/period'
+  ]);
 });
 test('Cloudflare profile has one writer and never falls back after an ambiguous write',async()=>{
   const c=context(),calls=[];

@@ -4,6 +4,7 @@ const aliases={title:'titulo',author:'autor',genre:'genero',pages:'paginas',cove
 const shape=r=>rowJSON(r,['dados'],['ativo','publico']);
 const norm=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
 const bookData=(current,incoming)=>{const out={...object(current)};for(const[k,v]of Object.entries(object(incoming)))if(!/(?:reward|recompens|approved|aprovad|^xp$|^pontos$|^_)/i.test(k))out[k]=v;return out};
+const manaDay=()=>{const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Manaus',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()),out={};for(const p of parts)out[p.type]=p.value;return out.year+'-'+out.month+'-'+out.day};
 export function handleLibrary(request,env,context){
   const {uid,headers,isAdmin}=context,url=new URL(request.url),route=url.pathname.match(/^\/api\/v1\/library\/books(?:\/([^/]+))?$/),finishRequest=url.pathname.match(/^\/api\/v1\/library\/books\/([^/]+)\/finish-request$/),reading=url.pathname==='/api/v1/reading';
   if(!route&&!reading&&!finishRequest)return null;
@@ -87,13 +88,21 @@ export function handleLibrary(request,env,context){
     const normalizedKey=norm(record.titulo||old?.titulo)+'|'+norm(record.autor??old?.autor);
     if(!old)statements.push(env.DB.prepare('INSERT OR IGNORE INTO library_identities(owner_id,normalized_key,book_id) VALUES(?,?,?)').bind(uid,normalizedKey,id));
     statements.push(old?prepareUpdate(env.DB,'livros_pessoais',record,old.id,uid):prepareInsert(env.DB,'livros_pessoais',record,{sql:'EXISTS(SELECT 1 FROM library_identities WHERE owner_id=? AND normalized_key=? AND book_id=?)',params:[uid,normalizedKey,id]}));
+    const trackDaily=reading&&own(b,'current_page')&&page>Number(old?.pagina_atual||0),day=trackDaily?manaDay():null;
     if(reading||own(b,'pagina_atual')||own(b,'current_page')){
       const readId=crypto.randomUUID(),key=record.livro_id||old?.livro_id||old?.id||id,bookId=old?.id||id;
       statements.push(env.DB.prepare("INSERT INTO leituras(id,usuario_id,livro_id,pagina_atual,porcentagem,finalizado,atualizado_em,progresso,epub_cfi,status,dados) SELECT ?,?,?,?,?,?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM livros_pessoais WHERE id=? AND usuario_id=?) ON CONFLICT(usuario_id,livro_id) DO UPDATE SET pagina_atual=excluded.pagina_atual,porcentagem=excluded.porcentagem,finalizado=excluded.finalizado,atualizado_em=excluded.atualizado_em,progresso=excluded.progresso,epub_cfi=excluded.epub_cfi,status=excluded.status,dados=excluded.dados").bind(readId,uid,key,page,record.progresso,status==='finished'?1:0,now,record.progresso,record.epub_cfi??old?.epub_cfi??'',status,JSON.stringify(record.dados),bookId,uid));
     }
+    if(trackDaily){
+      const before=Math.max(0,Number(old?.pagina_atual)||0),bookId=String(old?.id||id),dailyId=uid+'_'+day;
+      statements.push(env.DB.prepare("INSERT OR IGNORE INTO daily_goal_progress_days(usuario_id,data,base_pages,created_at) SELECT ?,?,MIN(20,MAX(0,COALESCE((SELECT paginas_lidas FROM metas_diarias WHERE usuario_id=? AND data=? LIMIT 1),0))),?").bind(uid,day,uid,day,now));
+      statements.push(env.DB.prepare("INSERT INTO daily_book_progress(usuario_id,data,book_id,last_page,pages_read,updated_at) VALUES(?,?,?,?,MAX(0,?-?),?) ON CONFLICT(usuario_id,data,book_id) DO UPDATE SET pages_read=daily_book_progress.pages_read+MAX(0,excluded.last_page-MAX(daily_book_progress.last_page,?)),last_page=MAX(daily_book_progress.last_page,excluded.last_page),updated_at=excluded.updated_at").bind(uid,day,bookId,page,page,before,now,before));
+      statements.push(env.DB.prepare("INSERT INTO metas_diarias(id,usuario_id,data,meta_paginas,paginas_lidas,concluida,recompensada,origem,livros,concluida_em,atualizado_em) SELECT ?,?, ?,20,MIN(20,MAX(0,base_pages)+COALESCE((SELECT SUM(pages_read) FROM daily_book_progress WHERE usuario_id=? AND data=?),0)),CASE WHEN MIN(20,MAX(0,base_pages)+COALESCE((SELECT SUM(pages_read) FROM daily_book_progress WHERE usuario_id=? AND data=?),0))>=20 THEN 1 ELSE 0 END,0,'leitor_cloudflare_v1','{}',CASE WHEN MIN(20,MAX(0,base_pages)+COALESCE((SELECT SUM(pages_read) FROM daily_book_progress WHERE usuario_id=? AND data=?),0))>=20 THEN ? ELSE NULL END,? FROM daily_goal_progress_days WHERE usuario_id=? AND data=? ON CONFLICT(usuario_id,data) DO UPDATE SET meta_paginas=20,paginas_lidas=MAX(COALESCE(metas_diarias.paginas_lidas,0),excluded.paginas_lidas),concluida=CASE WHEN excluded.concluida=1 OR COALESCE(metas_diarias.concluida,0)=1 THEN 1 ELSE 0 END,recompensada=COALESCE(metas_diarias.recompensada,0),origem=CASE WHEN COALESCE(metas_diarias.concluida,0)=1 AND COALESCE(metas_diarias.origem,'') NOT LIKE '%leitor%' THEN metas_diarias.origem ELSE excluded.origem END,livros=COALESCE(metas_diarias.livros,excluded.livros),concluida_em=CASE WHEN excluded.concluida=1 THEN COALESCE(metas_diarias.concluida_em,excluded.concluida_em) ELSE metas_diarias.concluida_em END,atualizado_em=excluded.atualizado_em").bind(dailyId,uid,day,uid,day,uid,day,uid,day,now,now,uid,day));
+    }
     await env.DB.batch(statements);
     const saved=await first(env.DB,'SELECT * FROM livros_pessoais WHERE id=? AND usuario_id=?',old?.id||id,uid);
     if(!saved)throw new DomainError('Este livro já está na sua biblioteca.',409);
-    return reply(headers,{book:shape(saved),reading:reading?rowJSON(await first(env.DB,'SELECT * FROM leituras WHERE usuario_id=? AND livro_id=?',uid,saved.livro_id||saved.id),['dados'],['finalizado']):undefined},old?200:201);
+    const daily=reading&&own(b,'current_page')?await first(env.DB,'SELECT * FROM metas_diarias WHERE usuario_id=? AND data=?',uid,manaDay()):null;
+    return reply(headers,{book:shape(saved),reading:reading?rowJSON(await first(env.DB,'SELECT * FROM leituras WHERE usuario_id=? AND livro_id=?',uid,saved.livro_id||saved.id),['dados'],['finalizado']):undefined,daily_goal:daily?{date:daily.data,pages:Number(daily.paginas_lidas)||0,target:20,completed:daily.concluida===1||daily.concluida===true,rewarded:daily.recompensada===1||daily.recompensada===true,origin:daily.origem||''}:undefined},old?200:201);
   });
 }

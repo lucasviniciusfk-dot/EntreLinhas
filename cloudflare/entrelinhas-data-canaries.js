@@ -105,6 +105,14 @@
     const result = await api().saveReading({book_id:id,current_page:page,epub_cfi:book.epubCfi || '',status:'reading',atualizado_em:book.atualizado_em || '',dados:book.dados || {}});
     if (!result.ok || !result.book) throw new Error('O progresso não foi confirmado no Cloudflare.');
     book.status = result.book.status || 'reading'; book.finishPending = /pending_finish/i.test(book.status); book.atualizado_em=result.book.atualizado_em||'';book.updatedAt = Date.now();
+    if(result.daily_goal){
+      const day=result.daily_goal,date=text(day.date),state=root.data;
+      if(state){state.dailyProgress=state.dailyProgress||{};state.dailyProgress[date]=state.dailyProgress[date]||{};state.dailyProgress[date][user.id]=Object.assign({},state.dailyProgress[date][user.id]||{},{pages:Number(day.pages)||0,done:!!day.completed,rewarded:!!day.rewarded,goalTarget:20,origem:day.origin||''});}
+      if(day.completed&&/leitor|reader|epub/i.test(text(day.origin))){
+        try{const reward=await api().awardDailyEpub(date);if(reward.ok){day.rewarded=true;if(state&&state.dailyProgress&&state.dailyProgress[date]&&state.dailyProgress[date][user.id])state.dailyProgress[date][user.id].rewarded=true;if(state&&state.user&&text(state.user.id||state.user.authId||state.user.supabaseId)===text(user.id)){state.user.xp=Number(reward.xp)||Number(state.user.xp)||0;state.user.pontos=Number(reward.points)||Number(state.user.pontos)||0;state.user.points=state.user.pontos;state.user.rankingPoints=state.user.pontos;state.user.estrelinhas=state.user.pontos;}}}
+        catch(e){root.__entrelCfDailyGoalError=text(e&&e.message||e);try{console.warn('[Cloudflare daily reward]',root.__entrelCfDailyGoalError)}catch(_){}}
+      }
+    }
     localSave(); root.__entrelCfLibraryCache = null; return true;
   }
   async function safeSaveProgress(book,page){try{return await saveProgress(book,page)}catch(e){root.__entrelCfLibraryError=text(e&&e.message||e);try{console.warn('[Cloudflare progress]',root.__entrelCfLibraryError)}catch(_){}return false}}
@@ -188,6 +196,24 @@
     const book=byRef(ref);if(!book)throw new Error('Livro não encontrado.');const input=root.document.getElementById('newPage');
     const page=input?Number(input.value):Number(book.readerPage||book.currentPage||0),ok=await safeSaveProgress(book,page);render();return ok;
   };
+  const oldCountPages=root.v18CountEpubDailyPages;
+  if(typeof oldCountPages==='function')root.v18CountEpubDailyPages=function(){if(enabled('cf_library'))return;return oldCountPages.apply(this,arguments)};
+  const oldFlushPages=root.entrelV483FlushReaderPages;
+  if(typeof oldFlushPages==='function')root.entrelV483FlushReaderPages=function(){if(enabled('cf_library'))return Promise.resolve(false);return oldFlushPages.apply(this,arguments)};
+  const oldCompleteDaily=root.completeDailyGoalV44;
+  if(typeof oldCompleteDaily==='function'){
+    const completeDaily=async function(){
+      if(!enabled('cf_library'))return oldCompleteDaily.apply(this,arguments);
+      const date=(()=>{try{const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Manaus',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()),values={};parts.forEach(x=>values[x.type]=x.value);return values.year+'-'+values.month+'-'+values.day}catch(_){return new Date().toISOString().slice(0,10)}})();
+      const snapshot=await api().getGoals('?daily_limit=366');if(!snapshot.ok)throw new Error('A meta diária não foi confirmada no Cloudflare.');
+      const row=(snapshot.daily||[]).find(item=>text(item.data)===date);if(!row||!(row.concluida===true||row.concluida===1)||!/leitor|reader|epub/i.test(text(row.origem)))return {pendingAdmin:false,applied:false,completed:false};
+      const reward=await api().awardDailyEpub(date);if(!reward.ok)throw new Error('A recompensa diária não foi confirmada no Cloudflare.');
+      try{if(typeof root.entrelV498LoadPrologue==='function')await root.entrelV498LoadPrologue(true)}catch(_){}
+      return Object.assign({pendingAdmin:false,completed:true},reward);
+    };
+    root.completeDailyGoalV44=root.completeDailyGoalV39=root.completeDailyGoalV38=root.completeDailyGoalV36=completeDaily;root.rewardDailyIfNeeded=completeDaily;
+    try{completeDailyGoalV44=root.completeDailyGoalV44;rewardDailyIfNeeded=root.rewardDailyIfNeeded}catch(_){}
+  }
   const oldAdminReview=root.adminReviewRequestV180||root.entrelV452Review;
   if(typeof oldAdminReview==='function'){
     const adminReview=function(id,action,reason){return enabled('cf_admin')?reviewFinishRequest(id,action,reason):oldAdminReview.apply(this,arguments)};
@@ -199,5 +225,13 @@
     try{adminReviewRequestV180=adminReview;entrelV452Review=adminReview}catch(_){}
   }
   root.entrelCfReconcileAwards=async function(){if(!enabled('cf_awards'))throw new Error('Ative cf_awards para usar a reconciliação de medalhas no Cloudflare.');return api().reconcileAwards()};
-  root.EntreLinhasDataCanaries=Object.freeze({enabled,readLibrary:safeReadLibrary,saveProgress:safeSaveProgress,readFinishRequests,reviewFinishRequest});
+  root.EntreLinhasDataCanaries=Object.freeze({enabled,readLibrary:safeReadLibrary,saveProgress:safeSaveProgress,readFinishRequests,reviewFinishRequest,
+    getGlobalSetting:key=>{if(!enabled('cf_settings'))throw new Error('Ative cf_settings para ler configurações do Cloudflare.');return api().getGlobalSetting(key)},
+    saveGlobalSetting:(key,value)=>{if(!enabled('cf_settings'))throw new Error('Ative cf_settings para gravar configurações no Cloudflare.');return api().saveGlobalSetting(key,value)},
+    readGoalProgress:()=>{if(!enabled('cf_library'))throw new Error('Ative cf_library para ler o progresso no Cloudflare.');return api().getGoals('?daily_limit=366')},
+    getWeeklyProgress:period=>{if(!enabled('cf_library')||!enabled('cf_settings'))throw new Error('Ative cf_library e cf_settings para ler metas no Cloudflare.');return api().getWeeklyProgress(period)},
+    getMonthlyProgress:period=>{if(!enabled('cf_library')||!enabled('cf_settings'))throw new Error('Ative cf_library e cf_settings para ler metas no Cloudflare.');return api().getMonthlyProgress(period)},
+    awardPeriod:(kind,period)=>{if(!enabled('cf_library')||!enabled('cf_settings'))throw new Error('Ative cf_library e cf_settings para confirmar recompensas periódicas.');return api().awardPeriod(kind,period)},
+    claimDailyReward:date=>{if(!enabled('cf_library'))throw new Error('Ative cf_library para confirmar a recompensa diária.');return api().awardDailyEpub(date)}
+  });
 })(typeof window !== 'undefined' ? window : globalThis);

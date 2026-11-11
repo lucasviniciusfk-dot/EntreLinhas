@@ -74,7 +74,7 @@
 | Perfis | edição própria em canário; listagem social, avatares de terceiros e outros sincronizadores ainda precisam de paridade |
 | Configurações | preferências e escopos pessoais/globais implementados em canário; migration remota pendente; demais chaves continuam com operações específicas |
 | Biblioteca e leituras | CRUD pessoal, progresso e pedido de conclusão integrados em canário; leitura/escrita EPUB e migração de arquivos legados ainda pendentes |
-| Metas/progresso | recompensas e JSON corrigidos; escritores de metas e calendário continuam legados |
+| Metas/progresso | gravação diária idempotente por livro/dia, metas canônicas semanais/mensais e leitura do progresso/recompensas no canário; outras rotinas de desafios e calendário ainda exigem revisão |
 | Desafios/medalhas/molduras | autorização de seleção própria validada e reconciliação de medalhas/molduras implementada em canário; fluxos administrativos e desafios ainda legados |
 | Clube | RPCs canário e correções de aprovação; mural, gestão completa de ciclos e interface de álbuns ainda incompletos |
 | Chat | operações normais integradas; editor administrativo de cards fixados e demais wrappers legados pendentes |
@@ -83,7 +83,7 @@
 | Recompensas | metas e aprovação testadas localmente; reconciliação histórica e contratos restantes pendentes |
 | Arquivos | avatar e arquivos privados próprios testados; novas capas pessoais podem vincular asset R2; migração dos três buckets e leitores legados pendente |
 
-A varredura AST continua encontrando 566 acessos estáticos a tabelas e 20 RPCs em 17 nomes, porque inclui funções antigas sobrescritas e caminhos de fallback. Esse total não prova quais funções executam. O inventário registra linhas e operações para a continuação por domínio. Não houve substituição global de from/rpc/fetch.
+A varredura AST de 2026-11-11 encontrou 566 acessos estáticos a tabelas em 26 tabelas, 20 RPCs em 17 nomes, 13 operações Storage e 28 chamadas `fetch` (nenhuma com URL estática). Também registrou 312 chamadas dinâmicas `from`/`rpc`/`fetch`. O inventário está em `FRONTEND_INVENTORY_2026-11-11.json`; inclui funções antigas sobrescritas e caminhos de fallback, portanto não prova o que executa. Não houve substituição global de `from`/`rpc`/`fetch`.
 
 ## Continuação local — configurações, biblioteca e conquistas
 
@@ -96,7 +96,19 @@ Foram concluídos localmente novos contratos de backend e integração opt-in do
 
 Validação local: **37 testes aprovados**, incluindo D1/R2 em workerd, e `npm run check` compilou os 264 scripts inline e módulos do navegador; `git diff --check` passou. Esses resultados não substituem autenticação Google real nem execução contra o staging remoto.
 
-**Estado da publicação:** as migrations `0002` e `0003` e as novas rotas ainda não foram aplicadas ao D1/Worker remoto. A conexão Cloudflare solicitou reautenticação durante esta continuação; o usuário iniciou a reconexão e o conector ainda não está disponível. Não executar cutover de produção. O teste real do Google e a reconciliação das diferenças de dados listadas acima também continuam pendentes.
+**Estado da publicação:** as migrations `0002`, `0003` e `0004` e as novas rotas ainda não foram aplicadas ao D1/Worker remoto. O conector Cloudflare continuou retornando `UNAUTHORIZED` após a tentativa de reconexão desta continuação. Não executar cutover de produção. O teste real do Google e a reconciliação das diferenças de dados listadas acima também continuam pendentes.
+
+## Continuação local — metas e progresso diário/semanal/mensal
+
+- A leitura das metas globais canônicas semanais e mensais usa o Worker quando `cf_settings=1`; gravações globais seguem restritas a administradores e são relidas antes de atualizar a interface.
+- A migration `0004_daily_book_progress.sql` cria o controle diário por usuário, livro e data. O Worker calcula deltas de página a partir de livros próprios, impede dupla contagem em reenvios e sincroniza o total diário em D1.
+- Com `cf_library=1`, os escritores legados de leitura diária não gravam no Supabase. A recompensa diária é pedida apenas após a conclusão confirmada no servidor e continua idempotente.
+- O progresso semanal e mensal pode ser consultado no Worker. Meta semanal alterada durante a semana usa o mesmo início efetivo na tela e na validação da recompensa; uma alteração no meio da semana não conta páginas anteriores para alcançar o novo alvo.
+- No modo normal, os parâmetros do canário permanecem desligados e Supabase continua ativo. Nenhuma alteração foi aplicada à produção.
+
+Validação local desta etapa: **40 testes aprovados** com D1/R2 em workerd; `npm run check` compilou os 264 scripts inline e módulos Cloudflare; `git diff --check` passou. Os testes não substituem sessão Google real nem validação no D1/R2 remoto.
+
+**Pendências externas e de cobertura:** reautenticar a conexão Cloudflare para aplicar migrations e publicar o Worker de staging; executar a página de validação com a sessão Google real; comparar/reconciliar as diferenças de dados já listadas; migrar os leitores e escritores ainda legados nos demais domínios. Supabase Auth segue ligado. Não houve mudança em produção.
 
 ### Reversão
 

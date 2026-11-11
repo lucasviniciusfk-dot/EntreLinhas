@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-11T17:50:57.348Z",
+  "generatedAt": "2026-11-11T18:26:40.533Z",
   "method": "AST; includes old overridden functions; does not prove runtime activity",
   "tableCalls": 566,
   "tables": 26,
@@ -992,187 +992,177 @@
     },
     {
       "file": "index.html",
-      "line": 69563,
+      "line": 69571,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69582,
+      "line": 69590,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69582,
+      "line": 69590,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69598,
+      "line": 69606,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69599,
+      "line": 69607,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69602,
+      "line": 69610,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69602,
+      "line": 69610,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69602,
+      "line": 69610,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69699,
+      "line": 69707,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 69721,
+      "line": 69729,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 70461,
+      "line": 70469,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 70589,
+      "line": 70597,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 70816,
+      "line": 70824,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 70976,
+      "line": 70984,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71306,
+      "line": 71314,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71307,
+      "line": 71315,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71320,
+      "line": 71328,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71322,
+      "line": 71330,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71325,
+      "line": 71333,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71351,
+      "line": 71359,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71352,
+      "line": 71360,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71649,
+      "line": 71657,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71668,
+      "line": 71676,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71668,
+      "line": 71676,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71670,
+      "line": 71678,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71671,
+      "line": 71679,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71672,
+      "line": 71680,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71672,
+      "line": 71680,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71672,
+      "line": 71680,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71672,
+      "line": 71680,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 71795,
+      "line": 71803,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72221,
+      "line": 72229,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72226,
+      "line": 72234,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72418,
+      "line": 72426,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72509,
-      "method": "from"
-    },
-    {
-      "file": "index.html",
-      "line": 72511,
-      "method": "from"
-    },
-    {
-      "file": "index.html",
-      "line": 72513,
+      "line": 72517,
       "method": "from"
     },
     {
@@ -1182,72 +1172,72 @@
     },
     {
       "file": "index.html",
-      "line": 72613,
+      "line": 72521,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72619,
+      "line": 72527,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72914,
+      "line": 72621,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72923,
+      "line": 72627,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72930,
+      "line": 72922,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72935,
+      "line": 72931,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 72936,
+      "line": 72938,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73071,
+      "line": 72943,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73072,
+      "line": 72944,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73078,
+      "line": 73079,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73090,
+      "line": 73080,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73103,
+      "line": 73086,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73126,
+      "line": 73098,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73130,
+      "line": 73111,
       "method": "from"
     },
     {
@@ -1257,232 +1247,227 @@
     },
     {
       "file": "index.html",
-      "line": 73135,
+      "line": 73138,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73155,
+      "line": 73142,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73157,
+      "line": 73143,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73241,
+      "line": 73163,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73241,
+      "line": 73165,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73246,
+      "line": 73249,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73246,
+      "line": 73249,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73480,
+      "line": 73254,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73481,
+      "line": 73254,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73481,
+      "line": 73489,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73482,
+      "line": 73490,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73482,
+      "line": 73490,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73514,
+      "line": 73491,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73518,
+      "line": 73491,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73520,
+      "line": 73523,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73535,
+      "line": 73527,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73536,
+      "line": 73529,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73547,
+      "line": 73544,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73548,
+      "line": 73545,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73576,
+      "line": 73556,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73576,
+      "line": 73557,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73598,
+      "line": 73585,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73598,
+      "line": 73585,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73672,
+      "line": 73607,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73673,
+      "line": 73607,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73673,
+      "line": 73681,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73677,
+      "line": 73682,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73688,
+      "line": 73682,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73732,
+      "line": 73686,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73735,
+      "line": 73697,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73739,
+      "line": 73741,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73740,
+      "line": 73744,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73790,
+      "line": 73748,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73790,
+      "line": 73749,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73839,
+      "line": 73799,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73944,
+      "line": 73799,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73945,
+      "line": 73848,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73946,
+      "line": 73953,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73947,
+      "line": 73954,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73983,
+      "line": 73955,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73993,
+      "line": 73956,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73993,
+      "line": 73992,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 73999,
+      "line": 74002,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74029,
+      "line": 74002,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74029,
-      "method": "from"
-    },
-    {
-      "file": "index.html",
-      "line": 74030,
+      "line": 74008,
       "method": "from"
     },
     {
@@ -1492,132 +1477,147 @@
     },
     {
       "file": "index.html",
-      "line": 74176,
+      "line": 74038,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74183,
+      "line": 74039,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74187,
+      "line": 74047,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74188,
+      "line": 74191,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74225,
+      "line": 74198,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74226,
+      "line": 74209,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74227,
+      "line": 74210,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74229,
+      "line": 74247,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74230,
+      "line": 74248,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74474,
+      "line": 74249,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 74743,
+      "line": 74251,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75034,
+      "line": 74252,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75035,
+      "line": 74496,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75036,
+      "line": 74772,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75038,
+      "line": 75065,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75082,
+      "line": 75066,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75090,
+      "line": 75067,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75100,
+      "line": 75069,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75279,
+      "line": 75113,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75287,
+      "line": 75121,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75297,
+      "line": 75131,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75316,
+      "line": 75310,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75502,
+      "line": 75318,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75503,
+      "line": 75328,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75630,
+      "line": 75347,
       "method": "from"
     },
     {
       "file": "index.html",
-      "line": 75631,
+      "line": 75533,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75534,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75661,
+      "method": "from"
+    },
+    {
+      "file": "index.html",
+      "line": 75662,
       "method": "from"
     }
   ],
@@ -6751,7 +6751,7 @@
     },
     {
       "file": "index.html",
-      "line": 69205,
+      "line": 69213,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6765,7 +6765,7 @@
     },
     {
       "file": "index.html",
-      "line": 69215,
+      "line": 69223,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -6779,7 +6779,7 @@
     },
     {
       "file": "index.html",
-      "line": 69216,
+      "line": 69224,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -6791,7 +6791,7 @@
     },
     {
       "file": "index.html",
-      "line": 69217,
+      "line": 69225,
       "name": "clube_livros_finalizados",
       "operation": "select",
       "chain": [
@@ -6802,7 +6802,7 @@
     },
     {
       "file": "index.html",
-      "line": 69218,
+      "line": 69226,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -6815,7 +6815,7 @@
     },
     {
       "file": "index.html",
-      "line": 69731,
+      "line": 69739,
       "name": "usuarios",
       "operation": "update",
       "chain": [
@@ -6825,7 +6825,7 @@
     },
     {
       "file": "index.html",
-      "line": 70986,
+      "line": 70994,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6835,7 +6835,7 @@
     },
     {
       "file": "index.html",
-      "line": 70986,
+      "line": 70994,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -6844,7 +6844,7 @@
     },
     {
       "file": "index.html",
-      "line": 71308,
+      "line": 71316,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -6855,7 +6855,7 @@
     },
     {
       "file": "index.html",
-      "line": 71723,
+      "line": 71731,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -6866,7 +6866,7 @@
     },
     {
       "file": "index.html",
-      "line": 71724,
+      "line": 71732,
       "name": "leituras",
       "operation": "select",
       "chain": [
@@ -6877,7 +6877,7 @@
     },
     {
       "file": "index.html",
-      "line": 71725,
+      "line": 71733,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -6888,7 +6888,7 @@
     },
     {
       "file": "index.html",
-      "line": 71726,
+      "line": 71734,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -6899,7 +6899,7 @@
     },
     {
       "file": "index.html",
-      "line": 71820,
+      "line": 71828,
       "name": "usuario_medalhas",
       "operation": "upsert",
       "chain": [
@@ -6908,7 +6908,7 @@
     },
     {
       "file": "index.html",
-      "line": 71823,
+      "line": 71831,
       "name": "usuario_medalhas",
       "operation": "insert",
       "chain": [
@@ -6917,7 +6917,7 @@
     },
     {
       "file": "index.html",
-      "line": 71832,
+      "line": 71840,
       "name": "usuario_molduras",
       "operation": "upsert",
       "chain": [
@@ -6926,7 +6926,7 @@
     },
     {
       "file": "index.html",
-      "line": 71833,
+      "line": 71841,
       "name": "usuario_molduras",
       "operation": "insert",
       "chain": [
@@ -6935,7 +6935,7 @@
     },
     {
       "file": "index.html",
-      "line": 72430,
+      "line": 72438,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -6944,7 +6944,7 @@
     },
     {
       "file": "index.html",
-      "line": 72533,
+      "line": 72541,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -6953,7 +6953,7 @@
     },
     {
       "file": "index.html",
-      "line": 72533,
+      "line": 72541,
       "name": "app_configuracoes",
       "operation": "upsert",
       "chain": [
@@ -6962,7 +6962,7 @@
     },
     {
       "file": "index.html",
-      "line": 72637,
+      "line": 72645,
       "name": "livros_pessoais",
       "operation": "update",
       "chain": [
@@ -6972,7 +6972,7 @@
     },
     {
       "file": "index.html",
-      "line": 72660,
+      "line": 72668,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -6983,7 +6983,7 @@
     },
     {
       "file": "index.html",
-      "line": 72663,
+      "line": 72671,
       "name": "app_configuracoes",
       "operation": "update",
       "chain": [
@@ -6993,7 +6993,7 @@
     },
     {
       "file": "index.html",
-      "line": 72794,
+      "line": 72802,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7006,7 +7006,7 @@
     },
     {
       "file": "index.html",
-      "line": 72796,
+      "line": 72804,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7019,7 +7019,7 @@
     },
     {
       "file": "index.html",
-      "line": 72818,
+      "line": 72826,
       "name": "livros_pessoais",
       "operation": "insert",
       "chain": [
@@ -7030,7 +7030,7 @@
     },
     {
       "file": "index.html",
-      "line": 72828,
+      "line": 72836,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7042,7 +7042,7 @@
     },
     {
       "file": "index.html",
-      "line": 72941,
+      "line": 72949,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7054,7 +7054,7 @@
     },
     {
       "file": "index.html",
-      "line": 72942,
+      "line": 72950,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7068,7 +7068,7 @@
     },
     {
       "file": "index.html",
-      "line": 72955,
+      "line": 72963,
       "name": "usuarios",
       "operation": "select",
       "chain": [
@@ -7079,7 +7079,7 @@
     },
     {
       "file": "index.html",
-      "line": 72970,
+      "line": 72978,
       "name": "admin_logs",
       "operation": "insert",
       "chain": [
@@ -7088,7 +7088,7 @@
     },
     {
       "file": "index.html",
-      "line": 73020,
+      "line": 73028,
       "name": "clube_albuns",
       "operation": "select",
       "chain": [
@@ -7099,7 +7099,7 @@
     },
     {
       "file": "index.html",
-      "line": 73365,
+      "line": 73374,
       "name": "desafios",
       "operation": "select",
       "chain": [
@@ -7110,7 +7110,7 @@
     },
     {
       "file": "index.html",
-      "line": 73365,
+      "line": 73374,
       "name": "desafios",
       "operation": "select",
       "chain": [
@@ -7121,7 +7121,7 @@
     },
     {
       "file": "index.html",
-      "line": 73366,
+      "line": 73375,
       "name": "usuario_desafios",
       "operation": "select",
       "chain": [
@@ -7133,7 +7133,7 @@
     },
     {
       "file": "index.html",
-      "line": 74038,
+      "line": 74047,
       "name": "desafios",
       "operation": "select",
       "chain": [
@@ -7144,7 +7144,7 @@
     },
     {
       "file": "index.html",
-      "line": 74685,
+      "line": 74708,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7157,7 +7157,7 @@
     },
     {
       "file": "index.html",
-      "line": 74705,
+      "line": 74728,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7168,7 +7168,7 @@
     },
     {
       "file": "index.html",
-      "line": 74718,
+      "line": 74741,
       "name": "solicitacoes_validacao",
       "operation": "insert",
       "chain": [
@@ -7177,7 +7177,7 @@
     },
     {
       "file": "index.html",
-      "line": 75329,
+      "line": 75360,
       "name": "clube_fotos",
       "operation": "select",
       "chain": [
@@ -7190,7 +7190,7 @@
     },
     {
       "file": "index.html",
-      "line": 75368,
+      "line": 75399,
       "name": "clube_albuns",
       "operation": "select",
       "chain": [
@@ -7201,7 +7201,7 @@
     },
     {
       "file": "index.html",
-      "line": 75382,
+      "line": 75413,
       "name": "clube_fotos",
       "operation": "select",
       "chain": [
@@ -7212,7 +7212,7 @@
     },
     {
       "file": "index.html",
-      "line": 75387,
+      "line": 75418,
       "name": "clube_fotos",
       "operation": "update",
       "chain": [
@@ -7222,7 +7222,7 @@
     },
     {
       "file": "index.html",
-      "line": 75392,
+      "line": 75423,
       "name": "clube_fotos",
       "operation": "delete",
       "chain": [
@@ -7232,7 +7232,7 @@
     },
     {
       "file": "index.html",
-      "line": 75448,
+      "line": 75479,
       "name": "clube_livro_participantes",
       "operation": "select",
       "chain": [
@@ -7246,7 +7246,7 @@
     },
     {
       "file": "index.html",
-      "line": 75449,
+      "line": 75480,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -7257,7 +7257,7 @@
     },
     {
       "file": "index.html",
-      "line": 75514,
+      "line": 75545,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -7269,7 +7269,7 @@
     },
     {
       "file": "index.html",
-      "line": 75515,
+      "line": 75546,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7280,7 +7280,7 @@
     },
     {
       "file": "index.html",
-      "line": 75516,
+      "line": 75547,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7294,7 +7294,7 @@
     },
     {
       "file": "index.html",
-      "line": 75520,
+      "line": 75551,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -7308,7 +7308,7 @@
     },
     {
       "file": "index.html",
-      "line": 75522,
+      "line": 75553,
       "name": "clube_livros_finalizados",
       "operation": "select",
       "chain": [
@@ -7321,7 +7321,7 @@
     },
     {
       "file": "index.html",
-      "line": 75553,
+      "line": 75584,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7332,7 +7332,7 @@
     },
     {
       "file": "index.html",
-      "line": 75554,
+      "line": 75585,
       "name": "app_configuracoes",
       "operation": "select",
       "chain": [
@@ -7344,7 +7344,7 @@
     },
     {
       "file": "index.html",
-      "line": 75555,
+      "line": 75586,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7356,7 +7356,7 @@
     },
     {
       "file": "index.html",
-      "line": 75556,
+      "line": 75587,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7367,7 +7367,7 @@
     },
     {
       "file": "index.html",
-      "line": 75557,
+      "line": 75588,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -7379,7 +7379,7 @@
     },
     {
       "file": "index.html",
-      "line": 75559,
+      "line": 75590,
       "name": "desafios",
       "operation": "select",
       "chain": [
@@ -7390,7 +7390,7 @@
     },
     {
       "file": "index.html",
-      "line": 75559,
+      "line": 75590,
       "name": "usuario_desafios",
       "operation": "select",
       "chain": [
@@ -7402,7 +7402,7 @@
     },
     {
       "file": "index.html",
-      "line": 75578,
+      "line": 75609,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7415,7 +7415,7 @@
     },
     {
       "file": "index.html",
-      "line": 75578,
+      "line": 75609,
       "name": "livros_pessoais",
       "operation": "select",
       "chain": [
@@ -7428,7 +7428,7 @@
     },
     {
       "file": "index.html",
-      "line": 75582,
+      "line": 75613,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -7439,7 +7439,7 @@
     },
     {
       "file": "index.html",
-      "line": 75638,
+      "line": 75669,
       "name": "clube_livro_participantes",
       "operation": "select",
       "chain": [
@@ -7451,7 +7451,7 @@
     },
     {
       "file": "index.html",
-      "line": 75639,
+      "line": 75670,
       "name": "clube_livro_participantes",
       "operation": "select",
       "chain": [
@@ -7462,7 +7462,7 @@
     },
     {
       "file": "index.html",
-      "line": 75644,
+      "line": 75675,
       "name": "clube_livro_atual",
       "operation": "select",
       "chain": [
@@ -7473,7 +7473,7 @@
     },
     {
       "file": "index.html",
-      "line": 75646,
+      "line": 75677,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7484,7 +7484,7 @@
     },
     {
       "file": "index.html",
-      "line": 75657,
+      "line": 75688,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7495,7 +7495,7 @@
     },
     {
       "file": "index.html",
-      "line": 75726,
+      "line": 75757,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7506,7 +7506,7 @@
     },
     {
       "file": "index.html",
-      "line": 75778,
+      "line": 75809,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7517,7 +7517,7 @@
     },
     {
       "file": "index.html",
-      "line": 75875,
+      "line": 75906,
       "name": "solicitacoes_validacao",
       "operation": "select",
       "chain": [
@@ -7530,7 +7530,7 @@
     },
     {
       "file": "index.html",
-      "line": 75876,
+      "line": 75907,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -7543,7 +7543,7 @@
     },
     {
       "file": "index.html",
-      "line": 75889,
+      "line": 75928,
       "name": "metas_diarias",
       "operation": "select",
       "chain": [
@@ -7555,7 +7555,7 @@
     },
     {
       "file": "index.html",
-      "line": 75889,
+      "line": 75928,
       "name": "metas_diarias",
       "operation": "update",
       "chain": [
@@ -7596,97 +7596,97 @@
     },
     {
       "file": "index.html",
-      "line": 73298,
+      "line": 73306,
       "name": "entrel_award_daily_epub_v507"
     },
     {
       "file": "index.html",
-      "line": 75452,
+      "line": 75483,
       "name": "entrel_finish_club_v507"
     },
     {
       "file": "index.html",
-      "line": 75517,
+      "line": 75548,
       "name": "entrel_award_period_goal_v507"
     },
     {
       "file": "index.html",
-      "line": 75562,
+      "line": 75593,
       "name": "entrel_apply_request_reward_v507"
     },
     {
       "file": "index.html",
-      "line": 75567,
+      "line": 75598,
       "name": "entrel_reject_request_v507"
     },
     {
       "file": "index.html",
-      "line": 75568,
+      "line": 75599,
       "name": "entrel_approve_finish_request_v508"
     },
     {
       "file": "index.html",
-      "line": 75668,
+      "line": 75699,
       "name": "entrel_finish_club_v507"
     },
     {
       "file": "index.html",
-      "line": 75678,
+      "line": 75709,
       "name": "entrel_approve_club_finish_v507"
     },
     {
       "file": "index.html",
-      "line": 75731,
+      "line": 75762,
       "name": "entrel_submit_club_finish_v509"
     },
     {
       "file": "index.html",
-      "line": 75736,
+      "line": 75767,
       "name": "entrel_admin_finish_club_v509"
     },
     {
       "file": "index.html",
-      "line": 75744,
+      "line": 75775,
       "name": "entrel_approve_club_finish_v509"
     },
     {
       "file": "index.html",
-      "line": 75786,
+      "line": 75817,
       "name": "entrel_repair_club_participants_v510"
     },
     {
       "file": "index.html",
-      "line": 75790,
+      "line": 75821,
       "name": "entrel_retry_pending_rewards_v510"
     },
     {
       "file": "index.html",
-      "line": 75800,
+      "line": 75831,
       "name": "entrel_submit_club_finish_v511"
     },
     {
       "file": "index.html",
-      "line": 75807,
+      "line": 75838,
       "name": "entrel_admin_finish_club_v511"
     },
     {
       "file": "index.html",
-      "line": 75817,
+      "line": 75848,
       "name": "entrel_approve_club_finish_v511"
     },
     {
       "file": "index.html",
-      "line": 75880,
+      "line": 75915,
       "name": "entrel_verified_monthly_progress_v512"
     },
     {
       "file": "index.html",
-      "line": 75885,
+      "line": 75920,
       "name": "entrel_award_period_goal_v507"
     },
     {
       "file": "index.html",
-      "line": 75889,
+      "line": 75928,
       "name": "entrel_award_daily_epub_v507"
     }
   ],
@@ -7792,7 +7792,7 @@
     },
     {
       "file": "index.html",
-      "line": 72190,
+      "line": 72198,
       "name": "comprovantes",
       "operation": "select",
       "chain": [
@@ -7801,7 +7801,7 @@
     },
     {
       "file": "index.html",
-      "line": 72192,
+      "line": 72200,
       "name": "comprovantes",
       "operation": "select",
       "chain": [
