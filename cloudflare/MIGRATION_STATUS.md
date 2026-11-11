@@ -72,8 +72,8 @@
 | Domínio | Situação real |
 |---|---|
 | Perfis | edição própria em canário; listagem social, avatares de terceiros e outros sincronizadores ainda precisam de paridade |
-| Configurações | preferências e escopos pessoais/globais implementados em canário; migration remota pendente; demais chaves continuam com operações específicas |
-| Biblioteca e leituras | CRUD pessoal, progresso e pedido de conclusão integrados em canário; leitura/escrita EPUB e migração de arquivos legados ainda pendentes |
+| Configurações | preferências e escopos pessoais/globais implementados em canário; migration aplicada ao staging; demais chaves continuam com operações específicas |
+| Biblioteca e leituras | CRUD pessoal, progresso e pedido de conclusão integrados em canário; migration de identidades aplicada ao staging; leitura/escrita EPUB e migração de arquivos legados ainda pendentes |
 | Metas/progresso | gravação diária idempotente por livro/dia, metas canônicas semanais/mensais e leitura do progresso/recompensas no canário; outras rotinas de desafios e calendário ainda exigem revisão |
 | Desafios/medalhas/molduras | catálogo e editor de definições de desafios no canário; progresso, solicitações e recompensas ainda Supabase; seleção própria e reconciliação de medalhas/molduras validadas em canário |
 | Clube | RPCs canário e correções de aprovação; mural, gestão completa de ciclos e interface de álbuns ainda incompletos |
@@ -96,7 +96,7 @@ Foram concluídos localmente novos contratos de backend e integração opt-in do
 
 Validação local: **37 testes aprovados**, incluindo D1/R2 em workerd, e `npm run check` compilou os 264 scripts inline e módulos do navegador; `git diff --check` passou. Esses resultados não substituem autenticação Google real nem execução contra o staging remoto.
 
-**Estado da publicação:** as migrations `0002`, `0003` e `0004` e as novas rotas ainda não foram aplicadas ao D1/Worker remoto. O conector Cloudflare continuou retornando `UNAUTHORIZED` após a tentativa de reconexão desta continuação. Não executar cutover de produção. O teste real do Google e a reconciliação das diferenças de dados listadas acima também continuam pendentes.
+**Estado da publicação atualizado em 2026-11-11:** a conexão Cloudflare foi reautenticada. As migrations `0002_scoped_settings.sql`, `0003_library_identities.sql` e `0004_daily_book_progress.sql` foram aplicadas ao D1 `entrelinhas-staging`; o Worker `entrelinhas-api-staging` foi publicado com o código da branch e 100% do tráfego de staging. A versão anterior `a5a076e7-8c03-43fe-8408-5a1cedf5f85d` permanece disponível para rollback de código. Produção não foi alterada. O teste real Google, a reconciliação das diferenças de dados e os domínios ainda legados continuam pendentes.
 
 ## Continuação local — metas e progresso diário/semanal/mensal
 
@@ -108,7 +108,7 @@ Validação local: **37 testes aprovados**, incluindo D1/R2 em workerd, e `npm r
 
 Validação local acumulada nesta continuação: **42 testes aprovados** com D1/R2 em workerd; `npm run check` compilou os 264 scripts inline e módulos Cloudflare; `git diff --check` passou. Os testes não substituem sessão Google real nem validação no D1/R2 remoto.
 
-**Pendências externas e de cobertura:** reautenticar a conexão Cloudflare para aplicar migrations e publicar o Worker de staging; executar a página de validação com a sessão Google real; comparar/reconciliar as diferenças de dados já listadas; migrar os leitores e escritores ainda legados nos demais domínios. Supabase Auth segue ligado. Não houve mudança em produção.
+**Pendências externas e de cobertura:** executar a página de validação com a sessão Google real; comparar/reconciliar as diferenças de dados já listadas; migrar os leitores e escritores ainda legados nos demais domínios. Supabase Auth segue ligado. Não houve mudança em produção.
 
 ## Continuação local — catálogo e editor administrativo de desafios
 
@@ -118,6 +118,15 @@ Validação local acumulada nesta continuação: **42 testes aprovados** com D1/
 - O progresso/conclusão automática, solicitação de validação, upload de comprovante e aprovação/recompensa de desafios ainda usam Supabase. Portanto, este canário cobre definições, não o domínio inteiro, e não pode ser tratado como paridade completa.
 - Os testes de rota cobrem listagem por papel, isolamento do progresso, criação/edição, validação, remoção lógica e a recusa de gravações por membro. O total validado nesta continuação é 42 testes.
 
+## Publicação real em staging — 2026-11-11
+
+- Cloudflare reautenticado para a conta EntreLinhas. D1 confirmado pelo nome `entrelinhas-staging` e pelo ID registrado em `STAGING_DEPLOYMENT_2026-11-11.json`.
+- Migrations `0002`, `0003` e `0004` aplicadas com sucesso via API D1. `scoped_settings` importou 11 linhas; `library_identities`, `daily_goal_progress_days` e `daily_book_progress` foram criadas sem apagar linhas existentes.
+- Worker implantado a partir do commit `a103db555f9dabd06c806d0e94942b9e6a92b316`; versão `ee1b9159-484c-4ed4-bce5-53bef863f9da`, deployment `fcbfec65-e92d-4492-aed8-c0300ea72ab3`, tráfego 100% no Worker de staging. Bindings D1, R2 e Supabase Auth foram preservados. A versão anterior `a5a076e7-8c03-43fe-8408-5a1cedf5f85d` é o rollback de código.
+- Verificação remota: `/health` retornou 200 com `ok:true`; `/api/v1/challenges`, `/api/v1/settings/global/meta_semanal` e `/api/v1/progress/weekly` retornaram 401 sem token, confirmando a barreira de autenticação. D1 manteve 13 usuários, 20 configurações e 177 livros pessoais; `scoped_settings` contém 11 linhas e as tabelas de progresso novo começaram vazias.
+- O teste Google autenticado continua pendente. A automação do navegador não conseguiu identificar a URL atual com confiança suficiente e foi interrompida; nenhum login foi automatizado. A página `cloudflare-validation.html` pode ser executada manualmente pelo usuário.
+- Nenhum deploy/cutover de produção ocorreu.
+
 ### Reversão
 
-A entrada normal index.html mantém Supabase como fonte até validação. O canário pode ser desativado removendo seus parâmetros/entrada. Para o código remoto, a versão anterior ao trabalho é `febf2e0f-6fe3-4163-ab6a-0c73c48236d6`; reverter código não reverte os dados. Não apagar o snapshot preservado, seus manifestos nem os históricos adicionados.
+A entrada normal index.html mantém Supabase como fonte até validação. O canário pode ser desativado removendo seus parâmetros/entrada. Para o código remoto de staging, reimplantar a versão `a5a076e7-8c03-43fe-8408-5a1cedf5f85d`; reverter código não reverte as migrations aditivas. A versão `febf2e0f-6fe3-4163-ab6a-0c73c48236d6` é a base anterior ao trabalho. Não apagar o snapshot preservado, seus manifestos nem os históricos adicionados.
