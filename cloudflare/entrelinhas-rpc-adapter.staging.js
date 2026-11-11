@@ -47,7 +47,7 @@
             target: a.p_target, xp: a.p_xp, points: a.p_points
           });
         case 'entrel_award_daily_epub_v507':
-          return call('/api/v1/rewards/daily-epub', 'POST', { date: a.p_date || a.p_day || a.date });
+          return call('/api/v1/rewards/daily-epub', 'POST', { date: a.p_date });
         case 'entrel_reject_request_v507':
           return call('/api/v1/admin/requests/reject', 'POST', {
             request_id: a.p_request_id, reason: a.p_reason
@@ -63,7 +63,9 @@
             request_id: a.p_request_id, reason: a.p_reason
           });
         case 'entrel_submit_club_finish_v509':
-          return call('/api/v1/club/finish-request', 'POST', {});
+          return call('/api/v1/club/finish-request', 'POST', {
+            cycle_id: global.__ENTREL_ACTIVE_CLUB_CYCLE_ID__ || ''
+          });
         case 'entrel_submit_club_finish_v511':
           return call('/api/v1/club/finish-request', 'POST', { cycle_id: a.p_cycle_id });
         default:
