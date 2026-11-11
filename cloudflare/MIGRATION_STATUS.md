@@ -45,3 +45,12 @@ O adaptador encaminha somente operações com rota e argumentos conhecidos. Oper
 - Não desligar Supabase Auth, Postgres ou Storage nesta fase.
 - Não apagar objetos R2 excedentes/zero-byte sem identificar referências.
 - Não mesclar o PR nem publicar o staging como produção antes dos testes autenticados e da auditoria de RLS.
+
+
+## Fechamento do ciclo de 10 marcos — 2026-11-11
+
+Foram concluídos dez marcos de preparação de staging nesta rodada. O último conjunto de alterações adicionou ao preview testes autenticados somente-leitura para perfil, livros, metas, leitura, notificações, chat, desafios, álbuns, fotos e download privado de imagem, além de expor os métodos correspondentes no cliente Cloudflare reutilizável. Os commits finais desta sequência são `7241433cf316b408160465942011b00c553b71d8` (cliente) e `ab2485bc8a52b4e5df854d5005b5fbeb2dae2041` (smoke test).
+
+Os dois checks Netlify do commit de documentação `e8f2808e28f08b2881635b191ff7d5a7f81f3782` foram reportados como `success`. Isso valida a geração dos previews, não a execução autenticada dos fluxos. O teste com a sessão Google do proprietário ainda precisa ser executado no navegador. Link direto: https://deploy-preview-2--entrelinhasoff.netlify.app/cloudflare-staging.html
+
+**Conclusão correta:** os dez marcos de preparação/teste de staging foram trabalhados; a migração integral do aplicativo NÃO está concluída e NÃO está pronta para produção. Permanecem as seis pendências descritas acima: cobertura das operações nas 26 tabelas, RPCs sem paridade, comparação integral dos dados, testes ponta a ponta autenticados, integridade D1 e revisão de RLS/cutover. PR #2 continua draft e não deve ser mesclada. Supabase Auth, Postgres e Storage permanecem ativos.
