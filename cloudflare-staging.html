@@ -6,8 +6,9 @@
 <title>Entre Linhas — Cloudflare staging</title>
 <style>
 html,body{margin:0;min-height:100%;background:#101014;color:#f5f5f5;font:14px system-ui}
-#stage-status{position:fixed;z-index:2147483647;right:10px;bottom:10px;padding:8px 12px;border-radius:10px;background:#24242b;color:#fff;box-shadow:0 2px 12px #0008}
+#stage-status{position:fixed;z-index:2147483647;right:10px;bottom:10px;padding:8px 12px;border-radius:10px;background:#24242b;color:#fff;box-shadow:0 2px 12px #0008;max-width:min(90vw,460px)}
 #stage-status.ok{background:#174b35}#stage-status.err{background:#702a2a}
+#stage-test{margin-left:8px;border:0;border-radius:7px;padding:6px 9px;background:#fff;color:#171717;font-weight:600}
 </style>
 </head>
 <body>
@@ -21,11 +22,25 @@ html,body{margin:0;min-height:100%;background:#101014;color:#f5f5f5;font:14px sy
     let source=await response.text();
     const sdk=/<script\s+src=["']https:\/\/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@2["']\s*>\s*<\/script>/i;
     if(!sdk.test(source))throw new Error('SDK do Supabase não encontrado no HTML principal.');
-    const injection='<script src="./cloudflare/entrelinhas-rpc-adapter.staging.js"><\/script><script>(function(){var sdk=window.supabase;if(!sdk||!sdk.createClient)throw new Error("SDK Supabase indisponível");if(sdk.__entrelCloudflareFactoryWrapped)return;sdk.__entrelCloudflareFactoryWrapped=true;var original=sdk.createClient.bind(sdk);sdk.createClient=function(){var client=original.apply(null,arguments);if(window.installEntreLinhasCloudflareRpcAdapter)window.installEntreLinhasCloudflareRpcAdapter(client,{apiBase:"https://entrelinhas-api-staging.lucasviniciusk.workers.dev"});return client;};window.__ENTREL_CLOUDFLARE_STAGING__={enabled:true,api:"https://entrelinhas-api-staging.lucasviniciusk.workers.dev",mode:"rpc-only-safe"};})();<\/script>';
+    const injection='<script src="./cloudflare/entrelinhas-api-client.js"><\\/script><script src="./cloudflare/entrelinhas-rpc-adapter.staging.js"><\\/script><script>(function(){var sdk=window.supabase;if(!sdk||!sdk.createClient)throw new Error("SDK Supabase indisponível");if(sdk.__entrelCloudflareFactoryWrapped)return;sdk.__entrelCloudflareFactoryWrapped=true;var original=sdk.createClient.bind(sdk);sdk.createClient=function(){var client=original.apply(null,arguments);window.__ENTREL_STAGING_SUPABASE_CLIENT__=client;if(window.installEntreLinhasCloudflareRpcAdapter)window.installEntreLinhasCloudflareRpcAdapter(client,{apiBase:"https://entrelinhas-api-staging.lucasviniciusk.workers.dev"});return client;};window.__ENTREL_CLOUDFLARE_STAGING__={enabled:true,api:"https://entrelinhas-api-staging.lucasviniciusk.workers.dev",mode:"rpc-safe-plus-profile-read-test"};})();<\\/script>';
     source=source.replace(sdk,match=>match+injection);
-    if(!source.includes('__ENTREL_CLOUDFLARE_STAGING__'))throw new Error('Não foi possível instalar o adaptador no ponto correto.');
-    status.className='ok';status.textContent='STAGING • RPCs compatíveis via Cloudflare • Supabase Auth preservado';
+    if(!source.includes('__ENTREL_CLOUDFLARE_STAGING__'))throw new Error('Não foi possível instalar os adaptadores no ponto correto.');
     document.open();document.write(source);document.close();
+    const panel=document.createElement('div');panel.id='stage-status';panel.className='ok';panel.textContent='STAGING • Auth Supabase preservado • RPCs compatíveis via Worker ';
+    const test=document.createElement('button');test.id='stage-test';test.textContent='Testar perfil';test.onclick=async function(){
+      test.disabled=true;test.textContent='Testando…';
+      try{
+        const client=window.__ENTREL_STAGING_SUPABASE_CLIENT__;
+        if(!client)throw new Error('Aguarde o carregamento e faça login com Google.');
+        const api=window.EntreLinhasCloudflareApi.create({getAccessToken:async function(){const r=await client.auth.getSession();if(r.error)throw r.error;if(!r.data.session)throw new Error('Faça login com Google primeiro.');return r.data.session.access_token;}});
+        const result=await api.getMe();
+        panel.className='ok';panel.firstChild.textContent='SUCESSO • Perfil lido do Worker Cloudflare. ';
+        test.textContent='Perfil validado';
+        console.info('[Entre Linhas staging] GET /api/v1/me',result);
+      }catch(e){panel.className='err';panel.firstChild.textContent='TESTE NÃO CONCLUÍDO • '+(e.message||e)+' ';test.textContent='Tentar novamente';}
+      finally{test.disabled=false;}
+    };
+    panel.appendChild(test);document.body.appendChild(panel);
   }catch(error){
     status.className='err';status.textContent='Falha no staging: '+(error&&error.message||error);
     console.error('[Entre Linhas staging]',error);
