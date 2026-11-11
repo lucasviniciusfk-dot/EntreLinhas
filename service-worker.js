@@ -1,6 +1,6 @@
-const ENTRELINHAS_SW_VERSION='1.0.49-v513';
-const CACHE_NAME='entrelinhas-pwa-1-0-49-v513';
-const APP_SHELL=['./','./index.html','./manifest.webmanifest','./offline.html','./icon-180.png','./icon-192.png','./icon-512.png','./maskable-512.png'];
+const ENTRELINHAS_SW_VERSION='1.0.50-cloudflare-canary';
+const CACHE_NAME='entrelinhas-pwa-1-0-50-cloudflare-canary';
+const APP_SHELL=['./','./index.html','./manifest.webmanifest','./offline.html','./cloudflare/entrelinhas-api-client.js','./cloudflare/entrelinhas-profile-data.js','./icon-180.png','./icon-192.png','./icon-512.png','./maskable-512.png'];
 
 async function cacheShell(){
   const cache=await caches.open(CACHE_NAME);
@@ -59,7 +59,12 @@ self.addEventListener('fetch',event=>{
   if(url.origin!==self.location.origin)return;
 
   if(request.mode==='navigate'){
-    event.respondWith(fetchNavigation(request));
+    const base=new URL('./',self.location.href).pathname;
+    if(url.pathname===base||url.pathname===base+'index.html'){
+      event.respondWith(fetchNavigation(request));
+    }else{
+      event.respondWith(fetch(request).catch(async()=>await caches.match(request)||await caches.match('./offline.html')||Response.error()));
+    }
     return;
   }
 

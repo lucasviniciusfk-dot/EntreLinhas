@@ -1,0 +1,5 @@
+node_modules/
+.migration-private/
+.dev.vars
+.env*
+coverage/

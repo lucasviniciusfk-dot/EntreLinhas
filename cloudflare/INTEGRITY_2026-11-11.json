@@ -1,0 +1,587 @@
+{
+  "checkedAt": "2026-11-11T16:18:47.110Z",
+  "normalization": "boolean, JSON key ordering and timestamp notation; no data edits",
+  "tables": [
+    {
+      "table": "admin_logs",
+      "status": "DIFFERENT",
+      "pgRows": 5195,
+      "d1Rows": 5195,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 1,
+      "changedFields": [
+        "detalhe"
+      ],
+      "comparison": "canonical content by primary key",
+      "insertOnlyDeltaRows": 8,
+      "deltaContentVerified": true
+    },
+    {
+      "table": "albuns",
+      "status": "MATCH",
+      "pgRows": 0,
+      "d1Rows": 0,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "empty table counts"
+    },
+    {
+      "table": "app_configuracoes",
+      "status": "DIFFERENT",
+      "pgRows": 20,
+      "d1Rows": 20,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 1,
+      "changedFields": [
+        "atualizado_em",
+        "valor"
+      ],
+      "comparison": "canonical content by primary key"
+    },
+    {
+      "table": "app_notificacoes",
+      "status": "MATCH",
+      "pgRows": 1206,
+      "d1Rows": 1206,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "comparison": "canonical content by primary key"
+    },
+    {
+      "table": "app_state",
+      "status": "MATCH",
+      "pgRows": 1,
+      "d1Rows": 1,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "SHA256 by primary key; PostgreSQL JSONB serialization, boolean/JSON/timestamp normalization",
+      "numericSerializationCaveat": false
+    },
+    {
+      "table": "chat_mensagens",
+      "status": "MATCH",
+      "pgRows": 3,
+      "d1Rows": 3,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "4f41e9452181f5b113d1701466b053a49bb8c066fbcb6075f06bd4f7d5b3faf9",
+      "d1Sha256": "4f41e9452181f5b113d1701466b053a49bb8c066fbcb6075f06bd4f7d5b3faf9"
+    },
+    {
+      "table": "chat_reacoes",
+      "status": "MATCH",
+      "pgRows": 0,
+      "d1Rows": 0,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "empty table counts"
+    },
+    {
+      "table": "clube_albuns",
+      "status": "MATCH",
+      "pgRows": 7,
+      "d1Rows": 7,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "e2a1fae79353c2f1c05128102d4c0454983137584b68c9cfe0bbf7df64b736a6",
+      "d1Sha256": "e2a1fae79353c2f1c05128102d4c0454983137584b68c9cfe0bbf7df64b736a6"
+    },
+    {
+      "table": "clube_biblioteca",
+      "status": "MATCH",
+      "pgRows": 10,
+      "d1Rows": 10,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "f508fb979ac04ce3ee0dbdedb9b90ced546e72625671990ad0732111a10ebe80",
+      "d1Sha256": "f508fb979ac04ce3ee0dbdedb9b90ced546e72625671990ad0732111a10ebe80"
+    },
+    {
+      "table": "clube_estatisticas",
+      "status": "MATCH",
+      "pgRows": 0,
+      "d1Rows": 0,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "empty table counts"
+    },
+    {
+      "table": "clube_fotos",
+      "status": "MATCH",
+      "pgRows": 22,
+      "d1Rows": 22,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "3878106c09c2d9122b63f040c5e24950bc0c6e868506197ddb900b35d29e812c",
+      "d1Sha256": "3878106c09c2d9122b63f040c5e24950bc0c6e868506197ddb900b35d29e812c"
+    },
+    {
+      "table": "clube_livro_atual",
+      "status": "MATCH",
+      "pgRows": 1,
+      "d1Rows": 1,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "ed256f5fadc88c33faa9df4e22145abf404e7ac0c0ed5127f1078175d7f558ca",
+      "d1Sha256": "ed256f5fadc88c33faa9df4e22145abf404e7ac0c0ed5127f1078175d7f558ca"
+    },
+    {
+      "table": "clube_livro_participantes",
+      "status": "MATCH",
+      "pgRows": 35,
+      "d1Rows": 35,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "d745d3df8a5c7b161551c6b02c5e6d332674886402d6575cdacd92da253581b8",
+      "d1Sha256": "d745d3df8a5c7b161551c6b02c5e6d332674886402d6575cdacd92da253581b8"
+    },
+    {
+      "table": "clube_livros_finalizados",
+      "status": "MATCH",
+      "pgRows": 3,
+      "d1Rows": 3,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "4077d64a4c6cf5cbac19f1e1d104355dc420a02987ef2c68b2328271897007ad",
+      "d1Sha256": "4077d64a4c6cf5cbac19f1e1d104355dc420a02987ef2c68b2328271897007ad"
+    },
+    {
+      "table": "clube_mural",
+      "status": "MATCH",
+      "pgRows": 4,
+      "d1Rows": 4,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "0fcbc6f8d3dea3dd4980ddee3e78bc192d7ecdf86e9b0c1110ecac5ec137b106",
+      "d1Sha256": "0fcbc6f8d3dea3dd4980ddee3e78bc192d7ecdf86e9b0c1110ecac5ec137b106"
+    },
+    {
+      "table": "clube_mural_reacoes",
+      "status": "MATCH",
+      "pgRows": 9,
+      "d1Rows": 9,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "31f0d2765bb7524c5c42b3fbd504e5f8dc9963a492a55b217a56af2059c73de7",
+      "d1Sha256": "31f0d2765bb7524c5c42b3fbd504e5f8dc9963a492a55b217a56af2059c73de7"
+    },
+    {
+      "table": "contas_removidas_app",
+      "status": "MATCH",
+      "pgRows": 2,
+      "d1Rows": 2,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "4dd4967cf112e71e811d98f2cade350b3b7db939c2427a95b98a1cda7c19dd46",
+      "d1Sha256": "4dd4967cf112e71e811d98f2cade350b3b7db939c2427a95b98a1cda7c19dd46"
+    },
+    {
+      "table": "desafios",
+      "status": "MATCH",
+      "pgRows": 14,
+      "d1Rows": 14,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "aefaf2e7c2e7cbb6a803dbbbb55a26f1435ac2cd453e5e243f1be93f59281d5e",
+      "d1Sha256": "aefaf2e7c2e7cbb6a803dbbbb55a26f1435ac2cd453e5e243f1be93f59281d5e"
+    },
+    {
+      "table": "entrel_app_snapshot_v257",
+      "status": "DIFFERENT",
+      "pgRows": 1,
+      "d1Rows": 1,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 1,
+      "comparison": "SHA256 by primary key; paginated D1; normalized PostgreSQL JSONB serialization",
+      "numericSerializationCaveat": true
+    },
+    {
+      "table": "entrel_app_snapshot_v260",
+      "status": "DIFFERENT",
+      "pgRows": 1,
+      "d1Rows": 1,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 1,
+      "comparison": "SHA256 by primary key; paginated D1; normalized PostgreSQL JSONB serialization",
+      "numericSerializationCaveat": true
+    },
+    {
+      "table": "entrel_app_state",
+      "status": "MATCH",
+      "pgRows": 1,
+      "d1Rows": 1,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "SHA256 by primary key; PostgreSQL JSONB serialization, boolean/JSON/timestamp normalization",
+      "numericSerializationCaveat": false
+    },
+    {
+      "table": "entrel_reward_claims_v510",
+      "status": "MATCH",
+      "pgRows": 61,
+      "d1Rows": 61,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "91831ec2f255f1f991c48363c2c8382ff3744b4353bed8dd158520d4cdd67efc",
+      "d1Sha256": "91831ec2f255f1f991c48363c2c8382ff3744b4353bed8dd158520d4cdd67efc"
+    },
+    {
+      "table": "entrel_user_library_snapshot_v259",
+      "status": "DIFFERENT",
+      "pgRows": 12,
+      "d1Rows": 12,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 3,
+      "comparison": "SHA256 by primary key; paginated D1; normalized PostgreSQL JSONB serialization",
+      "numericSerializationCaveat": true
+    },
+    {
+      "table": "entrel_user_snapshot_v260",
+      "status": "PRESERVED_WITH_ARCHIVE",
+      "pgRows": 17,
+      "d1Rows": 17,
+      "verifiedValidRows": 16,
+      "changedValidRows": 3,
+      "invalidD1Rows": 1,
+      "archivedFullSourceBytes": 8849397,
+      "archiveSha256": "527d32cf741bb7b0d38416a38d82f2a7ad73126750d93c5fccd33c5251fd6d8f",
+      "legacyRowsOverwritten": 0
+    },
+    {
+      "table": "entrel_user_state",
+      "status": "MATCH",
+      "pgRows": 1,
+      "d1Rows": 1,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "SHA256 by primary key; PostgreSQL JSONB serialization, boolean/JSON/timestamp normalization",
+      "numericSerializationCaveat": false
+    },
+    {
+      "table": "estatisticas_pessoais",
+      "status": "MATCH",
+      "pgRows": 0,
+      "d1Rows": 0,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "empty table counts"
+    },
+    {
+      "table": "fotos_albuns",
+      "status": "MATCH",
+      "pgRows": 0,
+      "d1Rows": 0,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "empty table counts"
+    },
+    {
+      "table": "leituras",
+      "status": "MATCH",
+      "pgRows": 0,
+      "d1Rows": 0,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "empty table counts"
+    },
+    {
+      "table": "livro_mes",
+      "status": "MATCH",
+      "pgRows": 0,
+      "d1Rows": 0,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "empty table counts"
+    },
+    {
+      "table": "livros",
+      "status": "MATCH",
+      "pgRows": 2,
+      "d1Rows": 2,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "66cd67c622336adf5e84b5370236d2be39236179f95ac49a3976cc567c2242e9",
+      "d1Sha256": "66cd67c622336adf5e84b5370236d2be39236179f95ac49a3976cc567c2242e9"
+    },
+    {
+      "table": "livros_pessoais",
+      "status": "DIFFERENT",
+      "pgRows": 177,
+      "d1Rows": 177,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 177,
+      "changedFields": [
+        "atualizado_em",
+        "dados",
+        "progresso",
+        "epub_storage_path"
+      ],
+      "comparison": "canonical content by primary key"
+    },
+    {
+      "table": "medalhas",
+      "status": "MATCH",
+      "pgRows": 0,
+      "d1Rows": 0,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "empty table counts"
+    },
+    {
+      "table": "metas_diarias",
+      "status": "MATCH",
+      "pgRows": 641,
+      "d1Rows": 641,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "comparison": "canonical content by primary key",
+      "insertOnlyDeltaRows": 3,
+      "deltaContentVerified": true
+    },
+    {
+      "table": "metas_mensais",
+      "status": "MATCH",
+      "pgRows": 0,
+      "d1Rows": 0,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "empty table counts"
+    },
+    {
+      "table": "metas_reset_comandos",
+      "status": "MATCH",
+      "pgRows": 1,
+      "d1Rows": 1,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "de51846a6a87dadf04ce4e67b6c545093efb4c66d59c219b141360730fe7eee6",
+      "d1Sha256": "de51846a6a87dadf04ce4e67b6c545093efb4c66d59c219b141360730fe7eee6"
+    },
+    {
+      "table": "metas_usuarios",
+      "status": "MATCH",
+      "pgRows": 17,
+      "d1Rows": 17,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "99d87e7e90eddf95c4cdec853c13f9c9953885096a0683329b5e554846e71d7e",
+      "d1Sha256": "99d87e7e90eddf95c4cdec853c13f9c9953885096a0683329b5e554846e71d7e"
+    },
+    {
+      "table": "molduras",
+      "status": "MATCH",
+      "pgRows": 10,
+      "d1Rows": 10,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "4dd72c6e510e0ad75ca6c1df9a362ed7b463f478036034298a3ddeb12e76c737",
+      "d1Sha256": "4dd72c6e510e0ad75ca6c1df9a362ed7b463f478036034298a3ddeb12e76c737"
+    },
+    {
+      "table": "notificacoes",
+      "status": "MATCH",
+      "pgRows": 0,
+      "d1Rows": 0,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "empty table counts"
+    },
+    {
+      "table": "push_subscriptions",
+      "status": "MATCH",
+      "pgRows": 1,
+      "d1Rows": 1,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "25046a495113963a2e17d5c55673fac8a9cfa89f3baeafc0d3bc8c321f82c73e",
+      "d1Sha256": "25046a495113963a2e17d5c55673fac8a9cfa89f3baeafc0d3bc8c321f82c73e"
+    },
+    {
+      "table": "ranking_recordes",
+      "status": "MATCH",
+      "pgRows": 7,
+      "d1Rows": 7,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "83f8e0b3d25fefbb76968f71af13225a25e6918a6ecb3b54e39426f7291f4bc0",
+      "d1Sha256": "83f8e0b3d25fefbb76968f71af13225a25e6918a6ecb3b54e39426f7291f4bc0"
+    },
+    {
+      "table": "ranking_snapshots",
+      "status": "DIFFERENT",
+      "pgRows": 1583,
+      "d1Rows": 1583,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 20,
+      "changedFields": [
+        "atualizado_em",
+        "medalhas",
+        "livros",
+        "paginas"
+      ],
+      "comparison": "canonical content by primary key"
+    },
+    {
+      "table": "ranking_temporada_entries",
+      "status": "MATCH",
+      "pgRows": 0,
+      "d1Rows": 0,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "empty table counts"
+    },
+    {
+      "table": "ranking_temporadas",
+      "status": "MATCH",
+      "pgRows": 1,
+      "d1Rows": 1,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "1897fa25cf563784d05f2bfe5edd0b5e61c611536df7a3e6e40916b286b2afe9",
+      "d1Sha256": "1897fa25cf563784d05f2bfe5edd0b5e61c611536df7a3e6e40916b286b2afe9"
+    },
+    {
+      "table": "solicitacoes_validacao",
+      "status": "MATCH",
+      "pgRows": 232,
+      "d1Rows": 232,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "SHA256 by primary key; paginated D1; normalized PostgreSQL JSONB serialization",
+      "numericSerializationCaveat": false
+    },
+    {
+      "table": "usuario_desafios",
+      "status": "MATCH",
+      "pgRows": 55,
+      "d1Rows": 55,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "comparison": "canonical content by primary key"
+    },
+    {
+      "table": "usuario_medalhas",
+      "status": "MATCH",
+      "pgRows": 0,
+      "d1Rows": 0,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "comparison": "empty table counts"
+    },
+    {
+      "table": "usuario_molduras",
+      "status": "MATCH",
+      "pgRows": 17,
+      "d1Rows": 17,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "925fad11bd16d56041f3317a3d6a94ae926b242acd9b02d31f3bd531225381ae",
+      "d1Sha256": "925fad11bd16d56041f3317a3d6a94ae926b242acd9b02d31f3bd531225381ae"
+    },
+    {
+      "table": "usuarios",
+      "status": "MATCH",
+      "pgRows": 13,
+      "d1Rows": 13,
+      "missingInD1": 0,
+      "extraInD1": 0,
+      "changedRows": 0,
+      "changedFields": [],
+      "pgSha256": "e3abae391a28f626f4af626a07d73ff984c310d070712d389fba4117e2c1c6a7",
+      "d1Sha256": "e3abae391a28f626f4af626a07d73ff984c310d070712d389fba4117e2c1c6a7"
+    }
+  ],
+  "snapshotArchive": {
+    "success": true,
+    "manifestKey": "migration-preservation/2026-11-11/user-snapshot-v260-527d32cf741bb7b0d38416a38d82f2a7ad73126750d93c5fccd33c5251fd6d8f/manifest.json",
+    "bytes": 8849397,
+    "sha256": "527d32cf741bb7b0d38416a38d82f2a7ad73126750d93c5fccd33c5251fd6d8f",
+    "parts": 9,
+    "jsonValid": true
+  },
+  "files": {
+    "snapshot": [
+      {
+        "max_chars": 8000000,
+        "rows": 17
+      }
+    ],
+    "activeFiles": 1089,
+    "r2Objects": 1174,
+    "missingFiles": 0,
+    "sizeMismatches": 0,
+    "extraObjects": 85,
+    "note": "The 85 pre-existing extras were retained. The preservation archive added nine parts and one manifest afterward."
+  },
+  "sourceAuthAccounts": 13,
+  "productionCutoverApproved": false
+}

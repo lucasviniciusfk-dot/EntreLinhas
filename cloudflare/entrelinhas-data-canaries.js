@@ -1,0 +1,348 @@
+/* Reversible, per-page canaries for settings, library data, challenges, club mural and albums. */
+(function (root) {
+  'use strict';
+  const params = () => new URLSearchParams(root.location.search);
+  const enabled = name => params().get(name) === '1';
+  const api = () => root.EntreLinhasCloudflareApi.create();
+  const parse = value => { try { return typeof value === 'string' ? JSON.parse(value) : value || {}; } catch (_) { return {}; } };
+  const text = value => String(value == null ? '' : value);
+  const normalize = value => text(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const own = (book, uid) => text(book && (book.userId || book.usuario_id || book.user_id || book.owner_id)) === text(uid);
+  const personal = book => !!(book && (book.userId || book.usuario_id || book.user_id || book.onlinePersonalId || book.personalOnlineId || book.personalFingerprint || /personal|pessoal|manual|epub/i.test(text(book.source || book.origem)))) && !/club|clube|global|public|catalog/i.test(text(book && book.source));
+  const localSave = () => { try { if (typeof root.save === 'function') root.save(); else if (typeof root.saveData === 'function') root.saveData(); } catch (_) {} };
+  const render = () => { try { if (typeof root.render === 'function') root.render(); } catch (_) {} };
+  const info = (title, message) => { try { if (typeof root.prettyInfo === 'function') root.prettyInfo(title, message || '', 'OK'); else root.alert(title + (message ? '\n\n' + message : '')); } catch (_) {} };
+  const uuid = () => root.crypto && root.crypto.randomUUID ? root.crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); });
+  const byRef = ref => (root.data && Array.isArray(root.data.books) ? root.data.books : []).find(b => [b && b.id,b && b.onlinePersonalId,b && b.personalOnlineId,b && b.livroId,b && b.livro_id].some(x => text(x) === text(ref)));
+  const objectUrls = new Map();
+  const clubPhotoUrls = new Map();
+  async function fileUrl(value) {
+    const match = text(value).match(/^cf-asset:(.+)$/);
+    if (!match) return text(value);
+    if (!objectUrls.has(match[1])) objectUrls.set(match[1], root.URL.createObjectURL(await api().getFile(match[1])));
+    return objectUrls.get(match[1]);
+  }
+  async function mapBook(row, uid, prior) {
+    const d = parse(row.dados), pages = Math.max(1, Number(row.paginas) || 300), page = Math.max(0, Number(row.pagina_atual) || 0);
+    const epub = await fileUrl(row.epub_storage_path || row.epub_url || '');
+    return Object.assign({}, prior || {}, {
+      id:row.id,onlinePersonalId:row.id,personalOnlineId:row.id,livroId:row.livro_id || row.id,personalFingerprint:row.livro_id || row.id,
+      userId:uid,title:row.titulo || d.title || 'Livro',author:row.autor || d.author || 'Autor não identificado',genre:row.genero || d.genre || 'Outro',
+      pages,currentPage:page,readerPage:page,epubProgress:Number(row.progresso) || Math.round(page / pages * 100),epubCfi:row.epub_cfi || '',
+      status:row.status || 'reading',finished:/^(finished|finalizado|concluido|concluído)$/i.test(text(row.status)),finalizado:/^(finished|finalizado|concluido|concluído)$/i.test(text(row.status)),
+      finishPending:/pending_finish|aguardando/i.test(text(row.status)) || !!d.finishPending,source:row.epub_storage_path || row.epub_url ? 'personal-epub-online-r2' : 'personal-manual-online',
+      cover:await fileUrl(row.capa_url || row.capa || d.cover || ''),coverReference:row.capa_url || row.capa || '',epubStoragePath:epub,epubStorageKey:row.epub_storage_path || row.epub_url || '',
+      epubRemoteUrl:epub,epub_url:epub,atualizado_em:row.atualizado_em || '',updatedAt:row.atualizado_em ? Date.parse(row.atualizado_em) : Date.now(),syncedOnline:true,dados:d
+    });
+  }
+  async function identity() {
+    const result = await api().getMe();
+    if (!result.ok || !result.profile || !result.profile.id) throw new Error('A conta no Cloudflare não foi confirmada.');
+    return result.profile;
+  }
+  async function readClubGallery() {
+    if (!enabled('cf_albums')) throw new Error('Ative cf_albums para ler os álbuns do Clube no Cloudflare.');
+    const result=await api().listAlbums('?limit=200');
+    if(!result.ok||!Array.isArray(result.items))throw new Error('A lista de álbuns do Cloudflare não foi confirmada.');
+    const photos=[],active=new Set();
+    for(const album of result.items){
+      const response=await api().listPhotos(album.id,'&limit=300');
+      if(!response.ok||!Array.isArray(response.items))throw new Error('As fotos do álbum '+text(album.nome||album.id)+' não foram confirmadas no Cloudflare.');
+      for(const row of response.items){
+        const photo=Object.assign({},row),privatePhoto=row.origem_arquivo==='r2-private-v1'||/^private:\/\//i.test(text(row.url||row.storage_path));
+        if(privatePhoto){
+          active.add(text(row.id));
+          if(!clubPhotoUrls.has(text(row.id))){const blob=await api().getClubPhoto(row.id);clubPhotoUrls.set(text(row.id),root.URL.createObjectURL(blob));}
+          photo.url=clubPhotoUrls.get(text(row.id));
+        }else photo.url=text(row.image_url||row.url||row.foto_url||row.storage_path);
+        photo.foto_url=photo.url;photos.push(photo);
+      }
+    }
+    for(const [id,url] of clubPhotoUrls){if(!active.has(id)){try{root.URL.revokeObjectURL(url)}catch(_){}clubPhotoUrls.delete(id);}}
+    return {albums:result.items,photos};
+  }
+  async function uploadClubPhoto(albumId,file) {
+    if(!enabled('cf_albums'))throw new Error('Ative cf_albums para enviar fotos ao Cloudflare.');
+    const uploaded=await api().uploadClubPhoto(file);
+    if(!uploaded.ok||!uploaded.file||!uploaded.file.id)throw new Error('O arquivo não foi confirmado no armazenamento privado do Cloudflare.');
+    try{
+      const result=await api().addClubPhoto(albumId,uploaded.file.id);
+      if(!result.ok||(!result.photo&&!result.already_attached))throw new Error('O Cloudflare não confirmou o vínculo da foto com o álbum.');
+      return result;
+    }catch(error){try{await api().deleteFile(uploaded.file.id)}catch(_){}throw error;}
+  }
+  async function readLibrary(force) {
+    if (!enabled('cf_library')) return;
+    const now = Date.now();
+    if (!force && root.__entrelCfLibraryCache && now - root.__entrelCfLibraryCache.at < 45000) return root.__entrelCfLibraryCache.items;
+    const user = await identity(), items = [];
+    let cursor = '';
+    do {
+      const page = await api().listBooks('?limit=500' + cursor);
+      if (!page.ok || !Array.isArray(page.items)) throw new Error('A biblioteca no Cloudflare não confirmou a leitura.');
+      items.push(...page.items);
+      cursor = page.nextCursor ? '&before=' + encodeURIComponent(page.nextCursor.before || '') + '&before_id=' + encodeURIComponent(page.nextCursor.before_id || '') : '';
+      if (items.length >= 5000) break;
+    } while (cursor);
+    const books = Array.isArray(root.data && root.data.books) ? root.data.books : [], globals = [], local = [], mapped = [];
+    for (const row of items) {
+      const old = books.find(b => own(b,user.id) && (text(b.id) === text(row.id) || text(b.onlinePersonalId || b.personalOnlineId || b.livroId) === text(row.id) || (normalize(b.title || b.titulo) === normalize(row.titulo) && normalize(b.author || b.autor) === normalize(row.autor))));
+      mapped.push(await mapBook(row,user.id,old));
+    }
+    books.forEach(b => {
+      if (!personal(b)) globals.push(b);
+      else if (own(b,user.id) && !mapped.some(x => text(x.id) === text(b.id) || text(x.livroId) === text(b.livroId || b.personalFingerprint))) local.push(b);
+      else if (!own(b,user.id)) {
+        root.data.__entrelCfQuarantinedBooks = Array.isArray(root.data.__entrelCfQuarantinedBooks) ? root.data.__entrelCfQuarantinedBooks : [];
+        if (!root.data.__entrelCfQuarantinedBooks.some(x => text(x.id) === text(b.id))) root.data.__entrelCfQuarantinedBooks.push(b);
+      }
+    });
+    root.data.books = globals.concat(mapped,local);
+    localSave();
+    root.__entrelCfLibraryCache = {at:Date.now(),items:mapped};
+    if (force) render();
+    return mapped;
+  }
+  async function safeReadLibrary(force){try{return await readLibrary(force)}catch(e){root.__entrelCfLibraryError=text(e&&e.message||e);try{console.warn('[Cloudflare library]',root.__entrelCfLibraryError)}catch(_){}return []}}
+  async function readFinishRequests(){
+    if(!enabled('cf_admin'))throw new Error('Ative cf_admin para consultar a fila administrativa do staging.');
+    const [pending,processing]=await Promise.all([
+      api().listAdminRequests('?status=pending&source=personal_finish_cf_v1&limit=120'),
+      api().listAdminRequests('?status=processing&source=personal_finish_cf_v1&limit=120')
+    ]);
+    if(!pending.ok||!processing.ok||!Array.isArray(pending.items)||!Array.isArray(processing.items))throw new Error('A fila de finalizações do Cloudflare não foi confirmada.');
+    const finish=pending.items.concat(processing.items);
+    const challenges=enabled('cf_challenges')?await readChallengeRequests():[];
+    const seen=new Set();return finish.concat(challenges).filter(row=>{const key=text(row.id);if(seen.has(key))return false;seen.add(key);return true});
+  }
+  async function readChallengeRequests(){
+    if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para consultar os pedidos de desafio no Cloudflare.');
+    const [pending,processing]=await Promise.all([
+      api().listChallengeRequests('?status=pending&limit=120'),
+      api().listChallengeRequests('?status=processing&limit=120')
+    ]);
+    if(!pending.ok||!processing.ok||!Array.isArray(pending.items)||!Array.isArray(processing.items))throw new Error('A fila de desafios do Cloudflare não foi confirmada.');
+    const rows=pending.items.concat(processing.items);
+    for(const row of rows){
+      const source=text(row.comprovante||row.prova||'');
+      if(/^cf-asset:/i.test(source)){
+        try{const url=await fileUrl(source);row.comprovante=url;row.prova=url;}
+        catch(e){row.dados=Object.assign({},parse(row.dados),{proof_unavailable:true});}
+      }
+    }
+    return rows;
+  }
+  async function submitChallengeRequest(id,value,file){
+    if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para enviar solicitações de desafio ao Cloudflare.');
+    const challengeId=text(id),profile=await identity();let uploaded=null;
+    try{
+      if(file){
+        uploaded=await api().uploadFile(file,'comprovante');
+        if(!uploaded.ok||!uploaded.file||!uploaded.file.id)throw new Error('O comprovante não foi confirmado no R2 privado do Cloudflare.');
+      }
+      const result=await api().createChallengeRequest(challengeId,Object.assign({},value||{},{proof_file_id:uploaded&&uploaded.file.id||'',request_id:text(value&&value.request_id||uuid())}));
+      if(!result.ok||!result.request)throw new Error('A solicitação não foi confirmada no Cloudflare.');
+      return Object.assign({profile},result);
+    }catch(error){if(uploaded&&uploaded.file&&uploaded.file.id){try{await api().deleteFile(uploaded.file.id)}catch(_){}}throw error;}
+  }
+  async function reviewChallengeRequest(id,action,reason){
+    if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para revisar desafios no Cloudflare.');
+    const row=(await readChallengeRequests()).find(item=>text(item.id)===text(id));
+    if(!row||row.origem!=='challenge_cf_v1'||text(row.tipo).toLowerCase()!=='challenge')throw new Error('Solicitação de desafio não encontrada na fila do Cloudflare.');
+    const rejected=/reject|recus|reprov/i.test(text(action)),result=await api().reviewChallengeRequest(id,rejected?'rejected':'approved',reason||'');
+    if(!result.ok)throw new Error(text(result.error||'O Cloudflare não confirmou a revisão.'));
+    const state=root.__entrelV452Requests;if(state){state.at=0;state.loaded=false;state.fromCache=false;}
+    if(typeof root.entrelV452Refresh==='function')await root.entrelV452Refresh();
+    localSave();render();info(rejected?'Solicitação recusada':'Desafio aprovado',rejected?'A recusa foi confirmada no Cloudflare.':(result.applied?'A aprovação e a recompensa foram confirmadas no Cloudflare.':'A aprovação foi confirmada; a recompensa já estava registrada.'));
+    return true;
+  }
+  async function reviewFinishRequest(id,action,reason){
+    if(!enabled('cf_admin'))throw new Error('Ative cf_admin para revisar pedidos do staging.');
+    try{
+      const rows=await readFinishRequests(),row=rows.find(item=>text(item.id)===text(id));
+      if(!row||row.origem!=='personal_finish_cf_v1'||!/finish|finaliz/i.test(text(row.tipo)))throw new Error('Esta fila aceita somente finalizações pessoais enviadas pelo canário.');
+      const rejected=/reject|recus|reprov/i.test(text(action));
+      const result=rejected?await api().rejectRequest(id,reason||'Solicitação recusada pela administração.'):await api().approveBookFinish(id,reason||'Solicitação aprovada.');
+      if(!result.ok)throw new Error('O Cloudflare não confirmou a revisão.');
+      const state=root.__entrelV452Requests;
+      if(state){state.at=0;state.loaded=false;state.fromCache=false;}
+      if(typeof root.entrelV452Refresh==='function')await root.entrelV452Refresh();
+      localSave();render();info(rejected?'Solicitação recusada':'Livro finalizado',rejected?'A recusa foi confirmada no Cloudflare.':'A aprovação e a recompensa foram confirmadas no Cloudflare.');
+      return true;
+    }catch(e){info('Erro ao revisar',text(e&&e.message||e));return false;}
+  }
+  async function saveProgress(book, requestedPage) {
+    if (!enabled('cf_library')) return false;
+    if (!book) return false;
+    const user = await identity(), id = text(book.onlinePersonalId || book.personalOnlineId || book.id), pages = Math.max(1,Number(book.pages || book.paginas) || 1);
+    const page = Math.max(0,Math.min(pages,Math.floor(Number(requestedPage == null ? (book.readerPage || book.currentPage || 0) : requestedPage) || 0)));
+    book.userId = user.id; book.readerPage = book.currentPage = page; book.epubProgress = Math.round(page / pages * 100);
+    const result = await api().saveReading({book_id:id,current_page:page,epub_cfi:book.epubCfi || '',status:'reading',atualizado_em:book.atualizado_em || '',dados:book.dados || {}});
+    if (!result.ok || !result.book) throw new Error('O progresso não foi confirmado no Cloudflare.');
+    book.status = result.book.status || 'reading'; book.finishPending = /pending_finish/i.test(book.status); book.atualizado_em=result.book.atualizado_em||'';book.updatedAt = Date.now();
+    if(result.daily_goal){
+      const day=result.daily_goal,date=text(day.date),state=root.data;
+      if(state){state.dailyProgress=state.dailyProgress||{};state.dailyProgress[date]=state.dailyProgress[date]||{};state.dailyProgress[date][user.id]=Object.assign({},state.dailyProgress[date][user.id]||{},{pages:Number(day.pages)||0,done:!!day.completed,rewarded:!!day.rewarded,goalTarget:20,origem:day.origin||''});}
+      if(day.completed&&/leitor|reader|epub/i.test(text(day.origin))){
+        try{const reward=await api().awardDailyEpub(date);if(reward.ok){day.rewarded=true;if(state&&state.dailyProgress&&state.dailyProgress[date]&&state.dailyProgress[date][user.id])state.dailyProgress[date][user.id].rewarded=true;if(state&&state.user&&text(state.user.id||state.user.authId||state.user.supabaseId)===text(user.id)){state.user.xp=Number(reward.xp)||Number(state.user.xp)||0;state.user.pontos=Number(reward.points)||Number(state.user.pontos)||0;state.user.points=state.user.pontos;state.user.rankingPoints=state.user.pontos;state.user.estrelinhas=state.user.pontos;}}}
+        catch(e){root.__entrelCfDailyGoalError=text(e&&e.message||e);try{console.warn('[Cloudflare daily reward]',root.__entrelCfDailyGoalError)}catch(_){}}
+      }
+    }
+    localSave(); root.__entrelCfLibraryCache = null; return true;
+  }
+  async function safeSaveProgress(book,page){try{return await saveProgress(book,page)}catch(e){root.__entrelCfLibraryError=text(e&&e.message||e);try{console.warn('[Cloudflare progress]',root.__entrelCfLibraryError)}catch(_){}return false}}
+  async function addBook() {
+    if (!enabled('cf_library')) return;
+    const title=text((root.document.getElementById('bt')||{}).value).trim(), author=text((root.document.getElementById('ba')||{}).value).trim(), pages=Math.floor(Number((root.document.getElementById('bp')||{}).value)), genre=text((root.document.getElementById('bg')||{}).value).trim();
+    const already=!!((root.document.getElementById('entrelV482AlreadyFinished')||{}).checked);
+    if (!title || !author || pages < 1 || !genre) throw new Error('Preencha título, autor, páginas e gênero.');
+    const user=await identity(), file=root.__personalCoverV118 instanceof File ? root.__personalCoverV118 : null;
+    let cover=text((root.document.getElementById('bc')||{}).value).trim(), uploaded=null;
+    if (file) { uploaded=await api().uploadFile(file,'cover'); if(!uploaded.ok||!uploaded.file)throw new Error('A capa não foi guardada no Cloudflare.'); cover='cf-asset:'+uploaded.file.id; }
+    const id=uuid(), created=await api().createBook({id,livro_id:id,titulo:title,autor:author,genero:genre,paginas:pages,capa:cover,capa_url:cover,status:'reading',ativo:true,publico:false,dados:{source:'personal-manual-cloudflare',createdFrom:'manual'}});
+    if(!created.ok||!created.book) { if(uploaded)try{await api().deleteFile(uploaded.file.id)}catch(_){} throw new Error('O livro não foi confirmado no Cloudflare.'); }
+    if(uploaded){await api().linkBookAsset(id,uploaded.file.id,'cover');root.__personalCoverV118=null;}
+    const book=await mapBook(created.book,user.id); root.data.books=Array.isArray(root.data.books)?root.data.books:[];root.data.books.unshift(book);localSave();root.__entrelCfLibraryCache=null;
+    if(already){const review=text((root.document.getElementById('finishReview')||{}).value).trim();const req=await api().requestFinishBook(id,uuid(),review);if(req.ok){book.status='pending_finish';book.finishPending=true;}else info('Livro adicionado','O livro foi salvo, mas o pedido de finalização não foi confirmado.');}
+    try{if(typeof root.closeModal==='function')root.closeModal()}catch(_){}render();
+    info('Livro pessoal salvo','Os dados foram confirmados no Cloudflare.');return book;
+  }
+  async function editBook(id) {
+    if (!enabled('cf_library')) return;
+    const book=byRef(id);if(!book)throw new Error('Livro não encontrado.');
+    const title=text((root.document.getElementById('editTitle')||{}).value).trim(),author=text((root.document.getElementById('editAuthor')||{}).value).trim(),pages=Math.floor(Number((root.document.getElementById('editPages')||{}).value)),genre=text((root.document.getElementById('editGenre')||{}).value).trim(),cover=text((root.document.getElementById('editCover')||{}).value).trim();
+    if(!title||!author||pages<1||!genre)return info('Dados incompletos','Preencha nome, autor, páginas e gênero.');
+    const user=await identity(),idOnline=text(book.onlinePersonalId||book.personalOnlineId||book.id),page=Math.min(pages,Math.max(0,Number(book.currentPage||book.readerPage)||0)),result=await api().updateBook(idOnline,{titulo:title,autor:author,genero:genre,paginas:pages,capa:cover,capa_url:cover,pagina_atual:page});
+    if(!result.ok||!result.book)throw new Error('A alteração não foi confirmada no Cloudflare.');
+    Object.assign(book,{title,author,genre,genero:genre,pages,currentPage:page,readerPage:page,cover,updatedAt:Date.now(),userId:user.id});localSave();root.__entrelCfLibraryCache=null;
+    try{if(typeof root.closeModal==='function')root.closeModal()}catch(_){}render();info('Livro atualizado','As alterações foram confirmadas no Cloudflare.');return true;
+  }
+  async function requestFinish(ref) {
+    if (!enabled('cf_library')) return;
+    const book=byRef(ref);if(!book)throw new Error('Livro não encontrado na sua biblioteca.');
+    const user=await identity(),id=text(book.onlinePersonalId||book.personalOnlineId||book.id);
+    if(book.finishPending||/pending_finish/i.test(text(book.status)))return info('Finalização já enviada','A solicitação já está aguardando aprovação.');
+    const review=text((root.document.getElementById('finishReview')||{}).value).trim(),request=await api().requestFinishBook(id,uuid(),review);
+    if(!request.ok||!request.request)throw new Error('A solicitação não foi confirmada no Cloudflare.');
+    book.userId=user.id;book.status='pending_finish';book.finishPending=true;book.review=review;book.updatedAt=Date.now();localSave();root.__entrelCfLibraryCache=null;
+    try{if(typeof root.closeModal==='function')root.closeModal()}catch(_){}render();info('Solicitação enviada','A finalização está aguardando aprovação administrativa.');return true;
+  }
+  if(typeof root.entLoadSettingsV66 === 'function'){
+    const oldLoad=root.entLoadSettingsV66, oldSave=root.entSaveSettingsV66;
+    root.entLoadSettingsV66=async function(){
+      if(!enabled('cf_settings'))return oldLoad.apply(this,arguments);
+      const current=Object.assign({},root.getEntreLinhasSettingsV66?root.getEntreLinhasSettingsV66():{},root.data&&root.data.appSettings||{});
+      try{const response=await api().getSettings();if(!response.ok||!Array.isArray(response.items))throw new Error('As configurações não foram confirmadas no Cloudflare.');
+        const user=await identity(),row=response.items.find(x=>text(x.usuario_id)===text(user.id)&&x.configuracoes&&typeof x.configuracoes==='object'),settings=Object.assign(current,row?row.configuracoes:{});
+        root.localStorage.setItem('entrelinhas_app_settings_v1863',JSON.stringify(settings));if(root.data){root.data.appSettings=settings;if(root.data.user)root.data.user.publicProfile=!!settings.publicProfile;}
+        if(typeof root.applyEntreLinhasSettingsV66==='function')root.applyEntreLinhasSettingsV66();return settings;
+      }catch(e){root.__entrelCfSettingsError=text(e&&e.message||e);try{console.warn('[Cloudflare settings]',root.__entrelCfSettingsError)}catch(_){}return current;}
+    };
+    root.entSaveSettingsV66=async function(value){
+      if(!enabled('cf_settings'))return oldSave.apply(this,arguments);
+      const defaults={theme:'claro',showProfileFrames:true,readerTheme:'claro',readerVoice:'feminina',readerFont:100,readerBrightness:100,readerSpeed:1,notificationsClub:true,notificationsAchievements:true,notificationsReading:true,publicProfile:true,notificationsSystem:true,notificationsChat:true,notificationsChallenges:true,notificationsAdmin:true,notificationOpenMarksRead:true};
+      const settings=Object.assign({},defaults,root.getEntreLinhasSettingsV66?root.getEntreLinhasSettingsV66():{},value||{});
+      root.localStorage.setItem('entrelinhas_app_settings_v1863',JSON.stringify(settings));if(root.data)root.data.appSettings=settings;
+      try{const response=await api().savePreferences(settings);if(!response.ok)throw new Error('A gravação das configurações não foi confirmada no Cloudflare.');root.__entrelCfSettingsError='';return true;}
+      catch(e){root.__entrelCfSettingsError=text(e&&e.message||e);try{console.warn('[Cloudflare settings]',root.__entrelCfSettingsError)}catch(_){}return false;}
+    };
+  }
+  if(typeof root.entrelV482LoadOwnLibrary==='function'){
+    const oldLoad=root.entrelV482LoadOwnLibrary;
+    root.entrelV482LoadOwnLibrary=function(force){return enabled('cf_library')?safeReadLibrary(!!force):oldLoad.apply(this,arguments)};
+    root.loadPersonalLibraryOnlineV5=root.entrelV482LoadOwnLibrary;root.syncPersonalLibraryV34=root.entrelV482LoadOwnLibrary;root.entrelV506RefreshLibrary=root.entrelV482LoadOwnLibrary;
+  }
+  const oldAddBook=root.addBook,oldSaveBookEdit=root.saveBookEdit,oldSaveGenre=root.saveEpubGenreEdit,oldConfirmFinish=root.confirmFinishBook,oldDeleteBook=root.deleteBook,oldSaveProgress=root.saveProgress,oldSaveProgressV8=root.saveProgressNowV8,oldSaveProgressV211=root.entrelV211SaveProgress;
+  if(typeof oldAddBook==='function')root.addBook=function(){return enabled('cf_library')?addBook.apply(this,arguments):oldAddBook.apply(this,arguments)};
+  if(typeof oldSaveBookEdit==='function')root.saveBookEdit=function(){if(!enabled('cf_library'))return oldSaveBookEdit.apply(this,arguments);return editBook.apply(this,arguments).catch(e=>{info('Erro ao atualizar',text(e&&e.message||e));return false})};
+  if(typeof oldSaveGenre==='function')root.saveEpubGenreEdit=async function(id){if(!enabled('cf_library'))return oldSaveGenre.apply(this,arguments);const book=byRef(id),genre=text((root.document.getElementById('editEpubGenre')||{}).value).trim();if(!book||!genre)return;const result=await api().updateBook(book.onlinePersonalId||book.id,{genero:genre});if(!result.ok)throw new Error('O gênero não foi confirmado no Cloudflare.');book.genre=book.genero=genre;localSave();root.__entrelCfLibraryCache=null;try{if(typeof root.closeModal==='function')root.closeModal()}catch(_){}render();info('Gênero atualizado','A alteração foi confirmada no Cloudflare.');return true;};
+  if(typeof oldConfirmFinish==='function')root.confirmFinishBook=function(){if(!enabled('cf_library'))return oldConfirmFinish.apply(this,arguments);return requestFinish.apply(this,arguments).catch(e=>{info('Finalização não enviada',text(e&&e.message||e));return false})};
+  if(typeof oldDeleteBook==='function')root.deleteBook=async function(ref){
+    if(!enabled('cf_library'))return oldDeleteBook.apply(this,arguments);
+    const book=byRef(ref);if(!book)throw new Error('Livro não encontrado.');
+    try{const result=await api().removeBook(book.onlinePersonalId||book.id);if(!result.ok)throw new Error('A remoção não foi confirmada no Cloudflare.');
+    book.status='removed';book.ativo=false;book.removed=true;localSave();root.__entrelCfLibraryCache=null;render();return true;
+    }catch(e){info('Não foi possível excluir',text(e&&e.message||e));return false;}
+  };
+  if(typeof oldSaveProgressV8==='function')root.saveProgressNowV8=async function(book){if(!enabled('cf_library'))return oldSaveProgressV8.apply(this,arguments);return safeSaveProgress(book)};
+  if(typeof oldSaveProgressV211==='function')root.entrelV211SaveProgress=async function(book){if(!enabled('cf_library'))return oldSaveProgressV211.apply(this,arguments);return safeSaveProgress(book)};
+  if(typeof oldSaveProgress==='function')root.saveProgress=async function(ref){
+    if(!enabled('cf_library'))return oldSaveProgress.apply(this,arguments);
+    const book=byRef(ref);if(!book)throw new Error('Livro não encontrado.');const input=root.document.getElementById('newPage');
+    const page=input?Number(input.value):Number(book.readerPage||book.currentPage||0),ok=await safeSaveProgress(book,page);render();return ok;
+  };
+  const oldCountPages=root.v18CountEpubDailyPages;
+  if(typeof oldCountPages==='function')root.v18CountEpubDailyPages=function(){if(enabled('cf_library'))return;return oldCountPages.apply(this,arguments)};
+  const oldFlushPages=root.entrelV483FlushReaderPages;
+  if(typeof oldFlushPages==='function')root.entrelV483FlushReaderPages=function(){if(enabled('cf_library'))return Promise.resolve(false);return oldFlushPages.apply(this,arguments)};
+  const oldCompleteDaily=root.completeDailyGoalV44;
+  if(typeof oldCompleteDaily==='function'){
+    const completeDaily=async function(){
+      if(!enabled('cf_library'))return oldCompleteDaily.apply(this,arguments);
+      const date=(()=>{try{const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Manaus',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()),values={};parts.forEach(x=>values[x.type]=x.value);return values.year+'-'+values.month+'-'+values.day}catch(_){return new Date().toISOString().slice(0,10)}})();
+      const snapshot=await api().getGoals('?daily_limit=366');if(!snapshot.ok)throw new Error('A meta diária não foi confirmada no Cloudflare.');
+      const row=(snapshot.daily||[]).find(item=>text(item.data)===date);if(!row||!(row.concluida===true||row.concluida===1)||!/leitor|reader|epub/i.test(text(row.origem)))return {pendingAdmin:false,applied:false,completed:false};
+      const reward=await api().awardDailyEpub(date);if(!reward.ok)throw new Error('A recompensa diária não foi confirmada no Cloudflare.');
+      try{if(typeof root.entrelV498LoadPrologue==='function')await root.entrelV498LoadPrologue(true)}catch(_){}
+      return Object.assign({pendingAdmin:false,completed:true},reward);
+    };
+    root.completeDailyGoalV44=root.completeDailyGoalV39=root.completeDailyGoalV38=root.completeDailyGoalV36=completeDaily;root.rewardDailyIfNeeded=completeDaily;
+    try{completeDailyGoalV44=root.completeDailyGoalV44;rewardDailyIfNeeded=root.rewardDailyIfNeeded}catch(_){}
+  }
+  const oldAdminReview=root.adminReviewRequestV180||root.entrelV452Review;
+  if(typeof oldAdminReview==='function'){
+    const adminReview=async function(id,action,reason){
+      if(enabled('cf_challenges')){try{if((await readChallengeRequests()).some(row=>text(row.id)===text(id)))return await reviewChallengeRequest(id,action,reason)}catch(error){if(!enabled('cf_admin'))throw error}}
+      return enabled('cf_admin')?reviewFinishRequest(id,action,reason):oldAdminReview.apply(this,arguments);
+    };
+    root.adminReviewRequestV180=adminReview;root.entrelV452Review=adminReview;
+    root.adminApproveRequestV67=id=>adminReview(id,'approved','');
+    root.approveValidationRequestV18711=id=>adminReview(id,'approved','');root.approveValidationRequestV18712=root.approveValidationRequestV18711;
+    root.finishValidationResponseV18712=function(id,action){const note=text((root.document.getElementById('adminValidationMsg18712')||{}).value);return adminReview(id,/reject|recus/i.test(text(action))?'rejected':'approved',note)};
+    root.finishValidationResponseV18711=root.finishValidationResponseV18712;
+    try{adminReviewRequestV180=adminReview;entrelV452Review=adminReview}catch(_){}
+  }
+  const oldChallengeSubmit=root.submitChallengeValidationV55||root.entrelV342SubmitValidation;
+  if(typeof oldChallengeSubmit==='function'){
+    const challengeSubmit=async function(id){
+      if(!enabled('cf_challenges'))return oldChallengeSubmit.apply(this,arguments);
+      try{
+        const state=root.__entDesafiosV55||{},challenge=(state.challenges||[]).find(item=>text(item.id||item.desafio_id)===text(id))||{},raw=parse(challenge.dados||challenge.raw&&challenge.raw.dados),requirement=text(challenge.proofRequirement||raw.proofRequirement||'optional').toLowerCase(),note=text((root.document.getElementById('v342ReqText')||root.document.getElementById('v55ReqNote')||{}).value||'').trim(),reference=text((root.document.getElementById('v342ReqReference')||root.document.getElementById('v55ReqBook')||{}).value||'').trim(),input=root.document.getElementById('v342ReqImage')||root.document.getElementById('v55ReqProof'),file=input&&input.files&&input.files[0];
+        if(['text','text_image','both'].includes(requirement)&&!note)throw new Error('Escreva a explicação exigida antes de enviar.');
+        if(['image','text_image','both'].includes(requirement)&&!file)throw new Error('Adicione o comprovante exigido antes de enviar.');
+        if(['either','any','mixed'].includes(requirement)&&!note&&!file)throw new Error('Envie um texto ou um comprovante.');
+        const progressRow=(state.progress||[]).find(row=>text(row.challengeId||row.desafio_id)===text(id)),progress=Number(progressRow&&(progressRow.progress??progressRow.progresso))||Number((root.document.getElementById('v55ReqPages')||{}).value)||0,result=await submitChallengeRequest(id,{request_id:uuid(),note,reference,progress},file);
+        if(result.already_pending){info('Solicitação em análise','Já existe um pedido pendente para este desafio.');return true;}
+        try{if(typeof root.closeModal==='function')root.closeModal()}catch(_){}
+        try{if(typeof root.loadDesafiosOnlineV55==='function')await root.loadDesafiosOnlineV55(true)}catch(_){}
+        localSave();render();info('Solicitação enviada','O pedido foi confirmado no Cloudflare e já pode ser revisado pela administração.');return true;
+      }catch(error){info('Solicitação não enviada',text(error&&error.message||error));return false;}
+    };
+    root.submitChallengeValidationV55=challengeSubmit;root.entrelV342SubmitValidation=challengeSubmit;
+    try{submitChallengeValidationV55=challengeSubmit;entrelV342SubmitValidation=challengeSubmit}catch(_){}
+  }
+  root.entrelCfReconcileAwards=async function(){if(!enabled('cf_awards'))throw new Error('Ative cf_awards para usar a reconciliação de medalhas no Cloudflare.');return api().reconcileAwards()};
+  root.EntreLinhasDataCanaries=Object.freeze({enabled,readLibrary:safeReadLibrary,saveProgress:safeSaveProgress,readFinishRequests,reviewFinishRequest,readChallengeRequests,submitChallengeRequest,reviewChallengeRequest,
+    getGlobalSetting:key=>{if(!enabled('cf_settings'))throw new Error('Ative cf_settings para ler configurações do Cloudflare.');return api().getGlobalSetting(key)},
+    saveGlobalSetting:(key,value)=>{if(!enabled('cf_settings'))throw new Error('Ative cf_settings para gravar configurações no Cloudflare.');return api().saveGlobalSetting(key,value)},
+    readGoalProgress:()=>{if(!enabled('cf_library'))throw new Error('Ative cf_library para ler o progresso no Cloudflare.');return api().getGoals('?daily_limit=366')},
+    getWeeklyProgress:period=>{if(!enabled('cf_library')||!enabled('cf_settings'))throw new Error('Ative cf_library e cf_settings para ler metas no Cloudflare.');return api().getWeeklyProgress(period)},
+    getMonthlyProgress:period=>{if(!enabled('cf_library')||!enabled('cf_settings'))throw new Error('Ative cf_library e cf_settings para ler metas no Cloudflare.');return api().getMonthlyProgress(period)},
+    awardPeriod:(kind,period)=>{if(!enabled('cf_library')||!enabled('cf_settings'))throw new Error('Ative cf_library e cf_settings para confirmar recompensas periódicas.');return api().awardPeriod(kind,period)},
+    readChallenges:()=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para ler desafios no Cloudflare.');return api().getChallengeState()},
+    saveChallenge:(id,value)=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para salvar desafios no Cloudflare.');return id?api().updateChallenge(id,value):api().createChallenge(value)},
+    removeChallenge:id=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para remover desafios no Cloudflare.');return api().removeChallenge(id)},
+    readClubMural:includeInactive=>{if(!enabled('cf_mural'))throw new Error('Ative cf_mural para ler o Mural do Clube no Cloudflare.');return api().listClubMural(includeInactive?'?include_inactive=1':'')},
+    saveClubPost:(id,value)=>{if(!enabled('cf_mural'))throw new Error('Ative cf_mural para publicar no Mural do Clube no Cloudflare.');return id?api().updateClubPost(id,value):api().createClubPost(value)},
+    pinClubPost:(id,pinned)=>{if(!enabled('cf_mural'))throw new Error('Ative cf_mural para fixar no Mural do Clube no Cloudflare.');return api().updateClubPost(id,{pinned:!!pinned})},
+    removeClubPost:id=>{if(!enabled('cf_mural'))throw new Error('Ative cf_mural para remover do Mural do Clube no Cloudflare.');return api().removeClubPost(id)},
+    reactToClubPost:(id,active)=>{if(!enabled('cf_mural'))throw new Error('Ative cf_mural para reagir no Mural do Clube no Cloudflare.');return api().reactToClubPost(id,!!active)},
+    readClubGallery,
+    saveClubAlbum:(id,value)=>{if(!enabled('cf_albums'))throw new Error('Ative cf_albums para salvar álbuns no Cloudflare.');return id?api().updateAlbum(id,value):api().createAlbum(value)},
+    setClubAlbumLocked:(id,locked)=>{if(!enabled('cf_albums'))throw new Error('Ative cf_albums para alterar álbuns no Cloudflare.');return api().updateAlbum(id,{locked:!!locked})},
+    removeClubAlbum:id=>{if(!enabled('cf_albums'))throw new Error('Ative cf_albums para remover álbuns no Cloudflare.');return api().updateAlbum(id,{active:false})},
+    uploadClubPhoto,
+    removeClubPhoto:id=>{if(!enabled('cf_albums'))throw new Error('Ative cf_albums para remover fotos do Cloudflare.');return api().removeClubPhoto(id)},
+    claimDailyReward:date=>{if(!enabled('cf_library'))throw new Error('Ative cf_library para confirmar a recompensa diária.');return api().awardDailyEpub(date)}
+  });
+})(typeof window !== 'undefined' ? window : globalThis);

@@ -532,3 +532,14 @@ Projeto desenvolvido e administrado por **Lucas Vinicius de Miranda** para o **E
 ## Licença
 
 Nenhuma licença pública foi definida. Antes de distribuir ou abrir o código para terceiros, adicione um arquivo `LICENSE` com os termos desejados.
+
+## Migração Cloudflare em staging
+
+A migração usa D1, Workers e R2 em ambiente de validação, mantendo Supabase Auth/Google. A entrada normal ainda utiliza os domínios legados enquanto a paridade é concluída.
+
+- [Estado e pendências por domínio](cloudflare/MIGRATION_STATUS.md)
+- [Teste real no navegador](cloudflare-validation.html)
+- [Entrada de canário](cloudflare-staging.html)
+- Verificação local: Node 24+, `npm ci --ignore-scripts`, `npm run check`, `npm test`.
+
+Não tratar esta branch como autorização para cutover de produção.

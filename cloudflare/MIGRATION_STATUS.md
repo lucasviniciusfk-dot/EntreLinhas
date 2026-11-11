@@ -1,0 +1,158 @@
+# Migração Entre Linhas — 2026-11-11
+
+**Ainda não aprovada para cutover de produção.** O Supabase Auth/Google permanece ativo.
+
+## Base verificada
+
+- PR #4 aberto, head inicial `a49da07`, sobre `main c1dd361`.
+- Actions run `43037087094` falhou em `Apply guarded profile bridge`: `Profile function boundary not found; aborting.` Nenhuma alteração no HTML foi feita pelo workflow.
+- Causa: o script procurava os caracteres literais `\\n` em vez da quebra de linha e ignorava CRLF.
+- Os oito commits recentes de main continuam ancestrais desta branch. Sem rebase nem force push.
+- Worker publicado recuperado e versionado em `worker.mjs`, com schema e índices capturados. Não se presumiu que o código estivesse no repositório.
+- Endereço confirmado por HTTP: `https://entrelinhas-api-staging.lucasviniciusfk.workers.dev`. Os clientes anteriores omitiam o segundo `f`.
+
+## Perfil implementado
+
+- Login/bootstrap e edição real `saveProfileV166` ligados ao cliente de API.
+- O canário usa `index.html?cf_profile=1`. A entrada normal mantém Supabase durante a validação com Google.
+- Um escritor por conta/página. A leitura inicial pode escolher Supabase se D1 estiver indisponível; após confirmar Cloudflare, erros não provocam escrita no Supabase.
+- PATCH envia apenas campos editáveis. Não atualiza XP, pontos, IDs ou papel administrativo.
+- Backend valida identidade pelo Supabase Auth, moldura desbloqueada, propriedade do avatar e campos parciais. Bootstrap não concede administração a partir de metadata.
+- Foto nova: upload privado R2, referência estável em D1 e Blob URL apenas para exibição autenticada.
+- Campos vazios e booleanos false preservados; interface atualizada após resposta confirmada.
+- Não se cria uma nova conquista ao selecionar uma moldura.
+
+## Validação
+
+- Testes de integração com Miniflare/workerd, D1 e R2 locais; autenticação externa é substituída explicitamente nos testes.
+- Testes de cliente cobrem fonte única, falha ambígua, fallback inicial, identidade e normalização.
+- Os 264 scripts inline são compilados para verificar sintaxe.
+- Google real e gravação autenticada no Worker remoto ainda dependem de execução com a conta do usuário no navegador. Não foram simulados como testes remotos.
+
+## Bloqueios de cutover
+
+- Vários domínios e rotinas de sincronização ainda usam Supabase Data API/Storage.
+- Fontes antigas de perfil em outros sincronizadores e telas sociais ainda exigem revisão antes de ativar Cloudflare globalmente.
+- Comparação integral de dados e arquivos deve terminar e as diferenças devem ser reconciliadas com backup.
+- Push continua dependente do webhook/Edge Function Supabase; mover leitura de notificações não comprova entrega de push.
+- Nenhuma tabela, usuário, histórico, arquivo existente ou dado extra do R2 foi apagado.
+
+## Etapas adicionais executadas
+
+| Etapa | Arquivos principais | Commits | Validação |
+|---|---|---|---|
+| Base implantada versionada | worker.mjs, schema.staging.sql, indexes.staging.sql | 20ed86d | fonte do Worker e bindings conferidos |
+| Perfil real | index.html, entrelinhas-profile-data.js, domains/profile.mjs | edcc05c | leitura, PATCH parcial, identidade, campos vazios, fallback único |
+| Chat canário | index.html, domains/chat.mjs | c9f2eba | reenvios concorrentes, resposta, reação, edição e remoção lógica |
+| Notificações canário | index.html, worker.mjs | 0229445 | leitura, paginação, estado individual e concorrência |
+| Recompensas | worker.mjs, tests/rewards.test.mjs | 9762688 | cálculo no servidor; pagamentos únicos sob concorrência |
+| Arquivos | worker.mjs, domains/profile.mjs | e39df9f, 75aa7a0 | referências protegidas, limpeza idempotente, disputa entre vincular e excluir |
+| Clube | worker.mjs, tests/club.test.mjs | e3ff229 | aprovação real no D1 local, ID da leitura, recompensa já paga, booleanos JSON SQLite |
+| Snapshot completo | domains/snapshots.mjs, migrations/0001_snapshot_archives.sql | c3f052a | SHA-256 remoto, dono correto e detecção de corrupção |
+
+### Testes e implantação
+
+- 28 testes automatizados aprovados com D1/R2 locais no runtime workerd, além de compilação dos 264 scripts inline e do teste de navegador. O serviço de autenticação é substituído apenas nesses testes locais.
+- npm audit: zero vulnerabilidades após fixar as dependências e overrides.
+- Worker de staging publicado; versão `a5a076e7-8c03-43fe-8408-5a1cedf5f85d`. D1/R2/Auth bindings preservados, logs e traces habilitados e query strings ocultadas dos logs.
+- Verificação HTTP remota: health 200; APIs de perfil/chat/notificações/snapshot sem token respondem 401; CORS do preview confirma origem e If-Match. Isso não substitui uma sessão Google real.
+- Página `cloudflare-validation.html` executa o teste real com a própria conta Google, restaura a biografia com controle de versão, verifica bytes de uma imagem sintética, testa reenvio de chat e faz consultas autenticadas. Relatório baixável não contém tokens.
+
+### Integridade e alterações de dados
+
+- 48 tabelas públicas examinadas por chave/conteúdo ou checksum normalizado: 40 correspondem, sete ainda têm diferenças e uma possui preservação complementar no R2. Comparações de JSON por hash registram a possibilidade de diferenças de serialização numérica; esses casos não foram declarados equivalentes.
+- As sete tabelas ainda diferentes são admin_logs, app_configuracoes, livros_pessoais, ranking_snapshots, entrel_app_snapshot_v257, entrel_app_snapshot_v260 e entrel_user_library_snapshot_v259.
+- O snapshot inválido de 8.000.000 caracteres foi preservado integralmente no R2: 8.849.397 bytes, nove partes e manifesto, SHA-256 igual ao original. Três das outras 16 linhas da tabela ainda têm diferenças de checksum. A linha antiga não foi substituída.
+- 1.089 arquivos ativos encontrados no R2 com tamanhos iguais aos metadados; 85 objetos extras anteriores preservados. O arquivo de preservação adicionou nove objetos de partes e um manifesto. A comparação de tamanho não é uma comparação byte a byte de todos os arquivos.
+- Oito logs e três metas diárias ausentes foram copiados para staging com backup local privado, IDs preservados e sem sobrescrever registros. As 11 linhas foram consultadas novamente e coincidem com o backup.
+- Supabase de produção e suas 13 contas Auth não foram alterados. O aplicativo ativo pode produzir novos deltas; não houve congelamento para cutover.
+
+### Domínios ainda pendentes
+
+| Domínio | Situação real |
+|---|---|
+| Perfis | edição própria em canário; listagem social, avatares de terceiros e outros sincronizadores ainda precisam de paridade |
+| Configurações | preferências e escopos pessoais/globais implementados em canário; migration aplicada ao staging; demais chaves continuam com operações específicas |
+| Biblioteca e leituras | CRUD pessoal, progresso e pedido de conclusão integrados em canário; migration de identidades aplicada ao staging; leitura/escrita EPUB e migração de arquivos legados ainda pendentes |
+| Metas/progresso | gravação diária idempotente por livro/dia, metas canônicas semanais/mensais e leitura do progresso/recompensas no canário; outras rotinas de desafios e calendário ainda exigem revisão |
+| Desafios/medalhas/molduras | catálogo e editor de definições de desafios no canário; progresso, solicitações e recompensas ainda Supabase; seleção própria e reconciliação de medalhas/molduras validadas em canário |
+| Clube | álbuns/fotos do encontro em canário opt-in (`cf_albums=1`) com D1/R2 privado; publicações, fixação, moderação e reações do mural agora em `cf_mural=1`; ciclos, participação/progresso do livro atual e outros caminhos administrativos ainda pendentes; capas seguem no fluxo existente |
+| Chat | operações normais integradas; editor administrativo de cards fixados e demais wrappers legados pendentes |
+| Notificações | leitura/lida/ocultação em canário; composição administrativa e entrega push ainda Supabase |
+| Administração | fila Cloudflare limitada à finalização de livros pessoais em canário; remoção de conta, ranking, logs e demais ações não migrados integralmente |
+| Recompensas | metas e aprovação testadas localmente; reconciliação histórica e contratos restantes pendentes |
+| Arquivos | avatar e arquivos privados próprios testados; novas capas pessoais podem vincular asset R2; migração dos três buckets e leitores legados pendente |
+
+A varredura AST de 2026-11-11 encontrou 566 acessos estáticos a tabelas em 26 tabelas, 20 RPCs em 17 nomes, 13 operações Storage e 28 chamadas `fetch` (nenhuma com URL estática). Também registrou 312 chamadas dinâmicas `from`/`rpc`/`fetch`. O inventário está em `FRONTEND_INVENTORY_2026-11-11.json`; inclui funções antigas sobrescritas e caminhos de fallback, portanto não prova o que executa. Não houve substituição global de `from`/`rpc`/`fetch`.
+
+## Continuação local — configurações, biblioteca e conquistas
+
+Foram concluídos localmente novos contratos de backend e integração opt-in do frontend:
+
+- Configurações: rotas autenticadas para preferências da própria conta e leitura/escrita por escopo; alterações globais exigem permissão administrativa e marcadores de recompensa permanecem exclusivos do servidor. A migration `0002_scoped_settings.sql` cria armazenamento com escopo e importa as configurações legadas sem sobrescrever chaves irmãs.
+- Biblioteca/leitura: rotas para listar, criar, editar, remover logicamente e sincronizar progresso preservando IDs; validação de identidade, proteção contra regressão de progresso antigo, prevenção de livros duplicados e solicitação idempotente de finalização sem conceder recompensa antes da aprovação. A migration `0003_library_identities.sql` adiciona a chave de deduplicação. Assets privados ficam vinculados ao livro e não são removidos enquanto referenciados.
+- Conquistas: `POST /api/v1/me/awards/reconcile` calcula medalhas e molduras a partir de evidência no D1, é idempotente e não altera XP nem pontos. O corpo da requisição não escolhe usuário nem prêmios.
+- Frontend: `index.html` carrega o adaptador opt-in. `cf_settings=1` e `cf_library=1` encaminham os fluxos cobertos ao Cloudflare; `cf_admin=1` limita a fila e a revisão às finalizações pessoais originadas no canário; `cf_challenges=1` encaminha o catálogo e a edição das definições de desafios. O caminho padrão permanece no Supabase. A reconciliação manual de conquistas é exposta apenas com `cf_awards=1`.
+
+Validação local: **37 testes aprovados**, incluindo D1/R2 em workerd, e `npm run check` compilou os 264 scripts inline e módulos do navegador; `git diff --check` passou. Esses resultados não substituem autenticação Google real nem execução contra o staging remoto.
+
+**Estado da publicação atualizado em 2026-11-11:** a conexão Cloudflare foi reautenticada. As migrations `0002_scoped_settings.sql`, `0003_library_identities.sql` e `0004_daily_book_progress.sql` foram aplicadas ao D1 `entrelinhas-staging`; o Worker `entrelinhas-api-staging` está na versão 23 com 100% do tráfego de staging. A versão 22 `c71c13e3-52c3-452f-a368-bd431b5ad006` permanece disponível para rollback de código. Produção não foi alterada. O teste real Google, a reconciliação das diferenças de dados e os domínios ainda legados continuam pendentes.
+
+## Continuação local — metas e progresso diário/semanal/mensal
+
+- A leitura das metas globais canônicas semanais e mensais usa o Worker quando `cf_settings=1`; gravações globais seguem restritas a administradores e são relidas antes de atualizar a interface.
+- A migration `0004_daily_book_progress.sql` cria o controle diário por usuário, livro e data. O Worker calcula deltas de página a partir de livros próprios, impede dupla contagem em reenvios e sincroniza o total diário em D1.
+- Com `cf_library=1`, os escritores legados de leitura diária não gravam no Supabase. A recompensa diária é pedida apenas após a conclusão confirmada no servidor e continua idempotente.
+- O progresso semanal e mensal pode ser consultado no Worker. Meta semanal alterada durante a semana usa o mesmo início efetivo na tela e na validação da recompensa; uma alteração no meio da semana não conta páginas anteriores para alcançar o novo alvo.
+- No modo normal, os parâmetros do canário permanecem desligados e Supabase continua ativo. Nenhuma alteração foi aplicada à produção.
+
+Validação local acumulada nesta continuação: **42 testes aprovados** com D1/R2 em workerd; `npm run check` compilou os 264 scripts inline e módulos Cloudflare; `git diff --check` passou. Os testes não substituem sessão Google real nem validação no D1/R2 remoto.
+
+**Pendências externas e de cobertura:** executar a página de validação com a sessão Google real; comparar/reconciliar as diferenças de dados já listadas; migrar os leitores e escritores ainda legados nos demais domínios. Supabase Auth segue ligado. Não houve mudança em produção.
+
+## Continuação local — catálogo e editor administrativo de desafios
+
+- `GET /api/v1/challenges` retorna desafios ativos para membros, desafios inativos apenas para administradores e progresso individual da conta autenticada.
+- `POST`, `PUT` e `DELETE` permitem que apenas administradores criem, editem campos validados e removam logicamente definições no D1. IDs e histórico não são apagados.
+- Com `cf_challenges=1`, o catálogo e o editor administrativo usam o Worker. O caminho padrão permanece no Supabase.
+- O progresso/conclusão automática, solicitação de validação, upload de comprovante e aprovação/recompensa de desafios ainda usam Supabase. Portanto, este canário cobre definições, não o domínio inteiro, e não pode ser tratado como paridade completa.
+- Os testes de rota cobrem listagem por papel, isolamento do progresso, criação/edição, validação, remoção lógica e a recusa de gravações por membro. O total validado nesta continuação é 42 testes.
+
+## Publicação real em staging — 2026-11-11
+
+- Cloudflare reautenticado para a conta EntreLinhas. D1 confirmado pelo nome `entrelinhas-staging` e pelo ID registrado em `STAGING_DEPLOYMENT_2026-11-11.json`.
+- Migrations `0002`, `0003` e `0004` aplicadas com sucesso via API D1. `scoped_settings` importou 11 linhas; `library_identities`, `daily_goal_progress_days` e `daily_book_progress` foram criadas sem apagar linhas existentes.
+- Worker atualizado com o canário de álbuns/fotos e a correção da resposta da recompensa diária, a partir da branch `migration/profile-cloudflare-shadow-write` (commit `6f6720616c60e9130e30bc3a90e43bd568c5dda6`), versão `eec8d7aa-31b6-4ed6-8f04-3516cd7e7a7c`, deployment `a5bb7d8e-433a-44c1-9a15-e6ec3aa587a0`, tráfego 100% no Worker de staging. Bindings D1, R2 e Supabase Auth foram preservados. A versão imediatamente anterior `c71c13e3-52c3-452f-a368-bd431b5ad006` é o rollback de código.
+- Verificação remota após a publicação: `/health` retornou 200; `/api/v1/challenges`, `/api/v1/settings/global/meta_semanal`, `/api/v1/progress/weekly`, `/api/v1/club/albums` e `/api/v1/rewards/daily-epub` retornaram 401 sem token. A publicação só alterou código; as migrations e os registros D1 não foram escritos nesta etapa.
+- O teste Google autenticado continua pendente. A automação do navegador não conseguiu identificar a URL atual com confiança suficiente e foi interrompida; nenhum login foi automatizado. A página `cloudflare-validation.html` pode ser executada manualmente pelo usuário.
+- Nenhum deploy/cutover de produção ocorreu.
+
+### Reversão
+
+A entrada normal index.html mantém Supabase como fonte até validação. O canário pode ser desativado removendo seus parâmetros/entrada. Para o código remoto de staging, reimplantar a versão `c71c13e3-52c3-452f-a368-bd431b5ad006`; reverter código não reverte as migrations aditivas. A versão `ee1b9159-484c-4ed4-bce5-53bef863f9da` é a base anterior aos canários recentes, `a5a076e7-8c03-43fe-8408-5a1cedf5f85d` é a base anterior aos canários de domínio, e `febf2e0f-6fe3-4163-ab6a-0c73c48236d6` é a base anterior ao trabalho de migração. Não apagar o snapshot preservado, seus manifestos nem os históricos adicionados.
+
+## Continuação local — álbuns e fotos do Clube
+
+- `cf_albums=1` encaminha a leitura da galeria, criação/edição, tranca/destranca, remoção lógica de álbuns e adição/remoção de fotos ao Worker. Sem o parâmetro, a entrada padrão permanece no Supabase.
+- As novas fotos usam upload autenticado para R2 privado e vínculo no D1. A leitura da galeria baixa cada objeto pela rota autenticada do Worker; o bucket R2 não é exposto diretamente ao navegador.
+- Membros podem vincular seus próprios uploads apenas a álbuns ativos e destrancados, e podem remover suas próprias fotos enquanto o álbum estiver aberto. Administração mantém controle de fotos em álbuns trancados. Reenvio concorrente do mesmo arquivo no mesmo álbum não cria duas linhas.
+- Criação/edição agora preserva separadamente a capa do álbum e a capa do livro (`capa_url` e `livro_capa_url`). Os uploads de capa continuam no fluxo existente; os buckets antigos e demais domínios do Clube não foram migrados por este incremento.
+- Testes locais cobrem papéis, uploads R2, leitura autenticada, idempotência concorrente, tranca, exclusão segura e o cliente de galeria autenticado. Resultado acumulado: **44 testes aprovados**, além de `npm run check` (264 scripts/módulos) e auditoria AST atualizada. A validação Google remota continua pendente.
+
+### Implantação do canário em staging
+
+- A versão 23 `eec8d7aa-31b6-4ed6-8f04-3516cd7e7a7c` foi publicada em `2026-11-11T19:32:29.571820Z` e recebe 100% do tráfego de staging. O deployment é `a5bb7d8e-433a-44c1-9a15-e6ec3aa587a0`; a versão 22 `c71c13e3-52c3-452f-a368-bd431b5ad006` está disponível para rollback.
+- O upload incluiu os 11 módulos atuais do Worker, preservou bindings, compatibilidade, logs e traces, e aplicou as alterações dos commits `4edc7c2` e `6f67206` descritas em `STAGING_DEPLOYMENT_2026-11-11.json`.
+- A resposta da recompensa diária agora marca `applied=true` somente para a requisição cujo UPDATE de saldo alterou uma linha. O teste concorrente passou cinco vezes consecutivas e a suíte completa passou 44/44.
+- Após a publicação, `/health` retornou 200; as rotas de desafios, configurações globais, progresso semanal, álbuns e recompensa diária sem token retornaram 401. Nenhuma migration nem dado foi alterado pelo deploy.
+- GitHub Actions run `43087977901` e os dois deploy previews da PR #4 concluíram com sucesso. O teste com sessão Google permanece pendente.
+
+## Publicação real do Mural em staging — 2026-11-11
+
+- O commit `c7fb3ac2888bc84ce14d8c97bc898ba9adfd39c7` passou no GitHub Actions run `43092079248` e nos dois previews Netlify.
+- O Worker `entrelinhas-api-staging` recebeu a versão 24 `60ac675e-e4d1-4fac-af8a-ba28b1897835`, deployment `77daf7d3-b577-45ab-a4e7-4451e1ad8df8`, com 100% do tráfego de staging. Rollback de código: versão 23 `eec8d7aa-31b6-4ed6-8f04-3516cd7e7a7c`; versão 22 `c71c13e3-52c3-452f-a368-bd431b5ad006` continua no histórico.
+- O upload preservou os 11 módulos, bindings D1/R2/Supabase Auth, compatibilidade, logs e traces. A fonte reconstruída do Worker bateu byte a byte em SHA-256 com `cloudflare/worker.mjs` do commit.
+- As tabelas `clube_mural` e `clube_mural_reacoes` já existiam em D1 com o esquema esperado; não foi aplicada migration nem alterada linha durante o deploy.
+- Verificação HTTP remota após o deploy: `/health` 200 com D1/R2/Auth prontos; `/api/v1/club/mural` e `/api/v1/club/albums` retornaram 401 sem token e CORS aceitou a origem do preview.
+- `cf_mural=1` cobre publicações administrativas, leitura por membros, fixação, edição, remoção lógica e reações. Ciclos, participação/progresso do livro atual e um caminho legado de administração do mural ainda não migraram.
+- A suíte local deste commit havia passado 46/46 e `npm run check` compilou 264 scripts/módulos. A sessão Google real continua aguardando a validação manual na página de staging. Nenhum deploy ou cutover de produção ocorreu.
