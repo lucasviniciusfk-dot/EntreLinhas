@@ -174,3 +174,10 @@ Consultei novamente o status combinado do commit atual do PR #2 (`a20c7fbcecb69b
 - `netlify/entrelinhasoff/deploy-preview`
 
 Os cinco arquivos esperados permanecem no PR, incluindo a página de staging, cliente API, adaptador RPC e auditoria. O PR segue draft e `mergeable=false`; nenhum merge foi feito. Este resultado valida publicação do preview para o commit consultado, não substitui o teste funcional autenticado no navegador nem aprova cutover.
+
+
+## Marco 6/10 — cobertura de álbuns e fotos do clube no smoke test
+
+A inspeção do Worker confirmou que existem rotas autenticadas de leitura para `GET /api/v1/club/albums` e `GET /api/v1/club/albums/photos?album_id=...`. Ampliei a bateria do preview para testar a listagem de álbuns e, quando existir um álbum ativo, consultar até cinco fotos desse álbum. Quando não houver álbum ativo, a consulta de fotos é marcada como não aplicável, sem criar registros nem alterar dados.
+
+O teste usa o token da sessão Google/Supabase e a URL correta do Worker de staging. A alteração foi verificada estaticamente no arquivo; a execução real no navegador continua pendente.
