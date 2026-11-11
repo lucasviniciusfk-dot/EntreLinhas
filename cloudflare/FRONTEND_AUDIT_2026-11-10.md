@@ -66,3 +66,29 @@ O código SQL do Worker referencia estas tabelas do frontend: `usuarios`, `app_c
 Estas nove tabelas encontradas no frontend não apareceram nas instruções SQL do Worker nesta leitura: `admin_logs`, `clube_livros_finalizados`, `clube_mural`, `clube_mural_reacoes`, `livros`, `push_subscriptions`, `ranking_temporadas`, `usuario_medalhas`, `usuario_molduras`.
 
 **Importante:** aparecer em uma consulta SQL não prova que todas as operações do frontend naquela tabela já estejam cobertas. Por exemplo, a rota de perfil observada é somente GET; não foi identificada nessa rota uma operação de atualização de perfil. A compatibilidade deve ser conferida por operação e não apenas por nome de tabela.
+
+
+## Detalhamento do primeiro domínio proposto: perfil e configurações
+
+A inspeção do HTML integral (5.225.332 caracteres) confirmou que o domínio `usuarios` não é somente leitura. O frontend usa:
+- leitura do próprio perfil por `id`;
+- criação do perfil durante o login (insert);
+- atualização de perfil e preferências (update);
+- upsert do perfil;
+- listagem de membros para telas administrativas e recursos sociais;
+- leitura/atualização de XP, pontos e ranking;
+- alterações de moldura e visibilidade pública.
+
+No Worker observado existe `GET /api/v1/me`, que devolve campos do próprio perfil. Nesta leitura não foi identificada uma rota equivalente de PATCH/PUT para atualizar perfil, nem rota de listagem administrativa de usuários com verificação explícita de admin. Portanto, não se pode trocar as operações de escrita ou listagem por essa rota GET.
+
+A tabela `app_configuracoes` tem operações de select, insert, update, upsert e delete, tanto para preferências por usuário quanto para configurações globais, metas e marcadores de recompensa. O Worker lê `app_configuracoes` internamente para algumas rotas, mas não foi identificada uma API CRUD genérica equivalente. Uma rota genérica sem autorização por chave/escopo seria insegura: configurações globais, configurações pessoais e marcadores de recompensa têm regras diferentes.
+
+### Critério de implementação
+Não alterar o frontend ainda. Primeiro especificar endpoints separados e validar:
+1. perfil próprio: somente campos permitidos, nunca permitir que o cliente altere `is_admin`, `admin_principal` ou identidade;
+2. administração de membros: exigir papel admin validado no servidor;
+3. configurações pessoais: restringir sempre ao usuário autenticado;
+4. configurações globais e recompensas: autorização administrativa e idempotência por chave;
+5. login: manter criação/recuperação de perfil compatível com Supabase Auth/Google.
+
+Essa análise fecha o contrato do primeiro domínio e evita uma substituição insegura por CRUD irrestrito. Ainda não é implementação de endpoint nem teste autenticado.
