@@ -1,16 +1,16 @@
 {
   "worker": "entrelinhas-api-staging",
   "environment": "staging",
-  "sourceCommit": "4edc7c2ed6fc2cec3d2aa41619416ec60faac309",
+  "sourceCommit": "6f6720616c60e9130e30bc3a90e43bd568c5dda6",
   "sourceBaseCommit": "a103db555f9dabd06c806d0e94942b9e6a92b316",
-  "deploymentId": "395c4ae1-0de1-4b6a-988a-e9b658ddd4b0",
-  "versionId": "c71c13e3-52c3-452f-a368-bd431b5ad006",
+  "deploymentId": "a5bb7d8e-433a-44c1-9a15-e6ec3aa587a0",
+  "versionId": "eec8d7aa-31b6-4ed6-8f04-3516cd7e7a7c",
   "trafficPercent": 100,
-  "rollbackVersionId": "ee1b9159-484c-4ed4-bce5-53bef863f9da",
+  "rollbackVersionId": "c71c13e3-52c3-452f-a368-bd431b5ad006",
   "previousVersionBeforeMigrationWork": "febf2e0f-6fe3-4163-ab6a-0c73c48236d6",
-  "publishedAt": "2026-11-11T19:24:54.192306Z",
+  "publishedAt": "2026-11-11T19:32:29.571820Z",
   "compatibilityDate": "2026-11-09",
-  "sourceAssembly": "Version 22 was built from active version 21 with 13 guarded source replacements matching the worker.mjs diff in sourceCommit; module line endings were preserved from Cloudflare",
+  "sourceAssembly": "Version 23 was built from version 21 with 13 guarded replacements matching commit 4edc7c2, then 2 guarded replacements matching commit 6f67206; module line endings were preserved from Cloudflare",
   "modules": [
     "worker.mjs",
     "achievement-catalog.mjs",
@@ -79,6 +79,7 @@
     "unauthenticatedGlobalSettings": 401,
     "unauthenticatedWeeklyProgress": 401,
     "unauthenticatedClubAlbums": 401,
+    "unauthenticatedDailyReward": 401,
     "bindingsPreserved": true
   },
   "githubChecks": {

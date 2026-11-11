@@ -96,7 +96,7 @@ Foram concluídos localmente novos contratos de backend e integração opt-in do
 
 Validação local: **37 testes aprovados**, incluindo D1/R2 em workerd, e `npm run check` compilou os 264 scripts inline e módulos do navegador; `git diff --check` passou. Esses resultados não substituem autenticação Google real nem execução contra o staging remoto.
 
-**Estado da publicação atualizado em 2026-11-11:** a conexão Cloudflare foi reautenticada. As migrations `0002_scoped_settings.sql`, `0003_library_identities.sql` e `0004_daily_book_progress.sql` foram aplicadas ao D1 `entrelinhas-staging`; o Worker `entrelinhas-api-staging` foi publicado com o código da branch e 100% do tráfego de staging. A versão anterior `a5a076e7-8c03-43fe-8408-5a1cedf5f85d` permanece disponível para rollback de código. Produção não foi alterada. O teste real Google, a reconciliação das diferenças de dados e os domínios ainda legados continuam pendentes.
+**Estado da publicação atualizado em 2026-11-11:** a conexão Cloudflare foi reautenticada. As migrations `0002_scoped_settings.sql`, `0003_library_identities.sql` e `0004_daily_book_progress.sql` foram aplicadas ao D1 `entrelinhas-staging`; o Worker `entrelinhas-api-staging` está na versão 23 com 100% do tráfego de staging. A versão 22 `c71c13e3-52c3-452f-a368-bd431b5ad006` permanece disponível para rollback de código. Produção não foi alterada. O teste real Google, a reconciliação das diferenças de dados e os domínios ainda legados continuam pendentes.
 
 ## Continuação local — metas e progresso diário/semanal/mensal
 
@@ -122,14 +122,14 @@ Validação local acumulada nesta continuação: **42 testes aprovados** com D1/
 
 - Cloudflare reautenticado para a conta EntreLinhas. D1 confirmado pelo nome `entrelinhas-staging` e pelo ID registrado em `STAGING_DEPLOYMENT_2026-11-11.json`.
 - Migrations `0002`, `0003` e `0004` aplicadas com sucesso via API D1. `scoped_settings` importou 11 linhas; `library_identities`, `daily_goal_progress_days` e `daily_book_progress` foram criadas sem apagar linhas existentes.
-- Worker atualizado com o canário de álbuns/fotos a partir da branch `migration/profile-cloudflare-shadow-write` (commit `4edc7c2ed6fc2cec3d2aa41619416ec60faac309`), versão `c71c13e3-52c3-452f-a368-bd431b5ad006`, deployment `395c4ae1-0de1-4b6a-988a-e9b658ddd4b0`, tráfego 100% no Worker de staging. Bindings D1, R2 e Supabase Auth foram preservados. A versão imediatamente anterior `ee1b9159-484c-4ed4-bce5-53bef863f9da` é o rollback de código.
-- Verificação remota após a publicação: `/health` retornou 200; `/api/v1/challenges`, `/api/v1/settings/global/meta_semanal`, `/api/v1/progress/weekly` e `/api/v1/club/albums` retornaram 401 sem token. A publicação só alterou código; as migrations e os registros D1 não foram escritos nesta etapa.
+- Worker atualizado com o canário de álbuns/fotos e a correção da resposta da recompensa diária, a partir da branch `migration/profile-cloudflare-shadow-write` (commit `6f6720616c60e9130e30bc3a90e43bd568c5dda6`), versão `eec8d7aa-31b6-4ed6-8f04-3516cd7e7a7c`, deployment `a5bb7d8e-433a-44c1-9a15-e6ec3aa587a0`, tráfego 100% no Worker de staging. Bindings D1, R2 e Supabase Auth foram preservados. A versão imediatamente anterior `c71c13e3-52c3-452f-a368-bd431b5ad006` é o rollback de código.
+- Verificação remota após a publicação: `/health` retornou 200; `/api/v1/challenges`, `/api/v1/settings/global/meta_semanal`, `/api/v1/progress/weekly`, `/api/v1/club/albums` e `/api/v1/rewards/daily-epub` retornaram 401 sem token. A publicação só alterou código; as migrations e os registros D1 não foram escritos nesta etapa.
 - O teste Google autenticado continua pendente. A automação do navegador não conseguiu identificar a URL atual com confiança suficiente e foi interrompida; nenhum login foi automatizado. A página `cloudflare-validation.html` pode ser executada manualmente pelo usuário.
 - Nenhum deploy/cutover de produção ocorreu.
 
 ### Reversão
 
-A entrada normal index.html mantém Supabase como fonte até validação. O canário pode ser desativado removendo seus parâmetros/entrada. Para o código remoto de staging, reimplantar a versão `ee1b9159-484c-4ed4-bce5-53bef863f9da`; reverter código não reverte as migrations aditivas. A versão `a5a076e7-8c03-43fe-8408-5a1cedf5f85d` é a base anterior aos canários recentes, e `febf2e0f-6fe3-4163-ab6a-0c73c48236d6` é a base anterior ao trabalho de migração. Não apagar o snapshot preservado, seus manifestos nem os históricos adicionados.
+A entrada normal index.html mantém Supabase como fonte até validação. O canário pode ser desativado removendo seus parâmetros/entrada. Para o código remoto de staging, reimplantar a versão `c71c13e3-52c3-452f-a368-bd431b5ad006`; reverter código não reverte as migrations aditivas. A versão `ee1b9159-484c-4ed4-bce5-53bef863f9da` é a base anterior aos canários recentes, `a5a076e7-8c03-43fe-8408-5a1cedf5f85d` é a base anterior aos canários de domínio, e `febf2e0f-6fe3-4163-ab6a-0c73c48236d6` é a base anterior ao trabalho de migração. Não apagar o snapshot preservado, seus manifestos nem os históricos adicionados.
 
 ## Continuação local — álbuns e fotos do Clube
 
@@ -141,7 +141,8 @@ A entrada normal index.html mantém Supabase como fonte até validação. O can�
 
 ### Implantação do canário em staging
 
-- A versão 22 `c71c13e3-52c3-452f-a368-bd431b5ad006` foi publicada em `2026-11-11T19:24:54.192306Z` e recebe 100% do tráfego de staging. O deployment é `395c4ae1-0de1-4b6a-988a-e9b658ddd4b0`; a versão 21 `ee1b9159-484c-4ed4-bce5-53bef863f9da` está disponível para rollback.
-- O upload incluiu os 11 módulos atuais do Worker, preservou bindings, compatibilidade, logs e traces, e aplicou 13 alterações de fonte correspondentes ao diff de `cloudflare/worker.mjs` do commit registrado em `STAGING_DEPLOYMENT_2026-11-11.json`.
-- Após a publicação, `/health` retornou 200; as rotas de desafios, configurações globais, progresso semanal e álbuns sem token retornaram 401. Nenhuma migration nem dado foi alterado pelo deploy.
-- GitHub Actions run `43085332836` e os dois deploy previews da PR #4 concluíram com sucesso. O teste com sessão Google permanece pendente.
+- A versão 23 `eec8d7aa-31b6-4ed6-8f04-3516cd7e7a7c` foi publicada em `2026-11-11T19:32:29.571820Z` e recebe 100% do tráfego de staging. O deployment é `a5bb7d8e-433a-44c1-9a15-e6ec3aa587a0`; a versão 22 `c71c13e3-52c3-452f-a368-bd431b5ad006` está disponível para rollback.
+- O upload incluiu os 11 módulos atuais do Worker, preservou bindings, compatibilidade, logs e traces, e aplicou as alterações dos commits `4edc7c2` e `6f67206` descritas em `STAGING_DEPLOYMENT_2026-11-11.json`.
+- A resposta da recompensa diária agora marca `applied=true` somente para a requisição cujo UPDATE de saldo alterou uma linha. O teste concorrente passou cinco vezes consecutivas e a suíte completa passou 44/44.
+- Após a publicação, `/health` retornou 200; as rotas de desafios, configurações globais, progresso semanal, álbuns e recompensa diária sem token retornaram 401. Nenhuma migration nem dado foi alterado pelo deploy.
+- GitHub Actions run `43087977901` e os dois deploy previews da PR #4 concluíram com sucesso. O teste com sessão Google permanece pendente.
