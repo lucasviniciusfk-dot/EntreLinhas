@@ -66,7 +66,9 @@ export async function handleProfile(request, env, context) {
         sets.push(key+'=?'); values.push(v);
       }
       sets.push('atualizado_em=?'); values.push(new Date().toISOString(),uid);
-      const result = await env.DB.prepare('UPDATE usuarios SET '+sets.join(',')+' WHERE id=? AND COALESCE(apagado,0)=0 AND COALESCE(conta_removida,0)=0').bind(...values).run();
+      const revision=request.headers.get('If-Match');
+      if(revision)values.push(revision);
+      const result = await env.DB.prepare('UPDATE usuarios SET '+sets.join(',')+' WHERE id=? AND COALESCE(apagado,0)=0 AND COALESCE(conta_removida,0)=0'+(revision?' AND atualizado_em=?':'')).bind(...values).run();
       if (Number(result.meta?.changes) !== 1) return reply({ok:false,error:'Gravação não confirmada. Recarregue o perfil.'},409);
     } else if (request.method !== 'GET') return null;
     const row = await env.DB.prepare('SELECT * FROM usuarios WHERE id=? LIMIT 1').bind(uid).first();

@@ -46,7 +46,7 @@
       apiBase, request,
       getMe: () => get('/api/v1/me'),
       bootstrapMe: () => send('/api/v1/me/bootstrap', 'POST', {}),
-      updateMe: p => send('/api/v1/me', 'PATCH', p),
+      updateMe: (p, revision) => request('/api/v1/me', {method:'PATCH',body:JSON.stringify(p),headers:revision?{'If-Match':revision}:undefined}),
       getAwards: () => get('/api/v1/me/awards'),
       getPreferences: () => get('/api/v1/me/preferences'),
       updatePreferences: p => send('/api/v1/me/preferences', 'PATCH', p),

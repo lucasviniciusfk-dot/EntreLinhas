@@ -2,7 +2,7 @@
 (function (root) {
   'use strict';
   function create(options) {
-    const o = options || {}, states = new Map(), inFlight = new Map(), photos = new Map();
+    const o = options || {}, states = new Map(), inFlight = new Map(), photos = new Map(), revisions = new Map();
     const enabled = o.enabled === undefined ? new URLSearchParams(root.location.search).get('cf_profile') === '1' : o.enabled;
     const api = o.api || root.EntreLinhasCloudflareApi.create();
     function client() { return o.client || root.entSupabaseClient || root.supabaseClient; }
@@ -39,6 +39,7 @@
         }
         if (!r.ok || !r.profile || String(r.profile.id) !== String(uid)) throw new Error('Identidade do perfil não confirmada.');
         states.set(uid, 'cloudflare');
+        revisions.set(uid,r.profile.atualizado_em);
         return await decorate(r.profile);
       } catch (e) {
         // Never downgrade AUTH/403, malformed responses or an account already using D1.
@@ -68,8 +69,9 @@
         }
         let row;
         if (provider === 'cloudflare') {
-          const r = await api.updateMe(body);
+          const r = await api.updateMe(body,revisions.get(uid));
           if (!r.ok || !r.profile || String(r.profile.id) !== String(uid)) throw new Error('Gravação não confirmada. Recarregue o perfil.');
+          revisions.set(uid,r.profile.atualizado_em);
           row = await decorate(r.profile);
         } else {
           const r = await client().from('usuarios').update(body).eq('id', uid).select('*').single();

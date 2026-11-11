@@ -1,3 +1,4 @@
+import {handleChat} from "./domains/chat.mjs";
 /* Snapshot revisado do Worker entrelinhas-api-staging.
  * Patch: erros de consulta D1 durante a resolução do perfil retornam 503 controlado.
  * Deploy deve preservar os bindings e settings atuais.
@@ -5,7 +6,7 @@
 import {handleProfile,bootstrapProfile} from "./domains/profile.mjs";
 const cors = (origin) => {
   const allowed = new Set(["https://lucasviniciusfk-dot.github.io","http://localhost:3000","http://localhost:5173","http://localhost:8787","https://entrelinhasoff.netlify.app","https://deploy-preview-4--entrelinhasoff.netlify.app"]);
-  const headers = new Headers({"Vary":"Origin","Access-Control-Allow-Methods":"GET, POST, PUT, PATCH, DELETE, OPTIONS","Access-Control-Allow-Headers":"Authorization, Content-Type","Access-Control-Max-Age":"86400"});
+  const headers = new Headers({"Vary":"Origin","Access-Control-Allow-Methods":"GET, POST, PUT, PATCH, DELETE, OPTIONS","Access-Control-Allow-Headers":"Authorization, Content-Type, If-Match","Access-Control-Max-Age":"86400"});
   if (allowed.has(origin)) headers.set("Access-Control-Allow-Origin", origin);
   return headers;
 };
@@ -89,6 +90,7 @@ btn.addEventListener("click",async()=>{
 
  const profileRequest=url.pathname==="/api/v1/me/bootstrap"?new Request(url.origin+"/api/v1/me",{headers:request.headers}):request;
  const profileResponse=await handleProfile(profileRequest,env,{uid,headers,authUser:access.user});if(profileResponse)return profileResponse;
+ const chatResponse=await handleChat(request,env,{uid,headers,isAdmin});if(chatResponse)return chatResponse;
 
  // Recompensas periódicas: replica as regras v507/v512, com identidade derivada da sessão.
  if(url.pathname==="/api/v1/rewards/period"&&request.method==="POST"){
@@ -506,66 +508,6 @@ btn.addEventListener("click",async()=>{
     await env.DB.prepare("UPDATE app_notificacoes SET ocultada_por=CASE WHEN EXISTS(SELECT 1 FROM json_each(CASE WHEN json_valid(ocultada_por) THEN ocultada_por ELSE '[]' END) WHERE value=?) THEN ocultada_por ELSE json_insert(CASE WHEN json_valid(ocultada_por) THEN ocultada_por ELSE '[]' END,'$[#]',?) END,atualizado_em=? WHERE id=?").bind(uid,uid,stamp,notificationId).run();
    }
    return json({ok:true,id:notificationId,action:action},200,headers);
-  }
-  // Chat: identidade e permissões derivadas da sessão; mensagens removidas ficam preservadas para auditoria.
-  if(request.method==="GET"&&url.pathname==="/api/v1/chat/messages"){
-   const limit=clampInt(url.searchParams.get("limit"),250,1,300);
-   const rows=await env.DB.prepare("SELECT id,usuario_id,mensagem,fixada,criado_em,editada,apagada,atualizado_em,reacoes,reagido_por,curtidas,nome,texto,removida,dados,editado_em FROM chat_mensagens WHERE COALESCE(removida,0)=0 AND COALESCE(apagada,0)=0 ORDER BY criado_em DESC,id DESC LIMIT ?").bind(limit).all();
-   const items=(rows.results||[]).reverse();
-   const ids=items.map(x=>String(x.id));
-   let reactions=[];
-   if(ids.length){
-    const marks=ids.map(()=>"?").join(",");
-    const rr=await env.DB.prepare("SELECT id,mensagem_id,usuario_id,emoji,criado_em,atualizado_em FROM chat_reacoes WHERE mensagem_id IN ("+marks+") ORDER BY criado_em ASC").bind(...ids).all();
-    reactions=rr.results||[];
-   }
-   const byMessage={};for(const r of reactions){const key=String(r.mensagem_id);if(!byMessage[key])byMessage[key]=[];byMessage[key].push(r);}
-   for(const m of items){m.dados=parseObject(m.dados);m.reacoes=parseObject(m.reacoes);m.reaction_items=byMessage[String(m.id)]||[];}
-   return json({ok:true,items,reactions,count:items.length,limit},200,headers);
-  }
-  if(request.method==="POST"&&url.pathname==="/api/v1/chat/messages"){
-   const b=await readBody(request),message=validText(b.message,4000,"Mensagem",true);
-   const profile=await env.DB.prepare("SELECT nome FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();
-   const stamp=new Date().toISOString(),id=crypto.randomUUID(),reply=b.reply&&typeof b.reply==="object"?{id:validText(b.reply.id,128,"ID da resposta"),userName:validText(b.reply.userName||"Membro",120,"Nome"),text:validText(b.reply.text||"",240,"Trecho")}:null;
-   const dados=JSON.stringify(Object.assign({tipo:"mensagem"},reply?{reply}:{}));
-   await env.DB.prepare("INSERT INTO chat_mensagens (id,usuario_id,mensagem,fixada,criado_em,editada,apagada,atualizado_em,reacoes,reagido_por,curtidas,nome,texto,removida,dados,editado_em) VALUES (?,?,?,0,?,0,0,?,'{}','[]','[]',?,?,0,?,NULL)").bind(id,uid,message,stamp,stamp,String(profile&&profile.nome||access.user.email||"Membro"),message,dados).run();
-   const item=await env.DB.prepare("SELECT id,usuario_id,mensagem,fixada,criado_em,editada,apagada,atualizado_em,reacoes,reagido_por,curtidas,nome,texto,removida,dados,editado_em FROM chat_mensagens WHERE id=?").bind(id).first();
-   item.dados=parseObject(item.dados);item.reaction_items=[];
-   return json({ok:true,message:item},201,headers);
-  }
-  const chatMessageRoute=url.pathname.match(/^\/api\/v1\/chat\/messages\/([^/]+)$/);
-  if(chatMessageRoute&&(request.method==="PATCH"||request.method==="DELETE")){
-   const messageId=decodeURIComponent(chatMessageRoute[1]),row=await env.DB.prepare("SELECT id,usuario_id,mensagem,criado_em,fixada,removida FROM chat_mensagens WHERE id=? LIMIT 1").bind(messageId).first();
-   if(!row||row.removida===1)return json({ok:false,error:"Mensagem não encontrada."},404,headers);
-   const owner=String(row.usuario_id||"")===uid;
-   if(request.method==="PATCH"){
-    if(!owner)return json({ok:false,error:"Somente o autor pode editar esta mensagem."},403,headers);
-    const body=await readBody(request),message=validText(body.message,4000,"Mensagem",true),stamp=new Date().toISOString();
-    await env.DB.prepare("UPDATE chat_mensagens SET mensagem=?,texto=?,editada=1,editado_em=?,atualizado_em=? WHERE id=? AND usuario_id=? AND COALESCE(removida,0)=0").bind(message,message,stamp,stamp,messageId,uid).run();
-    return json({ok:true,id:messageId,message,edited_at:stamp},200,headers);
-   }
-   const created=Date.parse(row.criado_em||"")||0,withinWindow=created>0&&Date.now()-created<=30*60*1000;
-   if(!isAdmin&&!(owner&&withinWindow))return json({ok:false,error:"Você só pode apagar suas mensagens por até 30 minutos."},403,headers);
-   const stamp=new Date().toISOString();
-   await env.DB.batch([
-    env.DB.prepare("UPDATE chat_mensagens SET removida=1,apagada=1,atualizado_em=? WHERE id=? AND COALESCE(removida,0)=0").bind(stamp,messageId),
-    env.DB.prepare("DELETE FROM chat_reacoes WHERE mensagem_id=?").bind(messageId)
-   ]);
-   return json({ok:true,id:messageId,removed:true},200,headers);
-  }
-  const chatReactionRoute=url.pathname.match(/^\/api\/v1\/chat\/messages\/([^/]+)\/reaction$/);
-  if(chatReactionRoute&&request.method==="PUT"){
-   const messageId=decodeURIComponent(chatReactionRoute[1]),body=await readBody(request),emoji=validText(body.emoji,16,"Emoji",true);
-   const message=await env.DB.prepare("SELECT id FROM chat_mensagens WHERE id=? AND COALESCE(removida,0)=0 AND COALESCE(apagada,0)=0 LIMIT 1").bind(messageId).first();
-   if(!message)return json({ok:false,error:"Mensagem não encontrada."},404,headers);
-   const stamp=new Date().toISOString();
-   await env.DB.prepare("INSERT INTO chat_reacoes (id,mensagem_id,usuario_id,emoji,criado_em,atualizado_em) VALUES (?,?,?,?,?,?) ON CONFLICT(mensagem_id,usuario_id) DO UPDATE SET emoji=excluded.emoji,atualizado_em=excluded.atualizado_em").bind(crypto.randomUUID(),messageId,uid,emoji,stamp,stamp).run();
-   return json({ok:true,message_id:messageId,emoji},200,headers);
-  }
-  if(chatReactionRoute&&request.method==="DELETE"){
-   const messageId=decodeURIComponent(chatReactionRoute[1]);
-   await env.DB.prepare("DELETE FROM chat_reacoes WHERE mensagem_id=? AND usuario_id=?").bind(messageId,uid).run();
-   return json({ok:true,message_id:messageId,removed:true},200,headers);
   }
   if(request.method==="GET"&&url.pathname==="/api/v1/challenges"){const [c,p]=await Promise.all([env.DB.prepare("SELECT * FROM desafios WHERE COALESCE(ativo,1)=1 ORDER BY criado_em DESC LIMIT 200").all(),env.DB.prepare("SELECT * FROM usuario_desafios WHERE usuario_id=? ORDER BY atualizado_em DESC LIMIT 500").bind(uid).all()]);return json({ok:true,items:c.results||[],progress:p.results||[]},200,headers);}
   if(request.method==="POST"&&url.pathname==="/api/v1/library/books"){const b=await readBody(request),title=validText(b.title,240,"Título",true),author=validText(b.author,200,"Autor",true),genre=validText(b.genre||"Outro",100,"Gênero"),pages=clampInt(b.pages,100,1,100000);if(b.current_page!==undefined&&(!Number.isInteger(Number(b.current_page))||Number(b.current_page)<0||Number(b.current_page)>pages))return json({ok:false,error:"A página atual precisa estar entre 0 e o total de páginas."},400,headers);const currentPage=clampInt(b.current_page,0,0,pages),cover=validText(b.cover_url||"",2048,"Capa"),cfi=validText(b.epub_cfi||"",4096,"Posição EPUB"),requestedStatus=String(b.status||"reading").toLowerCase(),status=["reading","pending_finish","finished"].includes(requestedStatus)?requestedStatus:"reading",progress=Math.max(0,Math.min(100,Math.round(currentPage/pages*100))),finished=status==="finished"||currentPage>=pages,finalStatus=finished?"finished":status;if(cover&&!/^https:/i.test(cover))return json({ok:false,error:"A capa precisa ser uma URL HTTPS."},400,headers);const all=await env.DB.prepare("SELECT id,titulo,autor FROM livros_pessoais WHERE usuario_id=? AND COALESCE(ativo,1)=1 LIMIT 500").bind(uid).all();const dup=(all.results||[]).find(x=>clean(x.titulo)===clean(title)&&clean(x.autor)===clean(author));if(dup)return json({ok:false,error:"Este livro já está na sua biblioteca.",existing_book_id:dup.id},409,headers);const id=crypto.randomUUID(),stamp=new Date().toISOString(),dados=JSON.stringify({source:"personal-manual-online",finishPending:finalStatus==="pending_finish",createdFrom:"manual",schemaVersion:1});await env.DB.prepare("INSERT INTO livros_pessoais (id,usuario_id,livro_id,titulo,autor,genero,paginas,capa,capa_url,epub_storage_path,pagina_atual,progresso,epub_cfi,status,ativo,dados,publico,criado_em,atualizado_em,finalizado_em) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").bind(id,uid,id,title,author,genre,pages,cover,cover,"",currentPage,progress,cfi,finalStatus,1,dados,0,stamp,stamp,finished?stamp:null).run();const book=await env.DB.prepare("SELECT * FROM livros_pessoais WHERE id=? AND usuario_id=? LIMIT 1").bind(id,uid).first();return json({ok:true,book},201,headers);}
