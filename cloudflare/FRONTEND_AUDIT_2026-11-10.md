@@ -131,3 +131,14 @@ O Worker de staging recebeu uma revisão adicional (deployment `732ad39d-342e-4c
 - As quatro bindings originais (D1, R2 e as duas configurações Supabase Auth) foram preservadas.
 
 A publicação e a versão ativa foram confirmadas pela API de deployments do Cloudflare. O teste funcional autenticado ainda precisa ser executado no navegador com a conta Google do proprietário; não foi declarado aprovado.
+
+
+## Marco 1/10 — staging e CI do pull request — 2026-11-11
+
+Verificações concluídas neste marco:
+- Worker `entrelinhas-api-staging`: deployment ativo `732ad39d-342e-4c69-9947-6dd9b25e18a7`, versão `4c5e2a79-8b6a-48d2-b6fa-f47ed75b9507`, 100% do tráfego do Worker de staging.
+- Bindings lidas após o deploy: D1 `DB`, R2 `FILES`, `SUPABASE_PUBLISHABLE_KEY` e `SUPABASE_URL` presentes.
+- PR #2: head `06d405bd16e9054aa514991f1bdd4775c3542845`; os dois checks de deploy preview Netlify retornaram `success` para esse head.
+- PR permanece draft e `mergeable=false`; nenhum merge/cutover foi feito.
+
+Limite deste marco: os checks `success` confirmam a geração dos previews, não o comportamento funcional no navegador. A URL pública do Worker e os previews não puderam ser abertos por este ambiente de execução, e a API D1 retornou `SQLITE_AUTH` nas consultas de inventário desta tentativa. Portanto, login Google, chamadas autenticadas e fluxo de arquivos continuam aguardando teste funcional real.
