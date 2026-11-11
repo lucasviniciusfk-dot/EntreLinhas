@@ -121,3 +121,13 @@ A integração automática no HTML principal foi deliberadamente suspensa porque
 - Perfil próprio: GET existente; PATCH publicado em staging; cliente isolado criado; integração e teste autenticado pendentes.
 - Configurações: schema D1 consultado. `app_configuracoes` tem PK em `usuario_id` e campos `configuracoes`, `chave`, `valor`, `ativo`; não há índice único separado por chave. Não implementar upsert por `(usuario_id,chave)` sem reconciliar a diferença entre schema e padrões de uso do frontend.
 - Migração completa: ainda não aprovada; frontend continua dependente do Supabase para operações sem equivalência verificada.
+
+
+## Correção de validação do PATCH de perfil — 2026-11-11
+
+O Worker de staging recebeu uma revisão adicional (deployment `732ad39d-342e-4c69-9947-6dd9b25e18a7`, versão `4c5e2a79-8b6a-48d2-b6fa-f47ed75b9507`, 100% do tráfego do Worker de staging):
+- `bio` e `livro_favorito` agora aceitam string vazia ou `null` para permitir limpar esses campos opcionais.
+- A atualização só é considerada confirmada quando D1 informa exatamente uma linha alterada; antes a condição não detectava o caso de zero linhas.
+- As quatro bindings originais (D1, R2 e as duas configurações Supabase Auth) foram preservadas.
+
+A publicação e a versão ativa foram confirmadas pela API de deployments do Cloudflare. O teste funcional autenticado ainda precisa ser executado no navegador com a conta Google do proprietário; não foi declarado aprovado.
