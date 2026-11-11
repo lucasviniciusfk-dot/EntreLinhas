@@ -64,7 +64,17 @@ html,body{margin:0;min-height:100%;background:#101014;color:#f5f5f5;font:14px sy
             if(album&&album.id){
               const photoResponse=await fetch('https://entrelinhas-api-staging.lucasviniciusk.workers.dev/api/v1/club/albums/photos?album_id='+encodeURIComponent(album.id)+'&limit=5',{headers:{Authorization:'Bearer '+token},cache:'no-store'});
               const photoPayload=await photoResponse.json();
-              results.push({route:'/api/v1/club/albums/photos?album_id='+album.id,label:'Fotos do álbum',status:photoResponse.status,ok:photoResponse.ok&&photoPayload.ok===true,error:photoPayload.error||null});
+              const photoOk=photoResponse.ok&&photoPayload.ok===true;
+              results.push({route:'/api/v1/club/albums/photos?album_id='+album.id,label:'Fotos do álbum',status:photoResponse.status,ok:photoOk,error:photoPayload.error||null});
+              if(photoOk&&photoPayload.items&&photoPayload.items.length){
+                const photo=photoPayload.items[0];
+                const contentResponse=await fetch('https://entrelinhas-api-staging.lucasviniciusk.workers.dev/api/v1/club/albums/photos/'+encodeURIComponent(photo.id)+'/content',{headers:{Authorization:'Bearer '+token},cache:'no-store'});
+                const contentType=contentResponse.headers.get('content-type')||'';
+                const contentBytes=contentResponse.ok?await contentResponse.arrayBuffer():new ArrayBuffer(0);
+                results.push({route:'/api/v1/club/albums/photos/'+photo.id+'/content',label:'Conteúdo da primeira foto',status:contentResponse.status,ok:contentResponse.ok&&contentBytes.byteLength>0&&/^image\\//i.test(contentType),error:contentResponse.ok?(contentBytes.byteLength?'Tipo de conteúdo: '+contentType:'Arquivo vazio'):(contentType||'Falha ao baixar foto')});
+              }else if(photoOk){
+                results.push({route:'/api/v1/club/albums/photos/:id/content',label:'Conteúdo da primeira foto',status:0,ok:true,error:'Não aplicável: álbum sem fotos.'});
+              }
             }else{
               results.push({route:'/api/v1/club/albums/photos',label:'Fotos do álbum',status:0,ok:true,error:'Não aplicável: não há álbum ativo para consultar.'});
             }
