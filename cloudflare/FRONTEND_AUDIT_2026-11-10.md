@@ -212,3 +212,7 @@ Foi identificada e corrigida uma defasagem entre Supabase e D1 em duas tabelas, 
 - `metas_diarias`: 1 registro de 2026-11-10 inserido no D1, mantendo `livros`, flags de conclusão/recompensa e timestamps originais. Contagem conferida após a inserção: Supabase 638 / D1 638.
 
 Nenhum registro foi apagado ou sobrescrito. Esta reconciliação fecha apenas essas duas diferenças de contagem; não equivale à paridade funcional total do frontend nem à aprovação de integridade referencial do D1 (os PRAGMA de integridade continuam bloqueados com `SQLITE_AUTH`).
+
+## Auditoria de contagem das 48 tabelas — 2026-11-11
+
+Consulta agregada executada no Supabase (schema `public`) e no D1 staging para as 48 tabelas listadas pelo catálogo do Supabase. Resultado: **48/48 tabelas com a mesma contagem de linhas** entre origem e destino após as reconciliações registradas acima. A comparação foi feita por contagem total de cada tabela; ela não substitui comparação linha a linha, validação de hashes/JSON, nem os testes de integridade referencial (que permanecem sem aprovação devido ao `SQLITE_AUTH` nos PRAGMAs).
