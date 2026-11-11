@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entre Linhas — Cloudflare staging</title>
+<style>
+html,body{margin:0;min-height:100%;background:#101014;color:#f5f5f5;font:14px system-ui}
+#stage-status{position:fixed;z-index:2147483647;right:10px;bottom:10px;padding:8px 12px;border-radius:10px;background:#24242b;color:#fff;box-shadow:0 2px 12px #0008}
+#stage-status.ok{background:#174b35}#stage-status.err{background:#702a2a}
+</style>
+</head>
+<body>
+<div id="stage-status">Preparando ambiente Cloudflare de testes…</div>
+<script>
+(async function(){
+  const status=document.getElementById('stage-status');
+  try{
+    const response=await fetch('./index.html',{cache:'no-store'});
+    if(!response.ok)throw new Error('Não foi possível carregar o index.html: HTTP '+response.status);
+    let source=await response.text();
+    const sdk=/<script\s+src=["']https:\/\/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@2["']\s*>\s*<\/script>/i;
+    if(!sdk.test(source))throw new Error('SDK do Supabase não encontrado no HTML principal.');
+    const injection='<script src="./cloudflare/entrelinhas-rpc-adapter.staging.js"><\/script><script>(function(){var sdk=window.supabase;if(!sdk||!sdk.createClient)throw new Error("SDK Supabase indisponível");if(sdk.__entrelCloudflareFactoryWrapped)return;sdk.__entrelCloudflareFactoryWrapped=true;var original=sdk.createClient.bind(sdk);sdk.createClient=function(){var client=original.apply(null,arguments);if(window.installEntreLinhasCloudflareRpcAdapter)window.installEntreLinhasCloudflareRpcAdapter(client,{apiBase:"https://entrelinhas-api-staging.lucasviniciusk.workers.dev"});return client;};window.__ENTREL_CLOUDFLARE_STAGING__={enabled:true,api:"https://entrelinhas-api-staging.lucasviniciusk.workers.dev",mode:"rpc-only-safe"};})();<\/script>';
+    source=source.replace(sdk,match=>match+injection);
+    if(!source.includes('__ENTREL_CLOUDFLARE_STAGING__'))throw new Error('Não foi possível instalar o adaptador no ponto correto.');
+    status.className='ok';status.textContent='STAGING • RPCs compatíveis via Cloudflare • Supabase Auth preservado';
+    document.open();document.write(source);document.close();
+  }catch(error){
+    status.className='err';status.textContent='Falha no staging: '+(error&&error.message||error);
+    console.error('[Entre Linhas staging]',error);
+  }
+})();
+</script>
+</body>
+</html>
