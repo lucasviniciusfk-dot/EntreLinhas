@@ -109,3 +109,15 @@ A tentativa de testar a URL pública do Worker a partir deste ambiente retornou 
 
 ### Situação do item 1
 **Não concluído.** Esta alteração cobre somente uma operação do domínio de perfil. O frontend ainda precisa ser integrado para usar a rota, e continuam pendentes as operações das outras tabelas, as RPCs, as configurações `app_configuracoes`, as operações administrativas e o Storage. Não fazer cutover nem remover Supabase.
+
+
+## Cliente frontend opt-in — 2026-11-11
+
+Foi criado `cloudflare/entrelinhas-api-client.js` na branch de migração (commit `3b6ce0514fecf38ef548e629959193c3873b5a5f`). O módulo oferece `getMe()` e `updateMe()`, obtém o access token da sessão Supabase Auth existente e chama o Worker de staging. Ele é opt-in: não intercepta `fetch`, não substitui o SDK Supabase e não foi incluído no `index.html` principal.
+
+A integração automática no HTML principal foi deliberadamente suspensa porque a auditoria encontrou 26 tabelas, 17 RPCs e três buckets ainda usados diretamente. Trocar o cliente globalmente antes de implementar e testar os contratos quebraria fluxos não cobertos. O cliente isolado não constitui cutover nem prova de compatibilidade funcional.
+
+### Estado real
+- Perfil próprio: GET existente; PATCH publicado em staging; cliente isolado criado; integração e teste autenticado pendentes.
+- Configurações: schema D1 consultado. `app_configuracoes` tem PK em `usuario_id` e campos `configuracoes`, `chave`, `valor`, `ativo`; não há índice único separado por chave. Não implementar upsert por `(usuario_id,chave)` sem reconciliar a diferença entre schema e padrões de uso do frontend.
+- Migração completa: ainda não aprovada; frontend continua dependente do Supabase para operações sem equivalência verificada.
