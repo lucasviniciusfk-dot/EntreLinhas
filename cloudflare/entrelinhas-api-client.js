@@ -41,6 +41,35 @@
       return payload;
     }
 
+    async function requestBinary(path) {
+      const token = await getAccessToken();
+      const response = await fetch(apiBase + path, {
+        method: "GET",
+        headers: { Authorization: "Bearer " + token },
+        cache: "no-store"
+      });
+      if (!response.ok) {
+        let message = "Falha ao baixar arquivo (HTTP " + response.status + ").";
+        try {
+          const payload = await response.json();
+          if (payload && payload.error) message = payload.error;
+        } catch (_) {}
+        throw new Error(message);
+      }
+      const contentType = response.headers.get("content-type") || "application/octet-stream";
+      if (!/^image\\//i.test(contentType)) {
+        throw new Error("A API retornou um conteúdo que não é imagem.");
+      }
+      const blob = await response.blob();
+      if (!blob.size) throw new Error("A imagem retornada está vazia.");
+      return Object.freeze({ blob: blob, contentType: contentType });
+    }
+
+    function safeLimit(value, fallback) {
+      const number = Number(value);
+      return Number.isFinite(number) ? Math.max(1, Math.min(200, Math.trunc(number))) : fallback;
+    }
+
     return Object.freeze({
       getMe: function () {
         return request("/api/v1/me", { method: "GET" });
@@ -53,6 +82,21 @@
           method: "PATCH",
           body: JSON.stringify(profile)
         });
+      },
+      getClubAlbums: function (limit) {
+        return request("/api/v1/club/albums?limit=" + safeLimit(limit, 100), { method: "GET" });
+      },
+      getClubAlbumPhotos: function (albumId, limit) {
+        if (!albumId || typeof albumId !== "string") {
+          return Promise.reject(new TypeError("Informe o ID do álbum."));
+        }
+        return request("/api/v1/club/albums/photos?album_id=" + encodeURIComponent(albumId) + "&limit=" + safeLimit(limit, 200), { method: "GET" });
+      },
+      getClubPhotoContent: function (photoId) {
+        if (!photoId || typeof photoId !== "string") {
+          return Promise.reject(new TypeError("Informe o ID da foto."));
+        }
+        return requestBinary("/api/v1/club/albums/photos/" + encodeURIComponent(photoId) + "/content");
       }
     });
   }
