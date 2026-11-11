@@ -2,9 +2,10 @@
  * Patch: erros de consulta D1 durante a resolução do perfil retornam 503 controlado.
  * Deploy deve preservar os bindings e settings atuais.
  */
+import {handleProfile,bootstrapProfile} from "./domains/profile.mjs";
 const cors = (origin) => {
-  const allowed = new Set(["https://lucasviniciusfk-dot.github.io","http://localhost:3000","http://localhost:5173"]);
-  const headers = new Headers({"Vary":"Origin","Access-Control-Allow-Methods":"GET, POST, PATCH, DELETE, OPTIONS","Access-Control-Allow-Headers":"Authorization, Content-Type","Access-Control-Max-Age":"86400"});
+  const allowed = new Set(["https://lucasviniciusfk-dot.github.io","http://localhost:3000","http://localhost:5173","http://localhost:8787","https://entrelinhasoff.netlify.app","https://deploy-preview-4--entrelinhasoff.netlify.app"]);
+  const headers = new Headers({"Vary":"Origin","Access-Control-Allow-Methods":"GET, POST, PUT, PATCH, DELETE, OPTIONS","Access-Control-Allow-Headers":"Authorization, Content-Type","Access-Control-Max-Age":"86400"});
   if (allowed.has(origin)) headers.set("Access-Control-Allow-Origin", origin);
   return headers;
 };
@@ -18,6 +19,7 @@ async function readBody(request){const raw=await request.text();if(raw.length>32
 function validText(value,max,label,required=false){const s=String(value??"").trim();if(required&&!s)throw new Error(label+" é obrigatório.");if(s.length>max)throw new Error(label+" excede o limite permitido.");return s;}
 export default {async fetch(request,env){
  const headers=cors(request.headers.get("Origin")||"");if(request.method==="OPTIONS")return new Response(null,{status:204,headers});
+ headers.set("Cache-Control","private, no-store");
  const url=new URL(request.url);if(url.pathname==="/health"&&request.method==="GET"){let d1=false;try{const x=await env.DB.prepare("SELECT 1 AS ok").first();d1=!!x&&x.ok===1;}catch(_){}const authReady=!!env.SUPABASE_URL&&!!env.SUPABASE_PUBLISHABLE_KEY;return json({ok:d1&&!!env.FILES&&authReady,environment:"staging",service:"entrelinhas-api-staging",bindings:{d1,r2:!!env.FILES,authConfig:authReady},readRoutesEnabled:true,writeRoutesEnabled:true},200,headers);}
  if(url.pathname==="/__staging-file-check"&&request.method==="GET"){
   const html = `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Entre Linhas — teste de arquivos</title><style>body{font:16px system-ui;background:#111;color:#eee;max-width:560px;margin:32px auto;padding:20px}main{background:#1d1d1d;padding:22px;border-radius:16px}button{box-sizing:border-box;width:100%;padding:14px;border-radius:8px;border:1px solid #555;font:inherit;margin-top:16px;background:#e8e8e8;color:#111;font-weight:700}button:disabled{opacity:.5}#out{white-space:pre-wrap;overflow-wrap:anywhere;background:#090909;padding:12px;border-radius:8px;margin-top:16px}.note{color:#bbb;font-size:14px}</style><main><h2>Teste privado de arquivos — staging</h2><p>Entre com a mesma conta Google usada no Entre Linhas. Não é necessário informar senha.</p><p class="note">A autenticação acontece pelo Supabase Auth com OAuth/PKCE. O token é usado somente neste teste, no navegador, e a sessão temporária é limpa ao terminar. Nenhum arquivo pessoal será enviado: será usado um PNG sintético.</p><button id="go">Continuar com Google e testar</button><pre id="out">Preparando autenticação…</pre></main><script type="module">\nimport { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -76,8 +78,17 @@ btn.addEventListener("click",async()=>{
   return new Response(html,{status:200,headers:h});
  }
  if(!url.pathname.startsWith("/api/v1/"))return json({ok:false,error:"Not found"},404,headers);
+ if(url.pathname==="/api/v1/me/bootstrap"&&request.method==="POST"){
+   let identity;
+   try{identity=await authenticate(request,env);}catch(_){return json({ok:false,error:"Serviço de autenticação indisponível."},503,headers);}
+   if(identity.error)return json({ok:false,error:"Sessão não confirmada."},identity.error==="upstream"?503:401,headers);
+   try{await bootstrapProfile(env,identity.user);}catch(_){return json({ok:false,error:"Não foi possível preparar o perfil."},503,headers);}
+ }
  const access=await requireUser(request,env,headers);if(access.response)return access.response;const uid=access.user.id;
  const isAdmin=Number(access.profile.is_admin)===1||Number(access.profile.admin_principal)===1||String(access.user.email||"").toLowerCase()==="lucasviniciusfk@gmail.com";
+
+ const profileRequest=url.pathname==="/api/v1/me/bootstrap"?new Request(url.origin+"/api/v1/me",{headers:request.headers}):request;
+ const profileResponse=await handleProfile(profileRequest,env,{uid,headers,authUser:access.user});if(profileResponse)return profileResponse;
 
  // Recompensas periódicas: replica as regras v507/v512, com identidade derivada da sessão.
  if(url.pathname==="/api/v1/rewards/period"&&request.method==="POST"){
@@ -220,7 +231,7 @@ btn.addEventListener("click",async()=>{
     await env.DB.prepare("INSERT INTO file_assets (id,owner_id,object_key,category,original_name,content_type,size_bytes,created_at) VALUES (?,?,?,?,?,?,?,?)").bind(id,uid,key,category,safeName,mime,file.size,stamp).run();
    }catch(e){await env.FILES.delete(key);throw e;}
    return json({ok:true,file:{id:id,category:category,name:safeName,content_type:mime,size_bytes:file.size,created_at:stamp}},201,headers);
-  }catch(e){return json({ok:false,error:"Não foi possível armazenar o arquivo no staging."},500,headers);}
+  }catch(e){console.error(JSON.stringify({event:"file_upload_failed",message:String(e&&e.message||e)}));return json({ok:false,error:"Não foi possível armazenar o arquivo no staging."},500,headers);}
  }
  if(fileRoute&&request.method==="GET"){
   try{
@@ -244,23 +255,6 @@ btn.addEventListener("click",async()=>{
   }catch(e){return json({ok:false,error:"Arquivo bloqueado para acesso; a limpeza do armazenamento pode precisar ser repetida."},500,headers);}
  }
  try{
-  if(request.method==="PATCH"&&url.pathname==="/api/v1/me") {
-   try {
-    const body=await readBody(request);
-    const allowed={nome:80,bio:500,livro_favorito:160,foto_url:2048,moldura_atual:80};
-    const sets=[],values=[];
-    for(const [key,max] of Object.entries(allowed)){if(Object.prototype.hasOwnProperty.call(body,key)){const rawValue=body[key];const value=rawValue===null?"":validText(rawValue,max,key,false);sets.push(key+"=?");values.push(value);}}
-    for(const key of ["perfil_privado","biblioteca_publica"]){if(Object.prototype.hasOwnProperty.call(body,key)){const v=body[key];if(!(v===true||v===false||v===0||v===1||v==="0"||v==="1"))return json({ok:false,error:"Valor inválido para "+key},400,headers);sets.push(key+"=?");values.push(v===true||v===1||v==="1"?1:0);}}
-    if(!sets.length)return json({ok:false,error:"Nenhum campo de perfil permitido foi enviado."},400,headers);
-    sets.push("atualizado_em=?");values.push(new Date().toISOString(),uid);
-    const result=await env.DB.prepare("UPDATE usuarios SET "+sets.join(",")+" WHERE id=? AND COALESCE(apagado,0)=0 AND COALESCE(conta_removida,0)=0").bind(...values).run();
-    if(!result.meta||Number(result.meta.changes)!==1)return json({ok:false,error:"Não foi possível confirmar a atualização do perfil."},409,headers);
-    const profile=await env.DB.prepare("SELECT id,nome,email,foto_url,bio,livro_favorito,nivel,xp,paginas_lidas,livros_finalizados,sequencia_dias,moldura_ativa,perfil_privado,biblioteca_publica,moldura_atual,criado_em,estado FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();
-    if(!profile)return json({ok:false,error:"Perfil não encontrado."},404,headers);
-    return json({ok:true,user:{id:uid,email:access.user.email||profile.email},profile},200,headers);
-   }catch(e){return json({ok:false,error:e&&e.message?e.message:"Não foi possível atualizar o perfil."},400,headers);}
-  }
-  if(request.method==="GET"&&url.pathname==="/api/v1/me"){const p=await env.DB.prepare("SELECT id,nome,email,foto_url,bio,livro_favorito,nivel,xp,paginas_lidas,livros_finalizados,sequencia_dias,moldura_ativa,perfil_privado,biblioteca_publica,moldura_atual,criado_em,estado FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();return json({ok:true,user:{id:uid,email:access.user.email||p.email},profile:p},200,headers);}
   if(request.method==="GET"&&url.pathname==="/api/v1/club/current-book"){
    const row=await env.DB.prepare("SELECT id,titulo,autor,genero,paginas_total,data_encontro,horario_encontro,local_encontro,xp_recompensa,capa_url,epub_storage_path,nome_arquivo,status,ativo,criado_em,atualizado_em,prazo,descricao,pontos_recompensa FROM clube_livro_atual WHERE COALESCE(ativo,1)=1 ORDER BY atualizado_em DESC LIMIT 1").first();
    return json({ok:true,book:row||null},200,headers);
@@ -373,6 +367,7 @@ btn.addEventListener("click",async()=>{
    const asset=await env.DB.prepare("SELECT object_key,content_type,original_name,size_bytes FROM file_assets WHERE id=? AND deleted_at IS NULL LIMIT 1").bind(photo.storage_path).first();
    if(!asset)return json({ok:false,error:"Arquivo da foto indisponível."},404,headers);
    const object=await env.FILES.get(asset.object_key);if(!object)return json({ok:false,error:"Arquivo da foto indisponível no R2."},404,headers);
+   const outHeaders=new Headers(headers);outHeaders.set("Content-Type",asset.content_type);outHeaders.set("Content-Length",String(asset.size_bytes));
    const safeName=String(asset.original_name||"foto").replace(/[^a-zA-Z0-9._-]/g,"_");outHeaders.set("Content-Disposition","inline; filename="+safeName);outHeaders.set("Cache-Control","private, no-store");outHeaders.set("X-Content-Type-Options","nosniff");
    return new Response(object.body,{status:200,headers:outHeaders});
   }
@@ -469,7 +464,7 @@ btn.addEventListener("click",async()=>{
     env.DB.prepare("UPDATE usuarios SET xp=COALESCE(xp,0)+(SELECT xp FROM entrel_reward_claims_v510 WHERE claim_key=? AND applied=0),pontos=COALESCE(pontos,0)+(SELECT pontos FROM entrel_reward_claims_v510 WHERE claim_key=? AND applied=0),atualizado_em=? WHERE id=? AND EXISTS(SELECT 1 FROM entrel_reward_claims_v510 WHERE claim_key=? AND applied=0)").bind(claim,claim,stamp,userId,claim),
     env.DB.prepare("UPDATE entrel_reward_claims_v510 SET applied=1,applied_at=? WHERE claim_key=? AND applied=0").bind(stamp,claim),
     env.DB.prepare("UPDATE livros_pessoais SET pagina_atual=?,progresso=100,status='finished',ativo=1,dados=?,atualizado_em=?,finalizado_em=? WHERE id=? AND usuario_id=?").bind(total,newBookData,stamp,stamp,book.id,userId),
-    env.DB.prepare("INSERT INTO leituras(usuario_id,livro_id,pagina_atual,porcentagem,progresso,finalizado,status,dados,atualizado_em) VALUES(?,?,?,100,100,1,'finished',?,?) ON CONFLICT(usuario_id,livro_id) DO UPDATE SET pagina_atual=excluded.pagina_atual,porcentagem=100,progresso=100,finalizado=1,status='finished',dados=excluded.dados,atualizado_em=excluded.atualizado_em").bind(userId,book.id,total,JSON.stringify({v510:true,requestId}),stamp),
+    env.DB.prepare("INSERT INTO leituras(id,usuario_id,livro_id,pagina_atual,porcentagem,progresso,finalizado,status,dados,atualizado_em) VALUES(?,?,?,?,100,100,1,'finished',?,?) ON CONFLICT(usuario_id,livro_id) DO UPDATE SET pagina_atual=excluded.pagina_atual,porcentagem=100,progresso=100,finalizado=1,status='finished',dados=excluded.dados,atualizado_em=excluded.atualizado_em").bind(crypto.randomUUID(),userId,book.id,total,JSON.stringify({v510:true,requestId}),stamp),
     env.DB.prepare("UPDATE solicitacoes_validacao SET status='approved',dados=json_set(COALESCE(dados,'{}'),'$.v510_approved',true,'$.v510_approved_at',?,'$.v510_type','finish','$.v510_reward_claim',?,'$.v510_resolved_book_id',?,'$.v510_admin_reason',?),resposta_admin=?,revisado_por=?,revisado_em=?,atualizado_em=? WHERE id=? AND lower(COALESCE(status,'pending')) NOT IN ('approved','aprovado','aprovada','rejected','recusado','recusada')").bind(stamp,claim,book.id,reason,reason,uid,stamp,stamp,requestId)
    ];
    await env.DB.batch(batch);
@@ -498,7 +493,7 @@ btn.addEventListener("click",async()=>{
   const notificationAction=url.pathname.match(/^\/api\/v1\/notifications\/([^/]+)\/(read|hide)$/);
   if(request.method==="POST"&&notificationAction){
    const notificationId=decodeURIComponent(notificationAction[1]),action=notificationAction[2];
-   const row=await env.DB.prepare("SELECT id,usuario_id,target_id,lida,lida_por,ocultada_por FROM app_notificacoes WHERE id=? AND (usuario_id=? OR usuario_id='all' OR target_id=? OR target_id='all') LIMIT 1").bind(notificationId,uid,uid).first();
+   const row=await env.DB.prepare("SELECT id,usuario_id,target_id,lida,lida_por,ocultada_por FROM app_notificacoes WHERE id=? AND (usuario_id=? OR target_id=? OR (usuario_id='all' AND target_id='all')) LIMIT 1").bind(notificationId,uid,uid).first();
    if(!row)return json({ok:false,error:"Notificação não encontrada."},404,headers);
    const stamp=new Date().toISOString();
    if(action==="read"){
