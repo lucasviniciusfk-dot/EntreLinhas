@@ -24,8 +24,8 @@ html,body{margin:0;height:100%;font-family:system-ui,sans-serif;background:#1011
   try{
    const w=frame.contentWindow;
    const client=w&&w.entSupabaseClient;
-   if(client&&typeof w.installEntreLinhasCloudflareRpcAdapter==='function'){
-    w.installEntreLinhasCloudflareRpcAdapter(client,{apiBase:'https://entrelinhas-api-staging.lucasviniciusk.workers.dev'});
+   if(client&&typeof window.installEntreLinhasCloudflareRpcAdapter==='function'){
+    window.installEntreLinhasCloudflareRpcAdapter(client,{apiBase:'https://entrelinhas-api-staging.lucasviniciusk.workers.dev'});
     done=true;
     const mapped=client.__entrelinhasCloudflareRpcMapped;
     state.textContent='Adaptador instalado · '+(mapped?mapped.size:0)+' RPCs com rota Worker';
