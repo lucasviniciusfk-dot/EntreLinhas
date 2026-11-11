@@ -74,9 +74,12 @@
   async function safeReadLibrary(force){try{return await readLibrary(force)}catch(e){root.__entrelCfLibraryError=text(e&&e.message||e);try{console.warn('[Cloudflare library]',root.__entrelCfLibraryError)}catch(_){}return []}}
   async function readFinishRequests(){
     if(!enabled('cf_admin'))throw new Error('Ative cf_admin para consultar a fila administrativa do staging.');
-    const result=await api().listAdminRequests('?status=pending&source=personal_finish_cf_v1&limit=120');
-    if(!result.ok||!Array.isArray(result.items))throw new Error('A fila de finalizações do Cloudflare não foi confirmada.');
-    return result.items;
+    const [pending,processing]=await Promise.all([
+      api().listAdminRequests('?status=pending&source=personal_finish_cf_v1&limit=120'),
+      api().listAdminRequests('?status=processing&source=personal_finish_cf_v1&limit=120')
+    ]);
+    if(!pending.ok||!processing.ok||!Array.isArray(pending.items)||!Array.isArray(processing.items))throw new Error('A fila de finalizações do Cloudflare não foi confirmada.');
+    const seen=new Set();return pending.items.concat(processing.items).filter(row=>{const key=text(row.id);if(seen.has(key))return false;seen.add(key);return true});
   }
   async function reviewFinishRequest(id,action,reason){
     if(!enabled('cf_admin'))throw new Error('Ative cf_admin para revisar pedidos do staging.');

@@ -53,6 +53,8 @@ test('finish requests are idempotent and award nothing until an admin approves',
   const queue=await r.api('/api/v1/admin/requests?status=pending&source=personal_finish_cf_v1','admin');assert.equal(queue.status,200);assert.deepEqual((await queue.json()).items.map(x=>x.id),[requests.results[0].id]);
   assert.equal((await r.api('/api/v1/admin/requests?source=personal_finish_cf_v1','alice')).status,403);
   assert.equal((await r.api('/api/v1/admin/requests/approve-book-finish','admin','POST',{request_id:'daily-unrelated'})).status,400);
+  await r.insert('solicitacoes_validacao',{id:'club-finish-unrelated',usuario_id:'alice',tipo:'finish',origem:'Finalização do Livro do Clube',status:'pending',dados:'{"request_kind":"club_finish"}',created_at:'2026-11-01T00:00:00Z',updated_at:'2026-11-01T00:00:00Z'});
+  assert.equal((await r.api('/api/v1/admin/requests/approve-book-finish','admin','POST',{request_id:'club-finish-unrelated'})).status,409);
   const book=await r.db.prepare("SELECT status,json_extract(dados,'$.finishRequestId') AS request_id FROM livros_pessoais WHERE id='finish-book'").first();
   assert.equal(book.status,'pending_finish');assert.equal(book.request_id,requests.results[0].id);
   const approved=await r.api('/api/v1/admin/requests/approve-book-finish','admin','POST',{request_id:requests.results[0].id,reason:'Aprovado.'});assert.equal(approved.status,200,await approved.clone().text());

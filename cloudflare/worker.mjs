@@ -483,7 +483,7 @@ btn.addEventListener("click",async()=>{
    if(!/finish|finaliz/i.test(String(req.tipo||"")))return json({ok:false,error:"Esta rota aceita apenas solicitações de finalização de livro."},400,headers);
    if(["approved","aprovado","aprovada"].includes(status))return json({ok:true,applied:false,already_reviewed:true,status:"approved"},200,headers);
    if(["rejected","recusado","recusada"].includes(status))return json({ok:false,error:"Esta solicitação já foi recusada."},409,headers);
-   const data=parseObject(req.dados),userId=String(req.usuario_id||"");
+   const data=parseObject(req.dados);if(/club|clube/i.test(String(req.origem||""))||/club_finish/i.test(String(data.request_kind||"")))return json({ok:false,error:"Finalizações do Clube devem usar a rota própria."},409,headers);const userId=String(req.usuario_id||"");
    if(!userId)return json({ok:false,error:"Solicitação sem usuário associado."},422,headers);
    const ref=String(req.livro_id||data.online_livro_id||data.livro_id_online||data.livro_id||data.book_id||"");
    const title=String(req.livro||req.livro_titulo||data.livro_titulo||data.bookTitle||"").trim();
