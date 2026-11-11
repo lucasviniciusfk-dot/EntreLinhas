@@ -1,4 +1,4 @@
-/* Reversible, per-page canaries for settings, library data, challenges and club albums. */
+/* Reversible, per-page canaries for settings, library data, challenges, club mural and albums. */
 (function (root) {
   'use strict';
   const params = () => new URLSearchParams(root.location.search);
@@ -267,6 +267,11 @@
     readChallenges:()=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para ler desafios no Cloudflare.');return api().listChallenges()},
     saveChallenge:(id,value)=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para salvar desafios no Cloudflare.');return id?api().updateChallenge(id,value):api().createChallenge(value)},
     removeChallenge:id=>{if(!enabled('cf_challenges'))throw new Error('Ative cf_challenges para remover desafios no Cloudflare.');return api().removeChallenge(id)},
+    readClubMural:includeInactive=>{if(!enabled('cf_mural'))throw new Error('Ative cf_mural para ler o Mural do Clube no Cloudflare.');return api().listClubMural(includeInactive?'?include_inactive=1':'')},
+    saveClubPost:(id,value)=>{if(!enabled('cf_mural'))throw new Error('Ative cf_mural para publicar no Mural do Clube no Cloudflare.');return id?api().updateClubPost(id,value):api().createClubPost(value)},
+    pinClubPost:(id,pinned)=>{if(!enabled('cf_mural'))throw new Error('Ative cf_mural para fixar no Mural do Clube no Cloudflare.');return api().updateClubPost(id,{pinned:!!pinned})},
+    removeClubPost:id=>{if(!enabled('cf_mural'))throw new Error('Ative cf_mural para remover do Mural do Clube no Cloudflare.');return api().removeClubPost(id)},
+    reactToClubPost:(id,active)=>{if(!enabled('cf_mural'))throw new Error('Ative cf_mural para reagir no Mural do Clube no Cloudflare.');return api().reactToClubPost(id,!!active)},
     readClubGallery,
     saveClubAlbum:(id,value)=>{if(!enabled('cf_albums'))throw new Error('Ative cf_albums para salvar álbuns no Cloudflare.');return id?api().updateAlbum(id,value):api().createAlbum(value)},
     setClubAlbumLocked:(id,locked)=>{if(!enabled('cf_albums'))throw new Error('Ative cf_albums para alterar álbuns no Cloudflare.');return api().updateAlbum(id,{locked:!!locked})},

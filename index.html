@@ -22458,14 +22458,16 @@ html.reader-v28-clean-active,body.reader-v28-clean-active{overflow:hidden!import
   async function load(force){if(state.loading)return;if(!force&&state.loaded&&Date.now()-state.at<900000)return;state.loading=true;state.error='';try{
       const c=db();if(!c){if(muralTabActiveV421()&&restoreMuralCacheV421())return;throw new Error('Supabase indisponível.');}
       const useCfAlbums=!!(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_albums'));
+      const useCfMural=!!(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_mural'));
       const cfGallery=useCfAlbums?await window.EntreLinhasDataCanaries.readClubGallery():null;
+      const cfMural=useCfMural?await window.EntreLinhasDataCanaries.readClubMural(isAdm()):null;
       const res=await Promise.all([
         safeRead('usuarios','*',q=>q.order('criado_em',{ascending:true})),
         safeReadActiveCompat('clube_livro_atual','*','atualizado_em',1),
         safeReadActiveCompat('clube_livro_participantes','*','atualizado_em'),
         safeRead('clube_biblioteca','*',q=>q.eq('ativo',true).order('criado_em',{ascending:false})),
-        safeRead('clube_mural','*',q=>q.eq('ativo',true).order('fixado',{ascending:false}).order('criado_em',{ascending:false})),
-        safeRead('clube_mural_reacoes','*'),
+        useCfMural?Promise.resolve({data:cfMural.posts,error:null}):safeRead('clube_mural','*',q=>q.eq('ativo',true).order('fixado',{ascending:false}).order('criado_em',{ascending:false})),
+        useCfMural?Promise.resolve({data:cfMural.reactions,error:null}):safeRead('clube_mural_reacoes','*'),
         useCfAlbums?Promise.resolve({data:cfGallery.albums,error:null}):safeRead('clube_albuns','*',q=>q.eq('ativo',true).order('data_encontro',{ascending:false})),
         useCfAlbums?Promise.resolve({data:cfGallery.photos,error:null}):safeRead('clube_fotos','*',q=>q.eq('ativo',true).order('criado_em',{ascending:true})),
         safeRead('clube_livros_finalizados','*',q=>q.eq('ativo',true).order('finalizado_em',{ascending:false}).limit(120)),
@@ -22706,6 +22708,10 @@ html.reader-v28-clean-active,body.reader-v28-clean-active{overflow:hidden!import
       const user=await sessionUser();const me=String((user&&user.id)||uid());
       if(!me)throw new Error('Sessão não encontrada.');
       const existing=feedReactionRowsV422(keys).some(r=>String(r.userId)===me);
+      if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_mural')){
+        for(const alias of (existing?keys:[key])){const saved=await window.EntreLinhasDataCanaries.reactToClubPost(alias,!existing);if(!saved||!saved.ok)throw new Error('O Cloudflare não confirmou a reação.');}
+        await load(true);state.muralSignature=muralDataSignatureV422();saveMuralCacheV421();renderSafe();return;
+      }
       const c=db();
       if(existing){
         state.reactions=state.reactions.filter(r=>!(keys.indexOf(String(r.postId))>=0&&String(r.userId)===me));
@@ -22765,11 +22771,11 @@ html.reader-v28-clean-active,body.reader-v28-clean-active{overflow:hidden!import
   }
   window.openClubPostModalV163=function(id){if(!isAdm())return;const p=id?state.posts.find(x=>String(x.id)===String(id)):null;openModal('<h3>'+(p?'Editar publicação':'Nova publicação')+'</h3><label class="muted">Título</label><input class="input" id="post163Title" value="'+attr(p&&p.title||'')+'"><label class="muted">Mensagem</label><textarea class="input" id="post163Text">'+esc(p&&p.text||'')+'</textarea><label class="muted">Tipo</label><select class="input" id="post163Type"><option value="aviso">Aviso</option><option value="evento">Evento</option><option value="conquista">Conquista</option></select><label class="row" style="margin:8px 0"><input type="checkbox" id="post163Pinned" '+(p&&p.pinned?'checked':'')+'> <span class="muted">Fixar publicação no topo</span></label><div class="row"><button class="btn secondary" onclick="closeModal()">Cancelar</button><button class="btn" onclick="saveClubPostV163(\''+attr(id||'')+'\')">Salvar</button></div>');const sel=document.getElementById('post163Type');if(sel&&p)sel.value=p.type||'aviso';};
   window.openClubPostModalV47=window.openClubPostModalV163;
-  window.saveClubPostV163=async function(id){if(!isAdm())return;try{const title=val('post163Title').trim(),message=val('post163Text').trim();if(!title&&!message)return info('Publicação vazia','Escreva um título ou uma mensagem antes de publicar.');const user=await sessionUser();const me=(user&&user.id)||uid();const row={tipo:val('post163Type')||'aviso',titulo:title||'Aviso',texto:message,fixado:!!(document.getElementById('post163Pinned')||{}).checked,automatico:false,ativo:true,autor_id:me,autor_nome:uname(),atualizado_em:now()};let r;if(id){r=await db().from('clube_mural').update(row).eq('id',id);}else{row.id=uuid('post');row.criado_em=now();r=await insertCompat('clube_mural',[row,strip(row,['autor_nome'])]);}if(r.error)throw r.error;closeSafe();await load(true);renderSafe();}catch(e){info('Erro ao publicar',(e&&e.message)||String(e));}};
+  window.saveClubPostV163=async function(id){if(!isAdm())return;try{const title=val('post163Title').trim(),message=val('post163Text').trim();if(!title&&!message)return info('Publicação vazia','Escreva um título ou uma mensagem antes de publicar.');if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_mural')){const saved=await window.EntreLinhasDataCanaries.saveClubPost(id,{type:val('post163Type')||'aviso',title:title||'Aviso',text:message,pinned:!!(document.getElementById('post163Pinned')||{}).checked});if(!saved||!saved.ok)throw new Error('O Cloudflare não confirmou a publicação.');closeSafe();await load(true);renderSafe();return;}const user=await sessionUser();const me=(user&&user.id)||uid();const row={tipo:val('post163Type')||'aviso',titulo:title||'Aviso',texto:message,fixado:!!(document.getElementById('post163Pinned')||{}).checked,automatico:false,ativo:true,autor_id:me,autor_nome:uname(),atualizado_em:now()};let r;if(id){r=await db().from('clube_mural').update(row).eq('id',id);}else{row.id=uuid('post');row.criado_em=now();r=await insertCompat('clube_mural',[row,strip(row,['autor_nome'])]);}if(r.error)throw r.error;closeSafe();await load(true);renderSafe();}catch(e){info('Erro ao publicar',(e&&e.message)||String(e));}};
   window.saveClubPostV47=window.saveClubPostV163;
-  window.toggleClubPostPinV163=async function(id){if(!isAdm())return;try{const p=state.posts.find(x=>String(x.id)===String(id));await db().from('clube_mural').update({fixado:!(p&&p.pinned),atualizado_em:now()}).eq('id',id);await load(true);renderSafe();}catch(e){info('Erro','Não consegui fixar/desfixar.');}};
+  window.toggleClubPostPinV163=async function(id){if(!isAdm())return;try{const p=state.posts.find(x=>String(x.id)===String(id)),pinned=!(p&&p.pinned);if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_mural')){const saved=await window.EntreLinhasDataCanaries.pinClubPost(id,pinned);if(!saved||!saved.ok)throw new Error('Cloudflare não confirmou.');await load(true);renderSafe();return;}await db().from('clube_mural').update({fixado:pinned,atualizado_em:now()}).eq('id',id);await load(true);renderSafe();}catch(e){info('Erro','Não consegui fixar/desfixar.');}};
   window.toggleClubPostPinV47=window.toggleClubPostPinV163;
-  window.deleteClubPostV163=function(id){if(!isAdm())return;confirmBox('Remover publicação','Essa publicação sairá do Mural para todas.','Remover',async function(){try{await db().from('clube_mural').update({ativo:false,atualizado_em:now()}).eq('id',id);state.posts=state.posts.filter(p=>String(p.id)!==String(id));renderSafe();await load(true);}catch(e){info('Erro','Não consegui remover.');}});};
+  window.deleteClubPostV163=function(id){if(!isAdm())return;confirmBox('Remover publicação','Essa publicação sairá do Mural para todas.','Remover',async function(){try{if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_mural')){const removed=await window.EntreLinhasDataCanaries.removeClubPost(id);if(!removed||!removed.ok)throw new Error('Cloudflare não confirmou.');}else await db().from('clube_mural').update({ativo:false,atualizado_em:now()}).eq('id',id);state.posts=state.posts.filter(p=>String(p.id)!==String(id));renderSafe();await load(true);}catch(e){info('Erro','Não consegui remover.');}});};
   window.deleteClubPostV47=window.deleteClubPostV163;
   window.toggleClubReactionV163=async function(id){
     id=String(id||'');
@@ -22781,6 +22787,7 @@ html.reader-v28-clean-active,body.reader-v28-clean-active{overflow:hidden!import
       const me=String((user&&user.id)||uid());
       if(!me)throw new Error('Sessão não encontrada.');
       const found=state.reactions.some(function(r){return String(r.postId)===id&&String(r.userId)===me;});
+      if(window.EntreLinhasDataCanaries&&window.EntreLinhasDataCanaries.enabled('cf_mural')){const saved=await window.EntreLinhasDataCanaries.reactToClubPost(id,!found);if(!saved||!saved.ok)throw new Error('O Cloudflare não confirmou a reação.');await load(true);saveMuralCacheV421();renderSafe();return;}
       if(found){
         state.reactions=state.reactions.filter(function(r){return !(String(r.postId)===id&&String(r.userId)===me);});
         renderSafe();

@@ -13,14 +13,25 @@ test('client uses the verified hostname, bearer auth and multipart headers',asyn
   const c=context(),calls=[],api=c.EntreLinhasCloudflareApi.create({client:{auth:auth()},fetch:async(url,init)=>{calls.push({url,init});return Response.json({ok:true,profile:{id:'alice'}})}});
   await api.updateMe({bio:''});await api.uploadFile(new File(['abc'],'photo.png',{type:'image/png'}),'avatar');
   await api.getGlobalSetting('meta_semanal');await api.saveGlobalSetting('meta_semanal',{target:90});await api.saveReading({book_id:'book',current_page:8});await api.awardDailyEpub('2026-11-11');await api.getMonthlyProgress('2026-11');await api.awardPeriod('monthly','2026-11');await api.listChallenges();await api.createChallenge({title:'Desafio'});await api.updateChallenge('ch-1',{title:'Atualizado'});await api.removeChallenge('ch-1');
+  await api.listClubMural('?include_inactive=1');await api.createClubPost({title:'Aviso'});await api.updateClubPost('post-1',{pinned:true});await api.removeClubPost('post-1');await api.reactToClubPost('post-1',true);await api.reactToClubPost('post-1',false);
   await api.listAlbums('?limit=200');await api.createAlbum({name:'Encontro'});await api.updateAlbum('a/b',{locked:false});await api.listPhotos('a/b','&limit=300');await api.uploadClubPhoto(new File(['img'],'foto.png',{type:'image/png'}));await api.addClubPhoto('a/b','file-1');await api.removeClubPhoto('photo-1');await api.getClubPhoto('photo-1');
   assert.equal(calls[0].url,'https://entrelinhas-api-staging.lucasviniciusfk.workers.dev/api/v1/me');
   assert.equal(calls[0].init.headers.get('Authorization'),'Bearer private-test-token');
   assert.equal(calls[1].init.headers.has('Content-Type'),false);
   assert.deepEqual(calls.slice(2).map(x=>x.url.replace('https://entrelinhas-api-staging.lucasviniciusfk.workers.dev','')),[
     '/api/v1/settings/global/meta_semanal','/api/v1/settings/global/meta_semanal','/api/v1/reading','/api/v1/rewards/daily-epub','/api/v1/progress/monthly?period=2026-11','/api/v1/rewards/period','/api/v1/challenges?definitions_only=1','/api/v1/challenges','/api/v1/challenges/ch-1','/api/v1/challenges/ch-1',
+    '/api/v1/club/mural?include_inactive=1','/api/v1/club/mural','/api/v1/club/mural/post-1','/api/v1/club/mural/post-1','/api/v1/club/mural/post-1/reaction','/api/v1/club/mural/post-1/reaction',
     '/api/v1/club/albums?limit=200','/api/v1/club/albums','/api/v1/club/albums/a%2Fb','/api/v1/club/albums/photos?album_id=a%2Fb&limit=300','/api/v1/files/upload','/api/v1/club/albums/photos','/api/v1/club/albums/photos/photo-1','/api/v1/club/albums/photos/photo-1/content'
   ]);
+});
+test('club mural canary reads and writes only through the authenticated Worker client',async()=>{
+  const c=context(),calls=[];c.location.search='?cf_mural=1';c.supabaseClient={auth:auth()};
+  c.fetch=async(url,init)=>{calls.push({url,init});return Response.json({ok:true,posts:[],reactions:[]})};
+  vm.runInContext(readFileSync(new URL('../cloudflare/entrelinhas-data-canaries.js',import.meta.url),'utf8'),c);
+  const data=await c.EntreLinhasDataCanaries.readClubMural(true);assert.equal(data.ok,true);
+  await c.EntreLinhasDataCanaries.saveClubPost('',{title:'Aviso'});await c.EntreLinhasDataCanaries.pinClubPost('post-1',true);await c.EntreLinhasDataCanaries.removeClubPost('post-1');await c.EntreLinhasDataCanaries.reactToClubPost('post-1',true);
+  assert.equal(calls.length,5);assert.ok(calls.every(call=>call.init.headers.get('Authorization')==='Bearer private-test-token'));
+  assert.deepEqual(calls.map(call=>new URL(call.url).pathname),['/api/v1/club/mural','/api/v1/club/mural','/api/v1/club/mural/post-1','/api/v1/club/mural/post-1','/api/v1/club/mural/post-1/reaction']);
 });
 test('club gallery canary fetches private photo bytes with the authenticated Worker client',async()=>{
   const c=context(),calls=[];c.location.search='?cf_albums=1';c.supabaseClient={auth:auth()};

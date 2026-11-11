@@ -51,3 +51,21 @@ test('club albums preserve separate covers and allow owner photo actions only wh
   const adminDelete=await r.api('/api/v1/club/albums/photos/'+encodeURIComponent(photo.id),'admin','DELETE');assert.equal(adminDelete.status,200);assert.equal((await r.db.prepare('SELECT ativo FROM clube_fotos WHERE id=?').bind(photo.id).first()).ativo,0);
   const removeFile=await r.api('/api/v1/files/'+encodeURIComponent(fileId),'alice','DELETE');assert.equal(removeFile.status,200,await removeFile.clone().text());
 });
+
+test('club mural keeps administration writes scoped and member reactions idempotent',async()=>{
+  const denied=await r.api('/api/v1/club/mural','alice','POST',{title:'Tentativa',text:'Não publicar'});assert.equal(denied.status,403);
+  const created=await r.api('/api/v1/club/mural','admin','POST',{title:'Encontro',text:'Sábado às 15h',type:'evento',pinned:true});
+  assert.equal(created.status,201,await created.clone().text());const post=(await created.json()).post;assert.equal(post.autor_id,'admin');assert.equal(post.fixado,1);
+  const attempts=await Promise.all(Array.from({length:2},()=>r.api('/api/v1/club/mural/'+encodeURIComponent(post.id)+'/reaction','alice','PUT')));
+  for(const response of attempts)assert.equal(response.status,200,await response.clone().text());
+  const results=await Promise.all(attempts.map(x=>x.json()));assert.equal(results.filter(x=>x.added).length,1);
+  assert.equal((await r.db.prepare('SELECT COUNT(*) AS total FROM clube_mural_reacoes WHERE post_id=? AND usuario_id=?').bind(post.id,'alice').first()).total,1);
+  const memberFeed=await r.api('/api/v1/club/mural','bob');assert.equal(memberFeed.status,200);const feed=await memberFeed.json();assert.equal(feed.posts.length,1);assert.equal(feed.reactions.length,1);
+  const deniedEdit=await r.api('/api/v1/club/mural/'+encodeURIComponent(post.id),'alice','PATCH',{pinned:false});assert.equal(deniedEdit.status,403);
+  const edited=await r.api('/api/v1/club/mural/'+encodeURIComponent(post.id),'admin','PATCH',{pinned:false,text:'Novo horário'});assert.equal(edited.status,200);assert.equal((await edited.json()).post.texto,'Novo horário');
+  const deniedDelete=await r.api('/api/v1/club/mural/'+encodeURIComponent(post.id),'alice','DELETE');assert.equal(deniedDelete.status,403);
+  const removedReaction=await r.api('/api/v1/club/mural/'+encodeURIComponent(post.id)+'/reaction','alice','DELETE');assert.equal((await removedReaction.json()).removed,1);
+  const removed=await r.api('/api/v1/club/mural/'+encodeURIComponent(post.id),'admin','DELETE');assert.equal(removed.status,200);
+  assert.equal((await r.db.prepare('SELECT ativo FROM clube_mural WHERE id=?').bind(post.id).first()).ativo,0);
+  assert.equal((await r.api('/api/v1/club/mural','bob')).status,200);assert.equal((await (await r.api('/api/v1/club/mural','bob')).json()).posts.length,0);
+});

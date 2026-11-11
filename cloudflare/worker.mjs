@@ -102,6 +102,57 @@ btn.addEventListener("click",async()=>{
  const chatResponse=await handleChat(request,env,{uid,headers,isAdmin});if(chatResponse)return chatResponse;
  const challengesResponse=await handleChallenges(request,env,{uid,headers,isAdmin});if(challengesResponse)return challengesResponse;
 
+ // Mural do Clube: membros leem e reagem; somente admins publicam e moderam.
+ const muralRoute=url.pathname.match(/^\/api\/v1\/club\/mural(?:\/([^/]+)(?:\/reaction)?)?$/);
+ if(muralRoute){
+  const postId=muralRoute[1]?decodeURIComponent(muralRoute[1]):"";
+  const isReaction=url.pathname.endsWith("/reaction");
+  if(postId.length>128)return json({ok:false,error:"ID da publicação inválido."},400,headers);
+  if(!postId&&!isReaction&&request.method==="GET"){
+   const limit=clampInt(url.searchParams.get("limit"),200,1,300),includeInactive=isAdmin&&url.searchParams.get("include_inactive")==="1";
+   const posts=await env.DB.prepare("SELECT id,tipo,titulo,texto,fixado,automatico,cor,ativo,autor_id,autor_nome,criado_em,atualizado_em FROM clube_mural WHERE (?=1 OR COALESCE(ativo,1)=1) ORDER BY COALESCE(fixado,0) DESC,criado_em DESC,id DESC LIMIT ?").bind(includeInactive?1:0,limit).all();
+   const reactions=await env.DB.prepare("SELECT id,post_id,usuario_id,usuario_nome,criado_em FROM clube_mural_reacoes ORDER BY criado_em DESC,id DESC LIMIT 3000").all();
+   return json({ok:true,posts:posts.results||[],reactions:reactions.results||[],count:(posts.results||[]).length,limit},200,headers);
+  }
+  if(!postId&&!isReaction&&request.method==="POST"){
+   if(!isAdmin)return json({ok:false,error:"Somente a administração pode publicar no Mural."},403,headers);
+   const body=await readBody(request),title=validText(body.title??body.titulo??"Aviso",160,"Título",true),message=validText(body.text??body.texto??"",12000,"Mensagem"),type=validText(body.type??body.tipo??"aviso",32,"Tipo",true),color=validText(body.color??body.cor??"",32,"Cor");
+   const pinned=body.pinned===true||body.pinned===1||String(body.pinned).toLowerCase()==="true",stamp=new Date().toISOString(),id=crypto.randomUUID();
+   const author=await env.DB.prepare("SELECT nome FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();
+   await env.DB.prepare("INSERT INTO clube_mural(id,tipo,titulo,texto,fixado,automatico,cor,ativo,autor_id,autor_nome,criado_em,atualizado_em) VALUES(?,?,?,?,?,0,?,1,?,?,?,?)").bind(id,type,title,message,pinned?1:0,color||null,uid,String(author&&author.nome||access.user.email||"Admin"),stamp,stamp).run();
+   const post=await env.DB.prepare("SELECT id,tipo,titulo,texto,fixado,automatico,cor,ativo,autor_id,autor_nome,criado_em,atualizado_em FROM clube_mural WHERE id=? LIMIT 1").bind(id).first();
+   return json({ok:true,post},201,headers);
+  }
+  if(postId&&!isReaction&&(request.method==="PATCH"||request.method==="PUT")){
+   if(!isAdmin)return json({ok:false,error:"Somente a administração pode editar o Mural."},403,headers);
+   const old=await env.DB.prepare("SELECT * FROM clube_mural WHERE id=? LIMIT 1").bind(postId).first();if(!old)return json({ok:false,error:"Publicação não encontrada."},404,headers);
+   const body=await readBody(request),has=(...keys)=>keys.some(key=>Object.prototype.hasOwnProperty.call(body,key)),pick=(keys,fallback)=>{for(const key of keys)if(Object.prototype.hasOwnProperty.call(body,key))return body[key];return fallback;};
+   const title=validText(pick(["title","titulo"],old.titulo),160,"Título",true),message=validText(pick(["text","texto"],old.texto),12000,"Mensagem"),type=validText(pick(["type","tipo"],old.tipo),32,"Tipo",true),color=validText(pick(["color","cor"],old.cor||""),32,"Cor"),pinned=has("pinned","fixado")?(pick(["pinned","fixado"],false)===true||pick(["pinned","fixado"],false)===1||String(pick(["pinned","fixado"],false)).toLowerCase()==="true"):(Number(old.fixado)===1),active=has("active","ativo")?(pick(["active","ativo"],true)===true||pick(["active","ativo"],true)===1||String(pick(["active","ativo"],true)).toLowerCase()==="true"):(Number(old.ativo)!==0),stamp=new Date().toISOString();
+   const updated=await env.DB.prepare("UPDATE clube_mural SET tipo=?,titulo=?,texto=?,fixado=?,cor=?,ativo=?,atualizado_em=? WHERE id=?").bind(type,title,message,pinned?1:0,color||null,active?1:0,stamp,postId).run();
+   if(Number(updated.meta?.changes)!==1)return json({ok:false,error:"Alteração da publicação não foi confirmada."},409,headers);
+   const post=await env.DB.prepare("SELECT id,tipo,titulo,texto,fixado,automatico,cor,ativo,autor_id,autor_nome,criado_em,atualizado_em FROM clube_mural WHERE id=? LIMIT 1").bind(postId).first();
+   return json({ok:true,post},200,headers);
+  }
+  if(postId&&!isReaction&&request.method==="DELETE"){
+   if(!isAdmin)return json({ok:false,error:"Somente a administração pode remover publicações."},403,headers);
+   const stamp=new Date().toISOString(),updated=await env.DB.prepare("UPDATE clube_mural SET ativo=0,atualizado_em=? WHERE id=? AND COALESCE(ativo,1)=1").bind(stamp,postId).run();
+   if(Number(updated.meta?.changes)!==1)return json({ok:false,error:"Publicação não encontrada."},404,headers);
+   return json({ok:true,removed:true,id:postId},200,headers);
+  }
+  if(postId&&isReaction&&request.method==="PUT"){
+   const id="mural-reaction:"+uid+":"+postId,stamp=new Date().toISOString(),author=await env.DB.prepare("SELECT nome FROM usuarios WHERE id=? LIMIT 1").bind(uid).first();
+   const added=await env.DB.prepare("INSERT OR IGNORE INTO clube_mural_reacoes(id,post_id,usuario_id,usuario_nome,criado_em) SELECT ?,?,?,?,? WHERE EXISTS(SELECT 1 FROM clube_mural WHERE id=? AND COALESCE(ativo,1)=1) AND NOT EXISTS(SELECT 1 FROM clube_mural_reacoes WHERE post_id=? AND usuario_id=?)").bind(id,postId,uid,String(author&&author.nome||access.user.email||"Membro"),stamp,postId,postId,uid).run();
+   const reaction=await env.DB.prepare("SELECT id,post_id,usuario_id,usuario_nome,criado_em FROM clube_mural_reacoes WHERE post_id=? AND usuario_id=? ORDER BY criado_em DESC,id DESC LIMIT 1").bind(postId,uid).first();
+   if(!reaction)return json({ok:false,error:"Não foi possível registrar a reação."},409,headers);
+   return json({ok:true,added:Number(added.meta?.changes)===1,reaction},200,headers);
+  }
+  if(postId&&isReaction&&request.method==="DELETE"){
+   const removed=await env.DB.prepare("DELETE FROM clube_mural_reacoes WHERE post_id=? AND usuario_id=?").bind(postId,uid).run();
+   return json({ok:true,removed:Number(removed.meta?.changes)||0},200,headers);
+  }
+  return json({ok:false,error:"Método não permitido."},405,headers);
+ }
+
  // Recompensas periódicas: replica as regras v507/v512, com identidade derivada da sessão.
  if(url.pathname==="/api/v1/rewards/period"&&request.method==="POST"){
   try{
