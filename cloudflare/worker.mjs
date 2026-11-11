@@ -107,9 +107,23 @@ btn.addEventListener("click",async()=>{
    }
    // O RPC original interpreta os limites de período no fuso America/Manaus (UTC-4).
    const from=new Date(start.getTime()+4*3600000).toISOString(),to=new Date(end.getTime()+4*3600000).toISOString();
-   let current=Number(body.current),target=Number(body.target),xpAdd=Math.max(0,Math.floor(Number(body.xp)||0)),pointsAdd=Math.max(0,Math.floor(Number(body.points)||0));
-   if(!Number.isFinite(current)||!Number.isFinite(target))return json({ok:false,error:"Progresso e meta precisam ser números válidos."},400,headers);
-   current=Math.floor(current);target=Math.floor(target);
+   const rewardRow=await env.DB.prepare("SELECT valor FROM app_configuracoes WHERE chave=? AND usuario_id IN ('global','00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000181') ORDER BY atualizado_em DESC LIMIT 1").bind(kind==="weekly"?"meta_semanal":"meta_mensal").first();
+   const rewardConfig=parseObject(rewardRow&&rewardRow.valor);
+   if(!rewardRow||rewardConfig.active===false||rewardConfig.ativa===false)return json({ok:false,applied:false,reason:"goal_inactive"},200,headers);
+   let target=Math.floor(Number(rewardConfig.target??rewardConfig.meta??rewardConfig.valor));
+   const xpAdd=Math.max(0,Math.floor(Number(rewardConfig.rewardXp??rewardConfig.xp??rewardConfig.xp_recompensa)||0)),pointsAdd=Math.max(0,Math.floor(Number(rewardConfig.rewardPoints??rewardConfig.pontos??rewardConfig.estrelinhas)||0));
+   if(!Number.isFinite(target)||target<1)return json({ok:false,error:"Configuração de meta inválida."},422,headers);
+   let current=0;
+   if(kind==="weekly"){
+    const type=String(rewardConfig.tipo||rewardConfig.type||"paginas").toLowerCase();
+    if(type.includes("pagina")){
+     const verified=await env.DB.prepare("SELECT COALESCE(SUM(MAX(0,paginas_lidas)),0) AS total FROM metas_diarias WHERE usuario_id=? AND data>=? AND data<?").bind(uid,period,end.toISOString().slice(0,10)).first();
+     current=Number(verified&&verified.total)||0;
+    }else if(type.includes("livro")){
+     const verified=await env.DB.prepare("SELECT COUNT(DISTINCT COALESCE(NULLIF(livro_id,''),NULLIF(json_extract(dados,'$.book_id'),''),id)) AS total FROM solicitacoes_validacao WHERE usuario_id=? AND lower(status) IN ('approved','aprovado','aprovada') AND COALESCE(origem,'') NOT LIKE 'auto_reward_%' AND COALESCE(revisado_em,created_at)>=? AND COALESCE(revisado_em,created_at)<? AND (lower(tipo) LIKE '%finish%' OR lower(tipo) LIKE '%finaliz%')").bind(uid,from,to).first();
+     current=Number(verified&&verified.total)||0;
+    }else return json({ok:false,applied:false,reason:"manual_review_required"},200,headers);
+   }
    let verifiedCurrent=current,monthlyType=null;
    if(kind==="monthly"){
     const cfg=await env.DB.prepare("SELECT valor FROM app_configuracoes WHERE chave='meta_mensal' AND usuario_id IN ('global','00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000181') ORDER BY atualizado_em DESC LIMIT 1").first();
