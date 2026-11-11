@@ -48,8 +48,6 @@
       bootstrapMe: () => send('/api/v1/me/bootstrap', 'POST', {}),
       updateMe: (p, revision) => request('/api/v1/me', {method:'PATCH',body:JSON.stringify(p),headers:revision?{'If-Match':revision}:undefined}),
       getAwards: () => get('/api/v1/me/awards'),
-      getPreferences: () => get('/api/v1/me/preferences'),
-      updatePreferences: p => send('/api/v1/me/preferences', 'PATCH', p),
       listBooks: query => get('/api/v1/library/books' + (query || '')),
       createBook: b => send('/api/v1/library/books', 'POST', b),
       updateBook: (key, b) => send('/api/v1/library/books/' + id(key), 'PATCH', b),
@@ -65,7 +63,7 @@
       removeMessage: key => send('/api/v1/chat/messages/' + id(key), 'DELETE'),
       reactToMessage: (key, emoji) => send('/api/v1/chat/messages/' + id(key) + '/reaction', 'PUT', {emoji}),
       removeReaction: key => send('/api/v1/chat/messages/' + id(key) + '/reaction', 'DELETE'),
-      listNotifications: () => get('/api/v1/notifications'),
+      listNotifications: query => get('/api/v1/notifications'+(query||'')),
       markNotification: (key, action) => {
         if (!['read','hide'].includes(action)) throw new TypeError('Ação inválida.');
         return send('/api/v1/notifications/' + id(key) + '/' + action, 'POST', {});

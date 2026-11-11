@@ -477,11 +477,14 @@ btn.addEventListener("click",async()=>{
   // Notificações: leitura e estado individual; nenhuma escrita dispara push.
   if(request.method==="GET"&&url.pathname==="/api/v1/notifications"){
    const limit=clampInt(url.searchParams.get("limit"),50,1,100);
+   const before=url.searchParams.get("before"),beforeId=url.searchParams.get("before_id");
+   if(!!before!==!!beforeId)return json({ok:false,error:"Use before e before_id juntos."},400,headers);
    const rows=await env.DB.prepare(`SELECT id,usuario_id,target_id,titulo,mensagem,tipo,lida,lida_por,ocultada_por,origem,dados,criada_em,atualizado_em
     FROM app_notificacoes
     WHERE (usuario_id=? OR target_id=? OR (usuario_id='all' AND target_id='all'))
       AND NOT EXISTS (SELECT 1 FROM json_each(CASE WHEN json_valid(ocultada_por) THEN ocultada_por ELSE '[]' END) WHERE value=?)
-    ORDER BY criada_em DESC,id DESC LIMIT ?`).bind(uid,uid,uid,limit).all();
+      AND (? IS NULL OR criada_em<? OR (criada_em=? AND id<?))
+    ORDER BY criada_em DESC,id DESC LIMIT ?`).bind(uid,uid,uid,before,before,before,beforeId,limit).all();
    const items=(rows.results||[]).map(n=>{
     let readBy=[],hiddenBy=[],data={};
     try{readBy=JSON.parse(n.lida_por||"[]");if(!Array.isArray(readBy))readBy=[];}catch(_){}
@@ -490,7 +493,8 @@ btn.addEventListener("click",async()=>{
     const personal=n.usuario_id===uid||n.target_id===uid;
     return {...n,dados:data,lida:personal?(n.lida===1||n.lida===true):((n.lida===1||n.lida===true)||readBy.includes(uid)),ocultada_por:undefined,lida_por:undefined};
    });
-   return json({ok:true,items,count:items.length},200,headers);
+   const last=items[items.length-1];
+   return json({ok:true,items,count:items.length,nextCursor:items.length===limit&&last?{before:last.criada_em,before_id:last.id}:null},200,headers);
   }
   const notificationAction=url.pathname.match(/^\/api\/v1\/notifications\/([^/]+)\/(read|hide)$/);
   if(request.method==="POST"&&notificationAction){
