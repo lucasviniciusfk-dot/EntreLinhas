@@ -4,7 +4,7 @@
  */
 (function (global) {
   'use strict';
-  const DEFAULT_API = 'https://entrelinhas-api-staging.lucasviniciusk.workers.dev';
+  const DEFAULT_API = 'https://entrelinhas-api-staging.lucasviniciusfk.workers.dev';
 
   function installCloudflareRpcAdapter(client, options) {
     if (!client || typeof client.rpc !== 'function' || !client.auth) {

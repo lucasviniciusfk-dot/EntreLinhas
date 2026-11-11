@@ -11,8 +11,8 @@ html,body{margin:0;height:100%;font-family:system-ui,sans-serif;background:#1011
 </style>
 </head>
 <body>
-<div id="bar"><strong>ENTRE LINHAS · STAGING CLOUDFLARE</strong><span id="state">Conectando adaptador…</span><span id="detail">Login e consultas de tabelas permanecem no Supabase; somente RPCs mapeadas usam o Worker.</span></div>
-<iframe id="app" src="./index.html" title="Entre Linhas"></iframe>
+<div id="bar"><strong>ENTRE LINHAS · STAGING CLOUDFLARE</strong><span id="state">Conectando adaptador…</span><span id="detail">Perfil, chat, notificações e RPCs mapeadas usam o Worker; demais domínios continuam em validação.</span></div>
+<iframe id="app" src="./index.html?cf_profile=1&amp;cf_chat=1&amp;cf_notifications=1" title="Entre Linhas"></iframe>
 <script src="./cloudflare/entrelinhas-rpc-adapter.staging.js"></script>
 <script>
 (function(){
@@ -25,7 +25,7 @@ html,body{margin:0;height:100%;font-family:system-ui,sans-serif;background:#1011
    const w=frame.contentWindow;
    const client=w&&w.entSupabaseClient;
    if(client&&typeof window.installEntreLinhasCloudflareRpcAdapter==='function'){
-    window.installEntreLinhasCloudflareRpcAdapter(client,{apiBase:'https://entrelinhas-api-staging.lucasviniciusk.workers.dev',getCycle:()=>w.__ENTREL_ACTIVE_CLUB_CYCLE_ID__||''});
+    window.installEntreLinhasCloudflareRpcAdapter(client,{apiBase:'https://entrelinhas-api-staging.lucasviniciusfk.workers.dev',getCycle:()=>w.__ENTREL_ACTIVE_CLUB_CYCLE_ID__||''});
     done=true;
     const mapped=client.__entrelinhasCloudflareRpcMapped;
     state.textContent='Adaptador instalado · '+(mapped?mapped.size:0)+' RPCs com rota Worker';

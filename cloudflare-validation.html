@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Entre Linhas — validação Cloudflare</title>
+<style>
+body{font:16px system-ui;background:#f8f4fa;color:#30253b;max-width:680px;margin:40px auto;padding:20px}
+main{background:white;padding:28px;border:1px solid #e4d9ea;border-radius:18px}button,a{font:inherit}button{padding:12px 18px;margin:8px 8px 8px 0;border-radius:9px;border:1px solid #bba8c6;cursor:pointer}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f6f2f8;padding:16px;border-radius:10px}small{color:#6a5c75}
+</style>
+<main>
+<h1>Validação Cloudflare</h1>
+<p>Use sua conta Google do Entre Linhas. Este teste usa somente o Worker de staging.</p>
+<p>O teste altera temporariamente a biografia e a restaura, envia uma imagem sintética e a exclui, cria uma mensagem de teste e a remove do chat. Dados e arquivos existentes são preservados.</p>
+<button id="login">Entrar com Google</button><button id="run">Testar com minha sessão</button><button id="download" disabled>Baixar resultado</button>
+<p><a href="./index.html?cf_profile=1&amp;cf_chat=1&amp;cf_notifications=1">Abrir o aplicativo de validação</a></p>
+<small>Se o Google não permitir o redirecionamento para esta página, faça login no aplicativo acima e volte aqui. Senhas e tokens nunca aparecem no relatório.</small>
+<pre id="out">Aguardando sua sessão Google.</pre>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./cloudflare/entrelinhas-api-client.js"></script>
+<script>
+(function(){
+  'use strict';
+  const c=window.entSupabaseClient=supabase.createClient('https://jxzcuqwlnqxnhftffbjx.supabase.co','sb_publishable_LyHzFw6vbzqAPXlLPPPFYA_pQMNyqQc');
+  const api=window.EntreLinhasCloudflareApi.create({client:c}),out=document.getElementById('out'),run=document.getElementById('run'),report=[];
+  function log(step,status){report.push({step,status,at:new Date().toISOString()});out.textContent=report.map(x=>x.status+' · '+x.step).join('\n');}
+  function check(value,message){if(!value)throw new Error(message);}
+  document.getElementById('login').onclick=async()=>{
+    const r=await c.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});
+    if(r.error)log('Login Google: '+r.error.message,'FALHOU');
+  };
+  run.onclick=async()=>{
+    run.disabled=true;report.length=0;
+    let original=null,revision=null,profileChanged=false,fileId=null,messageId=null;
+    try{
+      const session=await c.auth.getSession();check(!session.error&&session.data.session,'Entre com Google primeiro.');
+      const token=session.data.session.access_token;
+      const initial=await api.getMe();check(initial.ok&&initial.profile,'Perfil não confirmado.');original=initial.profile;
+      log('Sessão Google aceita pelo Worker e perfil consultado no D1','OK');
+      const marker='Validação Cloudflare '+crypto.randomUUID();
+      const saved=await api.updateMe({bio:marker},original.atualizado_em);check(saved.ok&&saved.profile.bio===marker,'PATCH não confirmado.');
+      profileChanged=true;revision=saved.profile.atualizado_em;
+      check((await api.getMe()).profile.bio===marker,'Gravação não persistiu.');
+      log('Atualização do perfil e nova consulta confirmam persistência','OK');
+      const restored=await api.updateMe({bio:original.bio||''},revision);check(restored.ok&&restored.profile.bio===(original.bio||''),'Restauração não confirmada.');profileChanged=false;
+      log('Biografia original restaurada','OK');
+      try{await api.updateMe({id:'different-account',nome:'Intruso'});throw new Error('Campos de identidade foram aceitos.');}catch(e){check(e.status===400,'Proteção de identidade não confirmada.');}
+      log('Tentativa de alterar identidade recusada','OK');
+      const png=Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLttAAAAABJRU5ErkJggg=='),x=>x.charCodeAt(0));
+      const uploaded=await api.uploadFile(new File([png],'cloudflare-validation.png',{type:'image/png'}),'avatar');
+      check(uploaded.ok&&uploaded.file,'Upload não confirmado.');fileId=uploaded.file.id;
+      const bytes=new Uint8Array(await (await api.getFile(fileId)).arrayBuffer());check(bytes.length===png.length&&bytes.every((v,i)=>v===png[i]),'Conteúdo do arquivo diferente.');
+      const unauth=await fetch(api.apiBase+'/api/v1/files/'+encodeURIComponent(fileId),{cache:'no-store'});check(unauth.status===401,'Download sem sessão não foi recusado.');
+      log('Upload R2, metadados D1, bytes e acesso privado confirmados','OK');
+      check((await api.deleteFile(fileId)).deleted,'Exclusão não confirmada.');fileId=null;
+      const id=crypto.randomUUID(),message='[Validação de staging] '+id;
+      const sent=await api.sendMessage({client_id:id,message});check(sent.ok&&sent.message,'Mensagem não confirmada.');messageId=sent.message.id;
+      const replay=await api.sendMessage({client_id:id,message});check(replay.already_sent,'Reenvio não foi identificado.');
+      check((await api.listMessages('?limit=100')).items.some(x=>x.id===messageId),'Mensagem não encontrada.');
+      check((await api.removeMessage(messageId)).removed,'Remoção não confirmada.');messageId=null;
+      log('Chat: envio, reenvio idempotente, leitura e remoção confirmados','OK');
+      for(const [name,path] of [['Biblioteca','/api/v1/library/books'],['Leituras','/api/v1/reading'],['Metas','/api/v1/goals'],['Desafios','/api/v1/challenges'],['Álbuns','/api/v1/club/albums'],['Notificações','/api/v1/notifications']]){
+        const result=await api.request(path,{method:'GET'});check(result.ok,name+' não confirmou a leitura.');log(name+': leitura autenticada','OK');
+      }
+      const admin=await fetch(api.apiBase+'/api/v1/admin/requests?limit=1',{headers:{Authorization:'Bearer '+token},cache:'no-store'});
+      check(admin.status===(original.is_admin||original.admin_principal?200:403),'Permissão administrativa inesperada.');log('Permissão administrativa compatível com a conta','OK');
+      log('Validação remota finalizada','SUCESSO');
+    }catch(e){log(e.message||'Falha na validação','FALHOU');}
+    finally{
+      if(profileChanged&&original){try{const r=await api.updateMe({bio:original.bio||''},revision);check(r.ok,'Restauração não confirmada.');log('Biografia restaurada na limpeza','OK');}catch(_){log('Biografia: confira seu perfil. Uma edição concorrente pode ter impedido a restauração segura.','PENDENTE');}}
+      if(messageId){try{await api.removeMessage(messageId);log('Mensagem de teste removida na limpeza','OK');}catch(_){log('Mensagem de teste aguarda remoção','PENDENTE');}}
+      if(fileId){try{await api.deleteFile(fileId);log('Imagem de teste excluída na limpeza','OK');}catch(_){log('Imagem de teste aguarda exclusão','PENDENTE');}}
+      run.disabled=false;document.getElementById('download').disabled=false;
+    }
+  };
+  document.getElementById('download').onclick=()=>{
+    const blob=new Blob([JSON.stringify({environment:'staging',results:report},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='entrelinhas-validacao-cloudflare.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  };
+})();
+</script>
+</html>
