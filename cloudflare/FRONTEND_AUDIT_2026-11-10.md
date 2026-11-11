@@ -202,3 +202,13 @@ Commit: `7241433cf316b408160465942011b00c553b71d8`. Implementação registrada; 
 A bateria autenticada do preview agora chama os métodos públicos do módulo `EntreLinhasCloudflareApi` para listar álbuns, listar fotos e baixar o conteúdo binário da primeira foto. Assim o teste cobre também a integração entre o módulo reutilizável e as rotas do Worker, incluindo validação de tipo e tamanho do arquivo. A etapa é somente leitura e não muda dados do clube.
 
 Commit de código: `ab2485bc8a52b4e5df854d5005b5fbeb2dae2041`. A alteração estática foi registrada; falta executar o preview autenticado com Google para obter resultados HTTP reais.
+
+
+## Reconciliação incremental de dados — 2026-11-11
+
+Foi identificada e corrigida uma defasagem entre Supabase e D1 em duas tabelas, usando os registros originais do Supabase e inserção idempotente `INSERT OR IGNORE` no D1:
+
+- `ranking_snapshots`: 10 registros do snapshot diário de 2026-11-11 inseridos no D1. Contagem conferida após a inserção: Supabase 1.583 / D1 1.583.
+- `metas_diarias`: 1 registro de 2026-11-10 inserido no D1, mantendo `livros`, flags de conclusão/recompensa e timestamps originais. Contagem conferida após a inserção: Supabase 638 / D1 638.
+
+Nenhum registro foi apagado ou sobrescrito. Esta reconciliação fecha apenas essas duas diferenças de contagem; não equivale à paridade funcional total do frontend nem à aprovação de integridade referencial do D1 (os PRAGMA de integridade continuam bloqueados com `SQLITE_AUTH`).
