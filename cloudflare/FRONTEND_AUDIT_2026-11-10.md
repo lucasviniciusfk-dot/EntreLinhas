@@ -158,3 +158,10 @@ Este marco implementa o teste no ambiente, mas ainda não foi executado por uma 
 Auditoria do adaptador encontrou cinco RPCs de conclusão do clube encaminhadas ao Worker apesar de a documentação de migração registrar que essas operações ainda não têm paridade funcional comprovada. Isso criava risco de alterar aprovação, ciclo ou recompensa ao usar staging. Removi os cinco encaminhamentos (`entrel_approve_club_finish_v507/v509/v511` e `entrel_submit_club_finish_v509/v511`): agora caem no `default` e executam a RPC original do Supabase. Nenhuma operação de dados foi executada por essa mudança; é uma correção preventiva do roteamento.
 
 Verificação após commit: os cinco nomes não aparecem mais como casos encaminhados e o fallback `originalRpc(name, args)` permanece ativo. Isso não prova a paridade do Worker; mantém a operação original até que ela seja implementada e testada.
+
+
+## Marco 4/10 — bateria de leituras autenticadas no staging
+
+Ampliei o botão de teste da página `cloudflare-staging.html`: após login Google, executa nove requisições GET autenticadas e somente de leitura para perfil, livro atual do clube, biblioteca do clube, biblioteca pessoal, metas, leituras, notificações, chat e desafios. Cada resultado mostra HTTP, sucesso/falha e mensagem de erro; também é exibido no console e em um relatório na tela. Nenhuma escrita, recompensa ou alteração de dados é feita por essa bateria.
+
+Verificação realizada no código: as nove rotas estão presentes no teste e os resultados são contabilizados individualmente. A execução depende de abrir o preview, fazer login Google e clicar em **Testar perfil** (o botão foi mantido, embora agora execute a bateria). Até essa execução, os endpoints não estão declarados funcionalmente aprovados.
