@@ -1,16 +1,16 @@
 {
   "worker": "entrelinhas-api-staging",
   "environment": "staging",
-  "sourceCommit": "6f6720616c60e9130e30bc3a90e43bd568c5dda6",
+  "sourceCommit": "c7fb3ac2888bc84ce14d8c97bc898ba9adfd39c7",
   "sourceBaseCommit": "a103db555f9dabd06c806d0e94942b9e6a92b316",
-  "deploymentId": "a5bb7d8e-433a-44c1-9a15-e6ec3aa587a0",
-  "versionId": "eec8d7aa-31b6-4ed6-8f04-3516cd7e7a7c",
+  "deploymentId": "77daf7d3-b577-45ab-a4e7-4451e1ad8df8",
+  "versionId": "60ac675e-e4d1-4fac-af8a-ba28b1897835",
   "trafficPercent": 100,
-  "rollbackVersionId": "c71c13e3-52c3-452f-a368-bd431b5ad006",
+  "rollbackVersionId": "eec8d7aa-31b6-4ed6-8f04-3516cd7e7a7c",
   "previousVersionBeforeMigrationWork": "febf2e0f-6fe3-4163-ab6a-0c73c48236d6",
-  "publishedAt": "2026-11-11T19:32:29.571820Z",
+  "publishedAt": "2026-11-11T20:08:40.697841Z",
   "compatibilityDate": "2026-11-09",
-  "sourceAssembly": "Version 23 was built from version 21 with 13 guarded replacements matching commit 4edc7c2, then 2 guarded replacements matching commit 6f67206; module line endings were preserved from Cloudflare",
+  "sourceAssembly": "Version 24 was uploaded from version 23 with the Mural route block from commit c7fb3ac; reconstructed worker.mjs SHA-256 matched the local source; all 11 modules and current bindings were preserved.",
   "modules": [
     "worker.mjs",
     "achievement-catalog.mjs",
@@ -80,14 +80,23 @@
     "unauthenticatedWeeklyProgress": 401,
     "unauthenticatedClubAlbums": 401,
     "unauthenticatedDailyReward": 401,
-    "bindingsPreserved": true
+    "bindingsPreserved": true,
+    "unauthenticatedClubMural": 401,
+    "corsPreviewOrigin": true,
+    "observabilityPreserved": true,
+    "d1MuralTablesPreexisting": true,
+    "migrationsAppliedForMural": false
   },
   "githubChecks": {
-    "actionsRunId": 43087977901,
+    "actionsRunId": 43092079248,
     "actionsConclusion": "success",
     "netlifyEntreLinhasoff": "success",
     "netlifyImaginativeBiscotti": "success"
   },
-  "realGoogleSessionTest": "pending user execution; browser automation stopped because current URL could not be established safely",
-  "productionCutover": false
+  "realGoogleSessionTest": "pending user execution; manual Google OAuth and authenticated staging validation are still required",
+  "productionCutover": false,
+  "previousDeploymentId": "a5bb7d8e-433a-44c1-9a15-e6ec3aa587a0",
+  "versionNumber": 24,
+  "previousRollbackVersionId": "c71c13e3-52c3-452f-a368-bd431b5ad006",
+  "workerSha256": "38c53f9c6b08c9f374c5c7d83e9d5fa21c2fb995830bb154f39de4473908b078"
 }

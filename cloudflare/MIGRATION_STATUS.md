@@ -76,7 +76,7 @@
 | Biblioteca e leituras | CRUD pessoal, progresso e pedido de conclusão integrados em canário; migration de identidades aplicada ao staging; leitura/escrita EPUB e migração de arquivos legados ainda pendentes |
 | Metas/progresso | gravação diária idempotente por livro/dia, metas canônicas semanais/mensais e leitura do progresso/recompensas no canário; outras rotinas de desafios e calendário ainda exigem revisão |
 | Desafios/medalhas/molduras | catálogo e editor de definições de desafios no canário; progresso, solicitações e recompensas ainda Supabase; seleção própria e reconciliação de medalhas/molduras validadas em canário |
-| Clube | álbuns/fotos do encontro integrados em canário opt-in (`cf_albums=1`) com D1/R2 privado; mural, gestão completa de ciclos e participação/progresso do livro do clube ainda pendentes; capas seguem no fluxo de upload existente |
+| Clube | álbuns/fotos do encontro em canário opt-in (`cf_albums=1`) com D1/R2 privado; publicações, fixação, moderação e reações do mural agora em `cf_mural=1`; ciclos, participação/progresso do livro atual e outros caminhos administrativos ainda pendentes; capas seguem no fluxo existente |
 | Chat | operações normais integradas; editor administrativo de cards fixados e demais wrappers legados pendentes |
 | Notificações | leitura/lida/ocultação em canário; composição administrativa e entrega push ainda Supabase |
 | Administração | fila Cloudflare limitada à finalização de livros pessoais em canário; remoção de conta, ranking, logs e demais ações não migrados integralmente |
@@ -146,3 +146,13 @@ A entrada normal index.html mantém Supabase como fonte até validação. O can�
 - A resposta da recompensa diária agora marca `applied=true` somente para a requisição cujo UPDATE de saldo alterou uma linha. O teste concorrente passou cinco vezes consecutivas e a suíte completa passou 44/44.
 - Após a publicação, `/health` retornou 200; as rotas de desafios, configurações globais, progresso semanal, álbuns e recompensa diária sem token retornaram 401. Nenhuma migration nem dado foi alterado pelo deploy.
 - GitHub Actions run `43087977901` e os dois deploy previews da PR #4 concluíram com sucesso. O teste com sessão Google permanece pendente.
+
+## Publicação real do Mural em staging — 2026-11-11
+
+- O commit `c7fb3ac2888bc84ce14d8c97bc898ba9adfd39c7` passou no GitHub Actions run `43092079248` e nos dois previews Netlify.
+- O Worker `entrelinhas-api-staging` recebeu a versão 24 `60ac675e-e4d1-4fac-af8a-ba28b1897835`, deployment `77daf7d3-b577-45ab-a4e7-4451e1ad8df8`, com 100% do tráfego de staging. Rollback de código: versão 23 `eec8d7aa-31b6-4ed6-8f04-3516cd7e7a7c`; versão 22 `c71c13e3-52c3-452f-a368-bd431b5ad006` continua no histórico.
+- O upload preservou os 11 módulos, bindings D1/R2/Supabase Auth, compatibilidade, logs e traces. A fonte reconstruída do Worker bateu byte a byte em SHA-256 com `cloudflare/worker.mjs` do commit.
+- As tabelas `clube_mural` e `clube_mural_reacoes` já existiam em D1 com o esquema esperado; não foi aplicada migration nem alterada linha durante o deploy.
+- Verificação HTTP remota após o deploy: `/health` 200 com D1/R2/Auth prontos; `/api/v1/club/mural` e `/api/v1/club/albums` retornaram 401 sem token e CORS aceitou a origem do preview.
+- `cf_mural=1` cobre publicações administrativas, leitura por membros, fixação, edição, remoção lógica e reações. Ciclos, participação/progresso do livro atual e um caminho legado de administração do mural ainda não migraram.
+- A suíte local deste commit havia passado 46/46 e `npm run check` compilou 264 scripts/módulos. A sessão Google real continua aguardando a validação manual na página de staging. Nenhum deploy ou cutover de produção ocorreu.
