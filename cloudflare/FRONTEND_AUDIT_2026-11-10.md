@@ -55,3 +55,14 @@ Esta varredura é estática e não prova equivalência funcional, autorização/
 Começar por leitura de perfil e configuração (`usuarios`, `app_configuracoes`), identificando todos os métodos e filtros usados no frontend e comparando com as rotas já existentes no Worker. Só implementar uma rota quando o contrato e a autorização forem conhecidos e testáveis.
 
 Nenhum dado foi alterado no Supabase, D1 ou R2 durante esta auditoria. Nenhuma chamada do frontend foi substituída.
+
+
+## Confronto com o Worker de staging (leitura direta do script implantado)
+
+O script `entrelinhas-api-staging` foi lido pela API da conta Cloudflare; o snapshot retornado tinha 95.808 caracteres. Foram identificadas rotas para perfil (`GET /api/v1/me`), leitura, metas, progresso mensal, biblioteca pessoal, notificações, chat, desafios, álbuns/fotos do clube, solicitações administrativas, recompensas e arquivos.
+
+O código SQL do Worker referencia estas tabelas do frontend: `usuarios`, `app_configuracoes`, `app_notificacoes`, `chat_mensagens`, `chat_reacoes`, `clube_albuns`, `clube_biblioteca`, `clube_fotos`, `clube_livro_atual`, `clube_livro_participantes`, `desafios`, `leituras`, `livros_pessoais`, `metas_diarias`, `metas_usuarios`, `solicitacoes_validacao`, `usuario_desafios`.
+
+Estas nove tabelas encontradas no frontend não apareceram nas instruções SQL do Worker nesta leitura: `admin_logs`, `clube_livros_finalizados`, `clube_mural`, `clube_mural_reacoes`, `livros`, `push_subscriptions`, `ranking_temporadas`, `usuario_medalhas`, `usuario_molduras`.
+
+**Importante:** aparecer em uma consulta SQL não prova que todas as operações do frontend naquela tabela já estejam cobertas. Por exemplo, a rota de perfil observada é somente GET; não foi identificada nessa rota uma operação de atualização de perfil. A compatibilidade deve ser conferida por operação e não apenas por nome de tabela.
