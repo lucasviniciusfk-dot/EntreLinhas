@@ -151,3 +151,10 @@ A página `cloudflare-staging.html` agora carrega o cliente de API Cloudflare ju
 A página mostra o resultado real da chamada e registra o payload no console. Se não houver sessão, se o Worker negar a chamada ou se a resposta falhar, mostra a falha sem recorrer automaticamente ao Supabase. O staging não faz cutover de operações diretas de tabelas.
 
 Este marco implementa o teste no ambiente, mas ainda não foi executado por uma sessão Google real do usuário; portanto, não declarar a leitura autenticada aprovada até o botão retornar sucesso no navegador.
+
+
+## Marco 3/10 — bloqueio de RPCs do clube sem paridade comprovada
+
+Auditoria do adaptador encontrou cinco RPCs de conclusão do clube encaminhadas ao Worker apesar de a documentação de migração registrar que essas operações ainda não têm paridade funcional comprovada. Isso criava risco de alterar aprovação, ciclo ou recompensa ao usar staging. Removi os cinco encaminhamentos (`entrel_approve_club_finish_v507/v509/v511` e `entrel_submit_club_finish_v509/v511`): agora caem no `default` e executam a RPC original do Supabase. Nenhuma operação de dados foi executada por essa mudança; é uma correção preventiva do roteamento.
+
+Verificação após commit: os cinco nomes não aparecem mais como casos encaminhados e o fallback `originalRpc(name, args)` permanece ativo. Isso não prova a paridade do Worker; mantém a operação original até que ela seja implementada e testada.
