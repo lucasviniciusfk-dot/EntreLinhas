@@ -142,3 +142,12 @@ Verificações concluídas neste marco:
 - PR permanece draft e `mergeable=false`; nenhum merge/cutover foi feito.
 
 Limite deste marco: os checks `success` confirmam a geração dos previews, não o comportamento funcional no navegador. A URL pública do Worker e os previews não puderam ser abertos por este ambiente de execução, e a API D1 retornou `SQLITE_AUTH` nas consultas de inventário desta tentativa. Portanto, login Google, chamadas autenticadas e fluxo de arquivos continuam aguardando teste funcional real.
+
+
+## Marco 2/10 — teste autenticado de leitura de perfil no staging
+
+A página `cloudflare-staging.html` agora carrega o cliente de API Cloudflare junto ao adaptador RPC, captura a instância real do Supabase criada pelo frontend sem substituir o fluxo de login e adiciona o botão **Testar perfil**. Após login Google, o botão obtém o access token da sessão Supabase e chama `GET /api/v1/me` no Worker. O teste é somente leitura: não altera perfil nem dados.
+
+A página mostra o resultado real da chamada e registra o payload no console. Se não houver sessão, se o Worker negar a chamada ou se a resposta falhar, mostra a falha sem recorrer automaticamente ao Supabase. O staging não faz cutover de operações diretas de tabelas.
+
+Este marco implementa o teste no ambiente, mas ainda não foi executado por uma sessão Google real do usuário; portanto, não declarar a leitura autenticada aprovada até o botão retornar sucesso no navegador.
