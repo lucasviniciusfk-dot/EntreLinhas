@@ -195,3 +195,10 @@ Commit da alteração: `31fd2c6e65d71011c9f6713b6920034d2e945ab8`. A validação
 O cliente reutilizável `cloudflare/entrelinhas-api-client.js` agora expõe `getClubAlbums(limit)`, `getClubAlbumPhotos(albumId, limit)` e `getClubPhotoContent(photoId)`. As chamadas usam o token da sessão Supabase Auth, validam os IDs antes de montar as rotas e limitam os parâmetros de paginação. O download de foto trata resposta binária, exige `Content-Type` de imagem e rejeita conteúdo vazio. O módulo continua opt-in: não intercepta `fetch`, não redireciona chamadas antigas e não altera dados.
 
 Commit: `7241433cf316b408160465942011b00c553b71d8`. Implementação registrada; execução funcional com a sessão Google ainda pendente.
+
+
+## Marco 9/10 — teste do cliente integrado, não apenas das rotas
+
+A bateria autenticada do preview agora chama os métodos públicos do módulo `EntreLinhasCloudflareApi` para listar álbuns, listar fotos e baixar o conteúdo binário da primeira foto. Assim o teste cobre também a integração entre o módulo reutilizável e as rotas do Worker, incluindo validação de tipo e tamanho do arquivo. A etapa é somente leitura e não muda dados do clube.
+
+Commit de código: `ab2485bc8a52b4e5df854d5005b5fbeb2dae2041`. A alteração estática foi registrada; falta executar o preview autenticado com Google para obter resultados HTTP reais.
